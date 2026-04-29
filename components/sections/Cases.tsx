@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "motion/react";
 import { track } from "@/lib/analytics";
+import { FadeUp, Stagger, StaggerItem, TiltCard } from "@/components/animations";
 
 type Case = {
   setor: string;
@@ -56,67 +58,97 @@ const CASES: Case[] = [
 
 export default function Cases() {
   return (
-    <section className="section-y bg-hzn-bg-base" id="cases">
-      <div className="container-h">
-        <div className="text-center max-w-2xl mx-auto">
+    <section className="section-y bg-hzn-bg-base relative" id="cases">
+      {/* Faint scanline background pattern */}
+      <div
+        aria-hidden
+        className="absolute inset-0 opacity-[0.025] pointer-events-none"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg, rgba(245,158,11,1) 0, rgba(245,158,11,1) 1px, transparent 1px, transparent 4px)",
+        }}
+      />
+
+      <div className="container-h relative">
+        <FadeUp className="text-center max-w-2xl mx-auto">
           <span className="eyebrow">CASES REAIS · FONTE PÚBLICA</span>
           <h2 className="mt-3 text-3xl md:text-5xl font-bold tracking-tight">
-            Quem está sendo engolido agora
+            Quem está sendo engolido <span className="text-hzn-brand-400">agora</span>
           </h2>
           <p className="mt-4 text-hzn-text-secondary">
             Cases reais. Fontes públicas. Datas recentes. Sem inventar.
           </p>
-        </div>
+        </FadeUp>
 
-        <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Stagger className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6">
           {CASES.map((c, i) => (
-            <article
-              key={c.setor}
-              className="surface-card flex flex-col"
-              onClick={() =>
-                track("case_card_click", { setor: c.setor, position: i + 1 })
-              }
-            >
-              <Image
-                src={c.illustration}
-                alt={c.illustrationAlt}
-                width={80}
-                height={80}
-                className="mb-4 rounded-lg"
-              />
-              <span className="eyebrow mb-3">{c.setor.toUpperCase()}</span>
-              <h3 className="text-xl font-bold leading-snug">{c.title}</h3>
-              <p className="mt-4 text-sm text-hzn-text-secondary leading-relaxed">
-                {c.body}
-              </p>
-              <ul className="mt-5 space-y-1 text-sm text-hzn-text-primary">
-                {c.metrics.map((m) => (
-                  <li key={m} className="flex items-start gap-2">
-                    <span className="text-hzn-brand-400 mt-1">▸</span>
-                    <span>{m}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-5 pt-5 border-t border-hzn-border-default text-xs text-hzn-text-muted">
-                <span className="text-hzn-brand-400">Quem perde: </span>
-                {c.loser}
-              </p>
-              <a
-                href={c.fonteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 text-xs italic text-hzn-brand-400 hover:underline"
+            <StaggerItem key={c.setor}>
+              <TiltCard
+                intensity={6}
+                className="group h-full"
+                onClick={() =>
+                  track("case_card_click", { setor: c.setor, position: i + 1 })
+                }
               >
-                Fonte: {c.fonteLabel} ↗
-              </a>
-            </article>
+                <article className="surface-card h-full flex flex-col cursor-pointer transition-colors duration-300 group-hover:border-hzn-brand-400/40">
+                  <motion.div
+                    whileHover={{ y: -4, rotate: -2 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    className="mb-4"
+                  >
+                    <Image
+                      src={c.illustration}
+                      alt={c.illustrationAlt}
+                      width={80}
+                      height={80}
+                      className="rounded-lg"
+                    />
+                  </motion.div>
+                  <span className="eyebrow mb-3">{c.setor.toUpperCase()}</span>
+                  <h3 className="text-xl font-bold leading-snug">{c.title}</h3>
+                  <p className="mt-4 text-sm text-hzn-text-secondary leading-relaxed">
+                    {c.body}
+                  </p>
+                  <ul className="mt-5 space-y-1 text-sm text-hzn-text-primary">
+                    {c.metrics.map((m, idx) => (
+                      <motion.li
+                        key={m}
+                        className="flex items-start gap-2"
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3 + idx * 0.08, duration: 0.4 }}
+                      >
+                        <span className="text-hzn-brand-400 mt-1">▸</span>
+                        <span>{m}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                  <p className="mt-5 pt-5 border-t border-hzn-border-default text-xs text-hzn-text-muted">
+                    <span className="text-hzn-brand-400">Quem perde: </span>
+                    {c.loser}
+                  </p>
+                  <a
+                    href={c.fonteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="mt-3 text-xs italic text-hzn-brand-400 hover:underline"
+                  >
+                    Fonte: {c.fonteLabel} ↗
+                  </a>
+                </article>
+              </TiltCard>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
 
-        <p className="mt-14 text-center text-hzn-text-secondary max-w-3xl mx-auto">
-          Em todo setor, alguém pequeno está se movendo primeiro. O custo de esperar
-          18 meses de roadmap interno é virar o case do próximo report.
-        </p>
+        <FadeUp delay={0.2}>
+          <p className="mt-14 text-center text-hzn-text-secondary max-w-3xl mx-auto">
+            Em todo setor, alguém pequeno está se movendo primeiro. O custo de esperar
+            18 meses de roadmap interno é virar o case do próximo report.
+          </p>
+        </FadeUp>
       </div>
     </section>
   );
