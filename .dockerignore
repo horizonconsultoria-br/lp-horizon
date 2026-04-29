@@ -1,0 +1,16 @@
+node_modules
+.next
+.git
+.github
+docs
+research
+content
+design
+reports
+infra
+.env*
+*.log
+.DS_Store
+.vscode
+.idea
+README.md

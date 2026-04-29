@@ -1,0 +1,42 @@
+{
+  "name": "lp-horizon",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LP institucional consultoriahorizon.com.br — captura lead + agendamento call",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lighthouse:desktop": "lighthouse https://consultoriahorizon.com.br --preset=desktop --output=json --output-path=./reports/desktop.json --quiet",
+    "lighthouse:mobile": "lighthouse https://consultoriahorizon.com.br --output=json --output-path=./reports/mobile.json --quiet",
+    "a11y": "axe https://consultoriahorizon.com.br --exit"
+  },
+  "dependencies": {
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@next/third-parties": "^15.1.0",
+    "resend": "^4.0.0",
+    "zod": "^3.23.8",
+    "lucide-react": "^0.460.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.2",
+    "tailwindcss": "^3.4.17",
+    "postcss": "^8.4.49",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^15.1.0",
+    "@axe-core/cli": "^4.10.0",
+    "lighthouse": "^12.3.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -1,0 +1,157 @@
+/*
+ * tokens.css — design system Horizon (dark-only v1)
+ *
+ * Reaproveita a paleta dark Horizon premium do demo DocsGrowth (grafite + âmbar dourado).
+ * Para a LP institucional v1 NÃO há toggle light/dark — só dark. Light fica P2.
+ *
+ * Decisão UX registrada em: Code-Ecosystem/decisions.md (FunnelViz + assinatura visual Horizon).
+ *
+ * Convenção de nome: --hzn-{categoria}-{papel}-{intensidade}
+ * Importar em app/globals.css com `@import "../design/tokens.css";`
+ */
+
+:root,
+[data-theme="dark"] {
+  /* ─── Backgrounds ─── */
+  --hzn-bg-base: #0b0d12;          /* fundo primário, quase preto azulado */
+  --hzn-bg-raised: #131720;         /* card / section elevada */
+  --hzn-bg-overlay: #1a2030;        /* hover state, modal backdrop */
+  --hzn-bg-muted: #0e1117;          /* footer, sidebar */
+
+  /* ─── Text ─── */
+  --hzn-text-primary: #f5f5f5;      /* títulos, copy principal */
+  --hzn-text-secondary: #a8acba;    /* sub-headlines, metadata */
+  --hzn-text-muted: #6b7280;        /* timestamps, captions */
+  --hzn-text-inverse: #0b0d12;      /* texto sobre fundo âmbar */
+
+  /* ─── Brand: âmbar/dourado Horizon ─── */
+  --hzn-brand-50: #fef3c7;
+  --hzn-brand-100: #fde68a;
+  --hzn-brand-200: #fcd34d;
+  --hzn-brand-300: #fbbf24;
+  --hzn-brand-400: #f59e0b;          /* accent principal — bordas, links */
+  --hzn-brand-500: #d97706;          /* CTA primário, ring focus */
+  --hzn-brand-600: #b45309;
+  --hzn-brand-700: #92400e;
+
+  /* ─── Glow / halo (para CTAs e drill-downs animados) ─── */
+  --hzn-glow-amber: 0 0 24px rgba(245, 158, 11, 0.35);
+  --hzn-glow-amber-strong: 0 0 48px rgba(245, 158, 11, 0.6);
+
+  /* ─── Borders ─── */
+  --hzn-border-subtle: #1f2937;
+  --hzn-border-default: #2a3344;
+  --hzn-border-strong: #3a4660;
+  --hzn-border-brand: var(--hzn-brand-400);
+
+  /* ─── Semantic ─── */
+  --hzn-success: #22c55e;
+  --hzn-warning: var(--hzn-brand-400);
+  --hzn-danger: #ef4444;
+  --hzn-info: #3b82f6;
+
+  /* ─── Spacing scale (4-base) ─── */
+  --hzn-space-1: 4px;
+  --hzn-space-2: 8px;
+  --hzn-space-3: 12px;
+  --hzn-space-4: 16px;
+  --hzn-space-5: 20px;
+  --hzn-space-6: 24px;
+  --hzn-space-8: 32px;
+  --hzn-space-10: 40px;
+  --hzn-space-12: 48px;
+  --hzn-space-16: 64px;
+  --hzn-space-20: 80px;
+  --hzn-space-24: 96px;
+  --hzn-space-32: 128px;
+
+  /* ─── Radius ─── */
+  --hzn-radius-sm: 6px;
+  --hzn-radius-md: 10px;
+  --hzn-radius-lg: 16px;
+  --hzn-radius-xl: 24px;
+  --hzn-radius-full: 9999px;
+
+  /* ─── Typography ─── */
+  --hzn-font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --hzn-font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  --hzn-text-xs: 12px;
+  --hzn-text-sm: 14px;
+  --hzn-text-base: 16px;
+  --hzn-text-lg: 18px;
+  --hzn-text-xl: 20px;
+  --hzn-text-2xl: 24px;
+  --hzn-text-3xl: 30px;
+  --hzn-text-4xl: 36px;
+  --hzn-text-5xl: 48px;
+  --hzn-text-6xl: 64px;
+  --hzn-text-7xl: 80px;        /* hero headline desktop */
+
+  --hzn-leading-tight: 1.1;
+  --hzn-leading-snug: 1.25;
+  --hzn-leading-normal: 1.5;
+  --hzn-leading-relaxed: 1.7;
+
+  --hzn-tracking-tight: -0.02em;  /* hero headlines */
+  --hzn-tracking-normal: 0;
+  --hzn-tracking-wide: 0.04em;    /* uppercase eyebrows */
+
+  --hzn-weight-regular: 400;
+  --hzn-weight-medium: 500;
+  --hzn-weight-semibold: 600;
+  --hzn-weight-bold: 700;
+
+  /* ─── Motion ─── */
+  --hzn-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --hzn-duration-fast: 150ms;
+  --hzn-duration-default: 300ms;
+  --hzn-duration-slow: 500ms;
+
+  /* ─── Layout ─── */
+  --hzn-container-max: 1200px;
+  --hzn-container-padding: clamp(16px, 4vw, 64px);
+}
+
+/* ─── Reset opinativo ─── */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--hzn-bg-base);
+  color: var(--hzn-text-primary);
+  font-family: var(--hzn-font-sans);
+  font-size: var(--hzn-text-base);
+  line-height: var(--hzn-leading-normal);
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--hzn-bg-base);
+}
+
+/* ─── Skip link p/ a11y (NFR-002) ─── */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--hzn-brand-500);
+  color: var(--hzn-text-inverse);
+  padding: var(--hzn-space-3) var(--hzn-space-4);
+  z-index: 9999;
+  border-radius: 0 0 var(--hzn-radius-md) 0;
+  font-weight: var(--hzn-weight-semibold);
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* ─── Focus ring consistente ─── */
+:focus-visible {
+  outline: 2px solid var(--hzn-brand-400);
+  outline-offset: 2px;
+  border-radius: var(--hzn-radius-sm);
+}

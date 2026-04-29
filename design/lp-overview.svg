@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 2400" font-family="Inter, system-ui, sans-serif">
+  <defs>
+    <linearGradient id="amberGlow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#d97706" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a2030"/>
+      <stop offset="100%" stop-color="#131720"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Page background -->
+  <rect width="1200" height="2400" fill="#0b0d12"/>
+
+  <!-- Header / Nav -->
+  <rect x="0" y="0" width="1200" height="72" fill="#0e1117"/>
+  <rect x="48" y="28" width="160" height="16" rx="3" fill="#f59e0b"/>
+  <rect x="900" y="28" width="80" height="16" rx="3" fill="#a8acba" opacity="0.5"/>
+  <rect x="1000" y="22" width="140" height="28" rx="14" fill="#d97706"/>
+  <text x="1070" y="41" text-anchor="middle" font-size="13" font-weight="600" fill="#0b0d12">Agendar diagnóstico</text>
+
+  <!-- HERO -->
+  <rect x="0" y="72" width="1200" height="640" fill="url(#amberGlow)" opacity="0.3"/>
+  <rect x="80" y="180" width="120" height="20" rx="10" fill="none" stroke="#f59e0b" stroke-width="1"/>
+  <text x="140" y="195" text-anchor="middle" font-size="11" font-weight="600" fill="#f59e0b" letter-spacing="2">HORIZONCONSULTORIA</text>
+
+  <text x="80" y="280" font-size="64" font-weight="700" fill="#f5f5f5" letter-spacing="-1.5">IA-native ou ser engolido</text>
+  <text x="80" y="356" font-size="64" font-weight="700" fill="#f59e0b" letter-spacing="-1.5">pela concorrência.</text>
+
+  <text x="80" y="430" font-size="20" fill="#a8acba" font-weight="400">Bancas tradicionais estão sendo trocadas por legaltechs de 2 anos.</text>
+  <text x="80" y="460" font-size="20" fill="#a8acba">Clínicas pequenas batem rede grande no WhatsApp.</text>
+  <text x="80" y="490" font-size="20" fill="#a8acba">A Horizon constrói essa camada antes que seu concorrente faça primeiro.</text>
+
+  <rect x="80" y="540" width="280" height="56" rx="28" fill="#d97706"/>
+  <text x="220" y="575" text-anchor="middle" font-size="16" font-weight="600" fill="#0b0d12">Agendar diagnóstico de 30min</text>
+  <rect x="376" y="540" width="280" height="56" rx="28" fill="none" stroke="#a8acba" stroke-width="1.5"/>
+  <text x="516" y="575" text-anchor="middle" font-size="16" font-weight="500" fill="#f5f5f5">Quero a auditoria-isca grátis</text>
+
+  <text x="80" y="660" font-size="13" fill="#6b7280" letter-spacing="1">★ 1 ECOSSISTEMA EM PRODUÇÃO  ·  ★ DOCSGROWTH CASE LIVE  ·  ★ IA-NATIVE DESDE DAY 1</text>
+
+  <!-- SECTION 2 — Quem está sendo engolido -->
+  <rect x="0" y="712" width="1200" height="540" fill="#0b0d12"/>
+  <text x="600" y="780" text-anchor="middle" font-size="40" font-weight="700" fill="#f5f5f5">Quem está sendo engolido agora</text>
+  <text x="600" y="820" text-anchor="middle" font-size="16" fill="#a8acba">Cases reais. Fontes públicas. Datas recentes. Sem inventar.</text>
+
+  <!-- 3 cards -->
+  <g>
+    <rect x="80" y="880" width="320" height="320" rx="16" fill="url(#cardGrad)" stroke="#2a3344"/>
+    <rect x="100" y="900" width="40" height="40" rx="8" fill="#f59e0b" opacity="0.2"/>
+    <text x="120" y="927" text-anchor="middle" font-size="20">⚖</text>
+    <text x="100" y="985" font-size="15" font-weight="600" fill="#fbbf24">ADVOCACIA</text>
+    <text x="100" y="1020" font-size="20" font-weight="700" fill="#f5f5f5">Enter virou "escritório</text>
+    <text x="100" y="1048" font-size="20" font-weight="700" fill="#f5f5f5">de IA" defendendo Itaú,</text>
+    <text x="100" y="1076" font-size="20" font-weight="700" fill="#f5f5f5">Santander e Nubank</text>
+    <text x="100" y="1115" font-size="13" fill="#a8acba">Avaliada em R$2 bilhões em 2025.</text>
+    <text x="100" y="1135" font-size="13" fill="#a8acba">250 mil casos previstos pra 2025.</text>
+    <text x="100" y="1175" font-size="11" fill="#f59e0b" font-style="italic">Fonte: Brazil Journal, GlobeNewswire</text>
+  </g>
+  <g>
+    <rect x="440" y="880" width="320" height="320" rx="16" fill="url(#cardGrad)" stroke="#2a3344"/>
+    <rect x="460" y="900" width="40" height="40" rx="8" fill="#f59e0b" opacity="0.2"/>
+    <text x="480" y="927" text-anchor="middle" font-size="20">✦</text>
+    <text x="460" y="985" font-size="15" font-weight="600" fill="#fbbf24">ESTÉTICA</text>
+    <text x="460" y="1020" font-size="20" font-weight="700" fill="#f5f5f5">+40% faturamento numa</text>
+    <text x="460" y="1048" font-size="20" font-weight="700" fill="#f5f5f5">clínica trocando humano</text>
+    <text x="460" y="1076" font-size="20" font-weight="700" fill="#f5f5f5">por IA no WhatsApp</text>
+    <text x="460" y="1115" font-size="13" fill="#a8acba">−30% esforço operacional.</text>
+    <text x="460" y="1135" font-size="13" fill="#a8acba">Atendimento + agenda unificados.</text>
+    <text x="460" y="1175" font-size="11" fill="#f59e0b" font-style="italic">Fonte: Case publicado por SleekFlow</text>
+  </g>
+  <g>
+    <rect x="800" y="880" width="320" height="320" rx="16" fill="url(#cardGrad)" stroke="#2a3344"/>
+    <rect x="820" y="900" width="40" height="40" rx="8" fill="#f59e0b" opacity="0.2"/>
+    <text x="840" y="927" text-anchor="middle" font-size="20">▲</text>
+    <text x="820" y="985" font-size="15" font-weight="600" fill="#fbbf24">VAREJO</text>
+    <text x="820" y="1020" font-size="20" font-weight="700" fill="#f5f5f5">Lu da Magalu virou</text>
+    <text x="820" y="1048" font-size="20" font-weight="700" fill="#f5f5f5">vendedora no WhatsApp</text>
+    <text x="820" y="1076" font-size="20" font-weight="700" fill="#f5f5f5">e converteu 3× o app</text>
+    <text x="820" y="1115" font-size="13" fill="#a8acba">1,2 milhão de usuários em 7 meses.</text>
+    <text x="820" y="1135" font-size="13" fill="#a8acba">NPS 90.</text>
+    <text x="820" y="1175" font-size="11" fill="#f59e0b" font-style="italic">Fonte: Exame, Nama Case Study</text>
+  </g>
+
+  <!-- SECTION 3 — Por que a Horizon -->
+  <rect x="0" y="1252" width="1200" height="380" fill="#131720"/>
+  <text x="600" y="1320" text-anchor="middle" font-size="40" font-weight="700" fill="#f5f5f5">Por que a Horizon</text>
+  <text x="600" y="1360" text-anchor="middle" font-size="16" fill="#a8acba">4 motivos concretos. Sem os adjetivos de slide.</text>
+
+  <g>
+    <rect x="80" y="1410" width="250" height="180" rx="12" fill="#0b0d12" stroke="#2a3344"/>
+    <text x="100" y="1450" font-size="14" font-weight="700" fill="#f59e0b">★ IA-NATIVE</text>
+    <text x="100" y="1480" font-size="13" fill="#f5f5f5">Não somos agência</text>
+    <text x="100" y="1500" font-size="13" fill="#f5f5f5">que adicionou IA depois.</text>
+    <text x="100" y="1530" font-size="12" fill="#a8acba">Claude + MCPs + Paperclip</text>
+    <text x="100" y="1548" font-size="12" fill="#a8acba">stack default.</text>
+  </g>
+  <g>
+    <rect x="350" y="1410" width="250" height="180" rx="12" fill="#0b0d12" stroke="#2a3344"/>
+    <text x="370" y="1450" font-size="14" font-weight="700" fill="#f59e0b">★ BLUEPRINTS</text>
+    <text x="370" y="1480" font-size="13" fill="#f5f5f5">O que vendemos já</text>
+    <text x="370" y="1500" font-size="13" fill="#f5f5f5">rodou em produção</text>
+    <text x="370" y="1530" font-size="12" fill="#a8acba">Você não paga pra ser</text>
+    <text x="370" y="1548" font-size="12" fill="#a8acba">cobaia.</text>
+  </g>
+  <g>
+    <rect x="620" y="1410" width="250" height="180" rx="12" fill="#0b0d12" stroke="#2a3344"/>
+    <text x="640" y="1450" font-size="14" font-weight="700" fill="#f59e0b">★ PREÇO</text>
+    <text x="640" y="1480" font-size="13" fill="#f5f5f5">5–10× mais barato que</text>
+    <text x="640" y="1500" font-size="13" fill="#f5f5f5">big consulting</text>
+    <text x="640" y="1530" font-size="12" fill="#a8acba">Sem PMO inflado, sem 6</text>
+    <text x="640" y="1548" font-size="12" fill="#a8acba">camadas de gerência.</text>
+  </g>
+  <g>
+    <rect x="890" y="1410" width="230" height="180" rx="12" fill="#0b0d12" stroke="#2a3344"/>
+    <text x="910" y="1450" font-size="14" font-weight="700" fill="#f59e0b">★ PRODUTO</text>
+    <text x="910" y="1480" font-size="13" fill="#f5f5f5">Squad opera como</text>
+    <text x="910" y="1500" font-size="13" fill="#f5f5f5">time interno seu</text>
+    <text x="910" y="1530" font-size="12" fill="#a8acba">Ownership de outcome,</text>
+    <text x="910" y="1548" font-size="12" fill="#a8acba">não de horas.</text>
+  </g>
+
+  <!-- SECTION 4 — O que entregamos -->
+  <rect x="0" y="1632" width="1200" height="500" fill="#0b0d12"/>
+  <text x="600" y="1700" text-anchor="middle" font-size="40" font-weight="700" fill="#f5f5f5">O que entregamos</text>
+  <text x="600" y="1740" text-anchor="middle" font-size="16" fill="#a8acba">4 modelos. Ticket transparente. Outcome no centro.</text>
+
+  <g>
+    <rect x="80" y="1790" width="250" height="280" rx="16" fill="url(#cardGrad)" stroke="#2a3344"/>
+    <text x="100" y="1830" font-size="13" font-weight="600" fill="#a8acba" letter-spacing="2">PREVISIBILIDADE</text>
+    <text x="100" y="1865" font-size="22" font-weight="700" fill="#f5f5f5">Squad Retainer</text>
+    <text x="100" y="1905" font-size="14" fill="#a8acba">2-3 profissionais alocados</text>
+    <text x="100" y="1925" font-size="14" fill="#a8acba">3-6 meses. Spin-up 7 dias.</text>
+    <line x1="100" y1="1965" x2="310" y2="1965" stroke="#2a3344"/>
+    <text x="100" y="2000" font-size="26" font-weight="700" fill="#f59e0b">R$15-40K</text>
+    <text x="100" y="2025" font-size="12" fill="#a8acba">por mês</text>
+  </g>
+  <g>
+    <rect x="350" y="1790" width="250" height="280" rx="16" fill="url(#cardGrad)" stroke="#2a3344"/>
+    <text x="370" y="1830" font-size="13" font-weight="600" fill="#a8acba" letter-spacing="2">ESCOPO + PRAZO</text>
+    <text x="370" y="1865" font-size="22" font-weight="700" fill="#f5f5f5">Projeto Fechado</text>
+    <text x="370" y="1905" font-size="14" fill="#a8acba">MVPs e IAs verticais.</text>
+    <text x="370" y="1925" font-size="14" fill="#a8acba">Pago por entregável.</text>
+    <line x1="370" y1="1965" x2="580" y2="1965" stroke="#2a3344"/>
+    <text x="370" y="2000" font-size="26" font-weight="700" fill="#f59e0b">R$50-200K</text>
+    <text x="370" y="2025" font-size="12" fill="#a8acba">por projeto · 60-120 dias</text>
+  </g>
+  <g>
+    <rect x="620" y="1790" width="250" height="280" rx="16" fill="url(#cardGrad)" stroke="#2a3344"/>
+    <text x="640" y="1830" font-size="13" font-weight="600" fill="#a8acba" letter-spacing="2">MOAT DE DOMÍNIO</text>
+    <text x="640" y="1865" font-size="22" font-weight="700" fill="#f5f5f5">IA Vertical</text>
+    <text x="640" y="1905" font-size="14" fill="#a8acba">Agentes específicos do</text>
+    <text x="640" y="1925" font-size="14" fill="#a8acba">seu domínio + RAG/eval.</text>
+    <line x1="640" y1="1965" x2="850" y2="1965" stroke="#2a3344"/>
+    <text x="640" y="2000" font-size="26" font-weight="700" fill="#f59e0b">R$80-250K</text>
+    <text x="640" y="2025" font-size="12" fill="#a8acba">90-180 dias</text>
+  </g>
+  <g>
+    <rect x="890" y="1790" width="230" height="280" rx="16" fill="url(#cardGrad)" stroke="#fbbf24"/>
+    <text x="910" y="1830" font-size="13" font-weight="600" fill="#a8acba" letter-spacing="2">DIFERENCIAÇÃO MAX</text>
+    <text x="910" y="1865" font-size="22" font-weight="700" fill="#f5f5f5">AI-OS as a</text>
+    <text x="910" y="1893" font-size="22" font-weight="700" fill="#f5f5f5">Service</text>
+    <text x="910" y="1925" font-size="14" fill="#a8acba">Plataforma agêntica</text>
+    <text x="910" y="1945" font-size="14" fill="#a8acba">completa.</text>
+    <line x1="910" y1="1985" x2="1100" y2="1985" stroke="#2a3344"/>
+    <text x="910" y="2018" font-size="26" font-weight="700" fill="#f59e0b">R$150-500K</text>
+    <text x="910" y="2043" font-size="12" fill="#a8acba">120-240 dias</text>
+  </g>
+
+  <!-- CTA secundário auditoria -->
+  <rect x="80" y="2090" width="1040" height="20" fill="none"/>
+
+  <!-- SECTION 5 — Como começamos + FAQ + Footer compactados -->
+  <rect x="0" y="2132" width="1200" height="120" fill="#131720"/>
+  <text x="600" y="2180" text-anchor="middle" font-size="28" font-weight="700" fill="#f5f5f5">Como começamos</text>
+  <text x="200" y="2225" text-anchor="middle" font-size="14" fill="#fbbf24">1. Formulário (3min)</text>
+  <text x="600" y="2225" text-anchor="middle" font-size="14" fill="#fbbf24">2. Call com CTO (30-45min)</text>
+  <text x="1000" y="2225" text-anchor="middle" font-size="14" fill="#fbbf24">3. Proposta em 5 dias</text>
+
+  <rect x="0" y="2252" width="1200" height="80" fill="#0b0d12"/>
+  <text x="600" y="2295" text-anchor="middle" font-size="20" font-weight="600" fill="#f5f5f5">FAQ — 8 perguntas que founders fazem</text>
+  <text x="600" y="2318" text-anchor="middle" font-size="13" fill="#6b7280">Quanto custa? · Quanto demora? · Código ou consultoria? · Funciona pra empresa pequena? · ...</text>
+
+  <rect x="0" y="2332" width="1200" height="68" fill="#0e1117"/>
+  <text x="80" y="2365" font-size="12" fill="#6b7280">HorizonConsultoria · CNPJ 37.111.839/0001-07 · contato@consultoriahorizon.com.br</text>
+  <text x="80" y="2385" font-size="11" fill="#6b7280">© 2026 — Construindo IA dentro do produto, não em volta dele.</text>
+</svg>

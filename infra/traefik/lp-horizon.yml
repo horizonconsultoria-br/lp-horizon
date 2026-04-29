@@ -1,0 +1,73 @@
+# Traefik file-provider config — sincronizar em /etc/easypanel/traefik/config/lp-horizon.yml na VPS.
+# Padrão herdado do DocsGrowth (decisão 2026-04-17 em decisions.md).
+#
+# Roteia consultoriahorizon.com.br + www.consultoriahorizon.com.br pro container lp-horizon:3000
+# Apex sem A record → fazemos redirect www→apex (ou inverso conforme decisão founder).
+#
+# Pré-requisito: DNS A record APEX `consultoriahorizon.com.br` apontando pra 31.97.93.85.
+# (Já existe o registro de WWW — falta o APEX. Se não puder configurar APEX, inverter
+#  redirect pra mandar todo tráfego pra www. Ver §"Decisão DNS" no docs/handoff-claudecode-local.md)
+
+http:
+  routers:
+    # Router APEX — preferencial
+    lp-horizon-apex:
+      rule: "Host(`consultoriahorizon.com.br`)"
+      entryPoints:
+        - websecure
+      service: lp-horizon-svc
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - secure-headers
+
+    # Router WWW — redirect 301 pro APEX (mantém SEO em uma URL canônica)
+    lp-horizon-www:
+      rule: "Host(`www.consultoriahorizon.com.br`)"
+      entryPoints:
+        - websecure
+      service: lp-horizon-svc
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - redirect-www-to-apex
+        - secure-headers
+
+    # Redirect HTTP → HTTPS (cobre apex + www)
+    lp-horizon-http-redirect:
+      rule: "Host(`consultoriahorizon.com.br`) || Host(`www.consultoriahorizon.com.br`)"
+      entryPoints:
+        - web
+      service: noop@internal
+      middlewares:
+        - redirect-to-https
+
+  services:
+    lp-horizon-svc:
+      loadBalancer:
+        servers:
+          - url: "http://lp-horizon:3000"
+        passHostHeader: true
+
+  middlewares:
+    redirect-www-to-apex:
+      redirectRegex:
+        regex: "^https?://www\\.consultoriahorizon\\.com\\.br/(.*)"
+        replacement: "https://consultoriahorizon.com.br/${1}"
+        permanent: true
+
+    redirect-to-https:
+      redirectScheme:
+        scheme: "https"
+        permanent: true
+
+    secure-headers:
+      headers:
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
+        forceSTSHeader: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: "strict-origin-when-cross-origin"
+        frameDeny: true

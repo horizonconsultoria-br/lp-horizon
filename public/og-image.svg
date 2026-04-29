@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Solid background — grafite Horizon -->
+  <rect width="1200" height="630" fill="#0b0d12"/>
+
+  <!-- Top-right amber accent block (flat, no gradient) -->
+  <rect x="900" y="0" width="300" height="200" fill="#1a2030"/>
+  <rect x="980" y="40" width="180" height="120" fill="#0b0d12"/>
+
+  <!-- Horizontal section dividers -->
+  <rect x="0" y="158" width="1200" height="1" fill="#1f2937"/>
+  <rect x="0" y="395" width="1200" height="1" fill="#1f2937"/>
+
+  <!-- Brand mark: square with H -->
+  <rect x="80" y="80" width="40" height="40" fill="#f59e0b"/>
+  <text x="100" y="110" text-anchor="middle" font-size="26" font-weight="900" fill="#0b0d12" font-family="Helvetica, Arial, sans-serif">H</text>
+  <text x="135" y="100" font-size="18" font-weight="700" fill="#f5f5f5" font-family="Helvetica, Arial, sans-serif">HorizonConsultoria</text>
+  <text x="135" y="120" font-size="11" font-weight="500" fill="#a8acba" font-family="Helvetica, Arial, sans-serif">SOFTWARE HOUSE IA-NATIVE</text>
+
+  <!-- Headline (split into 2 lines for safe rendering) -->
+  <text x="80" y="290" font-size="72" font-weight="900" fill="#f5f5f5" font-family="Helvetica, Arial, sans-serif">IA-native</text>
+  <text x="80" y="372" font-size="72" font-weight="900" fill="#f59e0b" font-family="Helvetica, Arial, sans-serif">ou ser engolido.</text>
+
+  <!-- Amber accent bar -->
+  <rect x="80" y="410" width="120" height="5" fill="#f59e0b"/>
+
+  <!-- Sublines -->
+  <text x="80" y="468" font-size="22" font-weight="400" fill="#a8acba" font-family="Helvetica, Arial, sans-serif">Bancas estao sendo trocadas por legaltechs de 2 anos.</text>
+  <text x="80" y="500" font-size="22" font-weight="400" fill="#a8acba" font-family="Helvetica, Arial, sans-serif">Clinicas batem rede grande no WhatsApp.</text>
+  <text x="80" y="532" font-size="22" font-weight="700" fill="#fbbf24" font-family="Helvetica, Arial, sans-serif">A Horizon constroi essa camada antes do seu concorrente.</text>
+
+  <!-- Footer URL -->
+  <text x="80" y="595" font-size="14" fill="#6b7280" font-family="Helvetica, Arial, sans-serif">consultoriahorizon.com.br</text>
+  <text x="80" y="613" font-size="11" fill="#6b7280" font-family="Helvetica, Arial, sans-serif">Squad em 7 dias  ·  Blueprints testados  ·  5-10x mais barato que big consulting</text>
+
+  <!-- Decorative top-right corner sparks -->
+  <g transform="translate(1080, 100)" fill="#f59e0b">
+    <circle cx="0" cy="0" r="4"/>
+    <circle cx="20" cy="-10" r="3" opacity="0.7"/>
+    <circle cx="35" cy="15" r="2" opacity="0.5"/>
+    <circle cx="-15" cy="20" r="2" opacity="0.6"/>
+  </g>
+</svg>

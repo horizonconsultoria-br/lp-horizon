@@ -1,0 +1,86 @@
+# Deploy pipeline — mesmo padrão do DocsGrowth (build → GHCR → SSH VPS → docker compose pull+up)
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync Traefik config to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "infra/traefik/lp-horizon.yml,compose.yml"
+          target: "/opt/lp-horizon/"
+          strip_components: 0
+          overwrite: true
+
+      - name: Deploy on VPS via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -euo pipefail
+            cd /opt/lp-horizon
+
+            # Sincroniza config Traefik no diretório que o file-provider observa
+            sudo cp infra/traefik/lp-horizon.yml /etc/easypanel/traefik/config/lp-horizon.yml
+
+            # Login GHCR pra pull da image privada (se ficar privada — public funciona sem)
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin || true
+
+            # Pull + recreate
+            docker compose pull
+            docker compose up -d --remove-orphans
+
+            # Health check
+            sleep 5
+            docker compose ps
+            curl -sSf https://consultoriahorizon.com.br/ -o /dev/null && echo "smoke OK" || echo "smoke FAILED (talvez TLS LE ainda emitindo)"

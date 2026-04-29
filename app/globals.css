@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tokens do design system Horizon — fonte de verdade em /design/tokens.css.
+   Replicado aqui pra Next/Tailwind enxergar os custom properties em runtime. */
+@import "../design/tokens.css";
+
+/* Tipografia container */
+.container-h {
+  width: 100%;
+  max-width: var(--hzn-container-max);
+  margin: 0 auto;
+  padding-inline: var(--hzn-container-padding);
+}
+
+/* Section padding vertical consistente */
+.section-y {
+  padding-block: clamp(64px, 10vw, 128px);
+}
+
+/* Botão primário */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hzn-space-2);
+  padding: 14px 28px;
+  background: var(--hzn-brand-500);
+  color: var(--hzn-text-inverse);
+  font-weight: var(--hzn-weight-semibold);
+  font-size: var(--hzn-text-base);
+  border-radius: var(--hzn-radius-full);
+  text-decoration: none;
+  transition: transform var(--hzn-duration-fast) var(--hzn-ease-out),
+              box-shadow var(--hzn-duration-default) var(--hzn-ease-out);
+  border: 0;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--hzn-glow-amber);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Botão secundário (outline) */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hzn-space-2);
+  padding: 13px 27px;
+  background: transparent;
+  color: var(--hzn-text-primary);
+  font-weight: var(--hzn-weight-medium);
+  font-size: var(--hzn-text-base);
+  border-radius: var(--hzn-radius-full);
+  text-decoration: none;
+  border: 1.5px solid var(--hzn-border-strong);
+  transition: border-color var(--hzn-duration-fast) var(--hzn-ease-out),
+              color var(--hzn-duration-fast) var(--hzn-ease-out);
+  cursor: pointer;
+}
+.btn-secondary:hover {
+  border-color: var(--hzn-brand-400);
+  color: var(--hzn-brand-300);
+}
+
+/* Card surface */
+.surface-card {
+  background: linear-gradient(180deg, var(--hzn-bg-overlay) 0%, var(--hzn-bg-raised) 100%);
+  border: 1px solid var(--hzn-border-default);
+  border-radius: var(--hzn-radius-lg);
+  padding: var(--hzn-space-6);
+  transition: border-color var(--hzn-duration-default) var(--hzn-ease-out),
+              transform var(--hzn-duration-default) var(--hzn-ease-out);
+}
+.surface-card:hover {
+  border-color: var(--hzn-brand-400);
+  transform: translateY(-4px);
+}
+
+/* Eyebrow (label uppercase âmbar) */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--hzn-space-2);
+  font-size: var(--hzn-text-xs);
+  font-weight: var(--hzn-weight-semibold);
+  letter-spacing: var(--hzn-tracking-wide);
+  text-transform: uppercase;
+  color: var(--hzn-brand-400);
+}
