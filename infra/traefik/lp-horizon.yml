@@ -10,37 +10,44 @@
 
 http:
   routers:
-    # Router APEX — preferencial
-    lp-horizon-apex:
+    # Router APEX — preferencial (HTTPS)
+    https-lp-horizon-apex:
       rule: "Host(`consultoriahorizon.com.br`)"
       entryPoints:
-        - websecure
+        - https
       service: lp-horizon-svc
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: consultoriahorizon.com.br
+            sans:
+              - www.consultoriahorizon.com.br
       middlewares:
         - secure-headers
+      priority: 20
 
-    # Router WWW — redirect 301 pro APEX (mantém SEO em uma URL canônica)
-    lp-horizon-www:
+    # Router WWW — redirect 301 pro APEX (HTTPS)
+    https-lp-horizon-www:
       rule: "Host(`www.consultoriahorizon.com.br`)"
       entryPoints:
-        - websecure
+        - https
       service: lp-horizon-svc
       tls:
         certResolver: letsencrypt
       middlewares:
         - redirect-www-to-apex
         - secure-headers
+      priority: 20
 
     # Redirect HTTP → HTTPS (cobre apex + www)
-    lp-horizon-http-redirect:
+    http-lp-horizon-redirect:
       rule: "Host(`consultoriahorizon.com.br`) || Host(`www.consultoriahorizon.com.br`)"
       entryPoints:
-        - web
-      service: noop@internal
+        - http
+      service: lp-horizon-svc
       middlewares:
         - redirect-to-https
+      priority: 20
 
   services:
     lp-horizon-svc:
