@@ -398,16 +398,25 @@
       font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
       font-size: 13px;
       line-height: 1.25;
-      font-weight: 300; /* leve, evita peso visual */
+      font-weight: 300;
       white-space: pre;
-      color: #3b82f6; /* horizon-500 — tom escuro pra ficar discreto, igual sutileza da v1 ambar */
-      text-shadow: 0 0 2px rgba(59, 130, 246, 0.35), 0 0 4px rgba(30, 64, 175, 0.2);
+      /* Gradient mascara a string toda transparente, exceto um spot estreito (~4 chars visíveis)
+         que emula o leading+trail do canvas v1: fundo preto domina, só "letras solitárias caindo" */
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 47.5%,
+        rgba(59, 130, 246, 0.55) 49%,
+        rgba(147, 197, 253, 0.85) 50%,
+        rgba(59, 130, 246, 0.45) 51%,
+        transparent 52.5%,
+        transparent 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
       animation: matrix-fall linear infinite;
       will-change: transform;
-    }
-    .matrix-col::before {
-      /* Trail mais escuro acumulado via overlay */
-      content: '';
     }
     @keyframes matrix-fall {
       0%   { transform: translateY(-100%); opacity: 0; }
@@ -1317,7 +1326,7 @@
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       const chars = '01<>{}[]()=>;@#$%^&*-+/\\|~`AIClaudeMCPGPTLLMnpmRAGRESTSDKAPIyamljson';
-      const colWidth = 14; // px — espaçamento entre colunas
+      const colWidth = 28; // px — spacing maior pra menos colunas (~44 vs 88) — fundo preto domina
 
       function build() {
         container.innerHTML = '';
@@ -1344,8 +1353,8 @@
           col.style.animationDuration = duration.toFixed(2) + 's';
           col.style.animationDelay = delay.toFixed(2) + 's';
 
-          // Variação sutil de opacity por column — range baixo pra suavidade (paridade v1 âmbar discreta)
-          col.style.opacity = (0.18 + Math.random() * 0.27).toFixed(2);
+          // Variação sutil de opacity por column — range bem baixo (paridade ~ canvas v1 que tem ~150 chars visíveis num frame, não milhares)
+          col.style.opacity = (0.30 + Math.random() * 0.35).toFixed(2);
 
           container.appendChild(col);
         }
