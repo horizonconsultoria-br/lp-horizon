@@ -398,9 +398,10 @@
       font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
       font-size: 13px;
       line-height: 1.25;
+      font-weight: 300; /* leve, evita peso visual */
       white-space: pre;
-      color: #93c5fd; /* sky-300 — leading char */
-      text-shadow: 0 0 4px rgba(96, 165, 250, 0.6), 0 0 8px rgba(59, 130, 246, 0.3);
+      color: #3b82f6; /* horizon-500 — tom escuro pra ficar discreto, igual sutileza da v1 ambar */
+      text-shadow: 0 0 2px rgba(59, 130, 246, 0.35), 0 0 4px rgba(30, 64, 175, 0.2);
       animation: matrix-fall linear infinite;
       will-change: transform;
     }
@@ -1343,8 +1344,8 @@
           col.style.animationDuration = duration.toFixed(2) + 's';
           col.style.animationDelay = delay.toFixed(2) + 's';
 
-          // Variação sutil de opacity por column pra textura
-          col.style.opacity = (0.55 + Math.random() * 0.45).toFixed(2);
+          // Variação sutil de opacity por column — range baixo pra suavidade (paridade v1 âmbar discreta)
+          col.style.opacity = (0.18 + Math.random() * 0.27).toFixed(2);
 
           container.appendChild(col);
         }
