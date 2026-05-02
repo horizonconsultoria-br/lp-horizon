@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horizon — IA para aumentar faturamento e reduzir custos · versão azul</title>
+  <meta name="description" content="Aumente em até 40% o faturamento da sua empresa em até 90 dias com inteligência artificial aplicada a vendas e atendimento." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'] },
+          colors: {
+            horizon: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#1d4ed8',700:'#1e3a8a' },
+            sunset: { peach:'#5b8dbe', amber:'#7da9d3', gold:'#bfdbfe' },
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(91,141,190,0.12), transparent 60%),
+        linear-gradient(180deg, #131316 0%, #101418 50%, #131316 100%);
+      color: #fafafa;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* === GRADIENT TEXT (sunset) === */
+    .grad-text {
+      background: linear-gradient(135deg, #5b8dbe 0%, #7da9d3 50%, #bfdbfe 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+    .grad-text-warm {
+      background: linear-gradient(135deg, #3b82f6 0%, #5b8dbe 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+
+    /* === GRADIENT BUTTON === */
+    .btn-grad {
+      position: relative; display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, #3b82f6 0%, #5b8dbe 100%);
+      color: #0a0a0a; padding: 14px 28px;
+      border-radius: 999px; font-weight: 700; font-size: 15px;
+      transition: all 0.25s ease; overflow: hidden; border: none; cursor: pointer;
+      box-shadow: 0 8px 24px -8px rgba(59,130,246,0.5);
+    }
+    .btn-grad::before {
+      content:''; position:absolute; inset:0; opacity:0;
+      background: linear-gradient(135deg, #7da9d3 0%, #bfdbfe 100%);
+      transition: opacity 0.25s ease;
+    }
+    .btn-grad > * { position: relative; z-index: 1; }
+    .btn-grad:hover { transform: translateY(-2px); box-shadow: 0 14px 32px -8px rgba(59,130,246,0.7); }
+    .btn-grad:hover::before { opacity: 1; }
+
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1.5px solid rgba(59,130,246,0.4); color: #7da9d3;
+      padding: 13px 26px; border-radius: 999px;
+      font-weight: 600; font-size: 15px; transition: all 0.25s ease; cursor: pointer;
+      background: rgba(59,130,246,0.04);
+    }
+    .btn-outline:hover { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.6); }
+
+    /* === BADGE OFERTA === */
+    .badge-offer {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 999px;
+      border: 1px solid rgba(59,130,246,0.25);
+      background: rgba(59,130,246,0.06);
+      color: #7da9d3; font-size: 13px; font-weight: 600;
+    }
+
+    /* === STATS GRADIENT === */
+    .stat-num {
+      font-size: 48px; font-weight: 700; letter-spacing: -0.03em; line-height: 1;
+      background: linear-gradient(135deg, #ffffff 0%, #7da9d3 60%, #5b8dbe 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label { font-size: 13px; color: #a1a1aa; font-weight: 500; margin-top: 6px; }
+
+    /* === AURORA ORBES === */
+    .aurora { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .aurora::before, .aurora::after {
+      content: ''; position: absolute; width: 700px; height: 700px; border-radius: 50%;
+      filter: blur(120px); opacity: 0.4;
+      animation: aurora-drift 18s ease-in-out infinite;
+    }
+    .aurora::before { background: radial-gradient(circle, rgba(91,141,190,0.5) 0%, transparent 70%); top: -200px; right: -150px; }
+    .aurora::after { background: radial-gradient(circle, rgba(59,130,246,0.35) 0%, transparent 70%); bottom: -300px; left: -150px; animation-delay: -9s; animation-duration: 22s; }
+    @keyframes aurora-drift {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33% { transform: translate(80px,-40px) scale(1.1); }
+      66% { transform: translate(-60px,50px) scale(0.95); }
+    }
+
+    /* === GRID PATTERN === */
+    .grid-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 80%);
+    }
+
+    /* === VSL PLAYER === */
+    .vsl-frame {
+      position: relative; aspect-ratio: 16/9; border-radius: 20px; overflow: hidden;
+      border: 1px solid rgba(59,130,246,0.3);
+      background: linear-gradient(135deg, #1c1917 0%, #0a0a0a 60%);
+      box-shadow: 0 30px 80px -20px rgba(59,130,246,0.25), 0 0 0 1px rgba(59,130,246,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .vsl-frame:hover { transform: scale(1.01); box-shadow: 0 35px 90px -20px rgba(59,130,246,0.35); }
+    .vsl-frame::before {
+      content:''; position:absolute; inset:0;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(91,141,190,0.2) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 3px);
+    }
+    .vsl-play {
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:88px; height:88px; border-radius:50%;
+      background: linear-gradient(135deg, #5b8dbe 0%, #7da9d3 100%);
+      display:flex; align-items:center; justify-content:center; cursor:pointer;
+      animation: pulse-ring 2.4s infinite;
+      transition: all 0.25s ease;
+    }
+    .vsl-play:hover { transform: translate(-50%,-50%) scale(1.1); }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(91,141,190,0.5); }
+      70% { box-shadow: 0 0 0 32px rgba(91,141,190,0); }
+      100% { box-shadow: 0 0 0 0 rgba(91,141,190,0); }
+    }
+    .vsl-controls {
+      position:absolute; bottom:14px; left:14px; right:14px;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .vsl-volume {
+      display:flex; align-items:center; gap:8px;
+      background:rgba(0,0,0,0.5); backdrop-filter:blur(8px);
+      padding:6px 12px; border-radius:999px; border:1px solid rgba(255,255,255,0.1);
+    }
+    .vsl-bar { width:60px; height:3px; background:rgba(255,255,255,0.2); border-radius:999px; overflow:hidden; }
+    .vsl-bar-fill { width:60%; height:100%; background:linear-gradient(90deg,#5b8dbe,#7da9d3); }
+
+    /* === REVEAL ON SCROLL === */
+    .reveal { opacity: 0; transform: translateY(24px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+
+    /* === CARD COM HOVER === */
+    .card-hov {
+      position: relative; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+      border: 1px solid rgba(39,39,42,0.8); background: rgba(24,24,27,0.4);
+      border-radius: 16px; padding: 28px; overflow: hidden;
+    }
+    .card-hov::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:1px;
+      background: linear-gradient(90deg, transparent, transparent, transparent);
+      transition: background 0.3s ease;
+    }
+    .card-hov:hover {
+      transform: translateY(-4px); border-color: rgba(59,130,246,0.4);
+      background: rgba(24,24,27,0.7);
+      box-shadow: 0 20px 40px -20px rgba(59,130,246,0.3);
+    }
+    .card-hov:hover::before {
+      background: linear-gradient(90deg, transparent, rgba(59,130,246,0.6), transparent);
+    }
+
+    /* === MARQUEE === */
+    .marquee { overflow:hidden; mask-image:linear-gradient(90deg,transparent 0%,black 8%,black 92%,transparent 100%); -webkit-mask-image:linear-gradient(90deg,transparent 0%,black 8%,black 92%,transparent 100%); }
+    .marquee-track { display:flex; gap:14px; width:max-content; animation: marquee 35s linear infinite; }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    @keyframes marquee { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
+    .stack-chip {
+      flex-shrink:0; padding:11px 22px; border-radius:999px;
+      border:1px solid rgba(59,130,246,0.15); background:rgba(24,24,27,0.6);
+      font-size:14px; color:#d4d4d8; font-weight:500; transition:all 0.2s ease;
+    }
+    .stack-chip:hover { border-color:rgba(59,130,246,0.5); color:#7da9d3; }
+
+    /* === NAV === */
+    .nav-link { position: relative; transition: color 0.15s ease; }
+    .nav-link::after { content:''; position:absolute; bottom:-6px; left:0; width:0; height:2px; background:linear-gradient(90deg,#5b8dbe,#7da9d3); transition:width 0.25s ease; }
+    .nav-link:hover { color:#7da9d3; }
+    .nav-link:hover::after { width:100%; }
+
+    /* === HORIZONTE LINE === */
+    .horizon-line { background: linear-gradient(90deg, transparent 0%, rgba(59,130,246,0.5) 50%, transparent 100%); height:1px; }
+
+    /* === SERVICES TABS (terceira dobra) === */
+    .service-tab {
+      cursor: pointer; position: relative;
+    }
+    .service-tab.active {
+      border-color: rgba(59,130,246,0.4) !important;
+      background: rgba(24,24,27,0.7) !important;
+      box-shadow: 0 8px 24px -12px rgba(59,130,246,0.4);
+    }
+    .service-tab.active span:not(.font-mono) { color: #fafafa !important; }
+    .service-tab.active .service-arrow path { stroke: #5b8dbe !important; }
+    .service-tab.active span.font-mono { color: #5b8dbe !important; }
+    .service-progress { display: none; }
+    .service-tab.active .service-progress { display: block; }
+
+    /* Stack: todos os slides ocupam a mesma célula do grid; container ajusta à altura do MAIOR */
+    .services-stack {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+    }
+    .services-stack > .service-slide {
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+    }
+    .service-slide {
+      opacity: 0; pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    }
+    .service-slide.active {
+      opacity: 1; pointer-events: auto; transform: translateY(0);
+    }
+
+    /* === COMO FUNCIONA — 3 ETAPAS === */
+    .step-num {
+      width: 56px; height: 56px; border-radius: 12px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700; flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+    .step-num.filled {
+      background: linear-gradient(135deg, #5b8dbe 0%, #7da9d3 100%);
+      color: #0a0a0a;
+      box-shadow: 0 10px 30px -10px rgba(59,130,246,0.55);
+    }
+    .step-num.outline {
+      background: rgba(24,24,27,0.6);
+      border: 2px solid rgba(59,130,246,0.45);
+      color: #7da9d3;
+    }
+    .step-line {
+      flex-grow: 1; height: 2px; margin: 0 14px;
+      background-image: linear-gradient(90deg, rgba(59,130,246,0.5) 50%, transparent 0);
+      background-size: 12px 2px;
+      background-repeat: repeat-x;
+      opacity: 0.7;
+    }
+    .step-card { transition: all 0.3s ease; }
+    .step-card:hover .step-num.filled { transform: scale(1.05); box-shadow: 0 14px 36px -10px rgba(59,130,246,0.7); }
+    .step-card:hover .step-num.outline { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.7); }
+
+    /* === SEÇÃO A EMPRESA — ÍCONES ORBITAIS === */
+    .empresa-card {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, rgba(24,24,27,0.6) 0%, rgba(10,10,10,0.4) 100%);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 32px;
+      padding: 48px 40px;
+    }
+    .empresa-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 999px;
+      background: rgba(59,130,246,0.1); color: #7da9d3;
+      border: 1px solid rgba(59,130,246,0.3);
+      font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 24px;
+    }
+    .empresa-check {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; flex-shrink: 0;
+      border-radius: 50%; background: rgba(59,130,246,0.15);
+      border: 1px solid rgba(59,130,246,0.4);
+      color: #5b8dbe; margin-right: 12px; margin-top: 2px;
+    }
+    .icons-stage {
+      position: relative; width: 100%; height: 100%; min-height: 440px;
+    }
+    .floating-icon {
+      position: absolute; display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; box-shadow: 0 12px 32px -10px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease;
+      animation: float-bob var(--bob-dur, 5s) ease-in-out infinite;
+      animation-delay: var(--bob-delay, 0s);
+    }
+    .floating-icon:hover { transform: scale(1.1); z-index: 10; }
+    .floating-icon.fi-light {
+      background: #ffffff;
+    }
+    .floating-icon.fi-dark {
+      background: linear-gradient(135deg, #18181b 0%, #0a0a0a 100%);
+      border: 1px solid rgba(59,130,246,0.3);
+    }
+    .floating-icon.fi-amber {
+      background: linear-gradient(135deg, #5b8dbe 0%, #7da9d3 100%);
+    }
+    .floating-icon.fi-cycle {
+      animation: float-bob var(--bob-dur, 5s) ease-in-out infinite, fade-cycle var(--cycle-dur, 12s) ease-in-out infinite;
+      animation-delay: var(--bob-delay, 0s), var(--cycle-delay, 0s);
+    }
+    @keyframes float-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    @keyframes fade-cycle {
+      0%, 40% { opacity: 1; }
+      50%, 90% { opacity: 0.15; }
+      100% { opacity: 1; }
+    }
+    .icons-glow {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 380px; height: 380px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(91,141,190,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .icons-orbit-ring {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 320px; height: 320px; border-radius: 50%;
+      border: 1px dashed rgba(59,130,246,0.15);
+      animation: rotate-slow 60s linear infinite;
+    }
+    .icons-orbit-ring.outer {
+      width: 460px; height: 460px;
+      border: 1px dashed rgba(59,130,246,0.08);
+      animation: rotate-slow 90s linear infinite reverse;
+    }
+    @keyframes rotate-slow {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* === VÍDEO COMPACTO DOS SERVIÇOS === */
+    .service-video {
+      position: relative; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden;
+      border: 1px solid rgba(59,130,246,0.25);
+      background: linear-gradient(135deg,#1c1917 0%,#0a0a0a 60%);
+      box-shadow: 0 14px 36px -14px rgba(59,130,246,0.25);
+      margin: 18px 0 22px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .service-video:hover { transform: scale(1.005); }
+    .service-video::before {
+      content:''; position:absolute; inset:0;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(91,141,190,0.18) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 3px);
+    }
+    .service-video-play {
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:62px; height:62px; border-radius:50%;
+      background: linear-gradient(135deg,#5b8dbe 0%,#7da9d3 100%);
+      display:flex; align-items:center; justify-content:center; cursor:pointer;
+      animation: pulse-ring 2.4s infinite; transition: all 0.25s ease;
+    }
+    .service-video-play:hover { transform: translate(-50%,-50%) scale(1.1); }
+    .service-video-meta {
+      position:absolute; bottom:12px; left:12px; right:12px;
+      display:flex; justify-content:space-between; align-items:center;
+      font-family: ui-monospace, monospace; font-size: 10px; color: #d4d4d8;
+    }
+    .service-video-tag {
+      padding: 4px 9px; border-radius: 5px; background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1);
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- ========== NAV ========== -->
+  <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-zinc-950/70 border-b border-zinc-800/60">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 h-32 flex items-center justify-between">
+      <a href="#" class="flex items-center text-zinc-100">
+        <img src="/lp2/assets/logo-azul.png" alt="Horizon" style="height: 110px; width: auto; transform: scale(1.5); transform-origin: left center;" />
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm text-zinc-400 font-medium">
+        <a href="#servicos" class="nav-link">Serviços</a>
+        <a href="#como-funciona" class="nav-link">Como funciona</a>
+        <a href="#empresa" class="nav-link">A empresa</a>
+        <a href="#contato" class="btn-grad !py-2 !px-5 !text-sm">Agendar chamada →</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== HERO COM VSL ========== -->
+  <section class="relative pt-48 pb-16 overflow-hidden">
+    <div class="aurora"></div>
+    <div class="grid-bg"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+        <!-- Coluna esquerda -->
+        <div>
+          <!-- EYEBROW (era a antiga H1) -->
+          <p class="reveal in text-base md:text-lg font-bold text-zinc-100 leading-snug mb-5 max-w-xl">
+            Aumente em até 40% o faturamento da sua empresa em até 90 dias com inteligência artificial aplicada a vendas e atendimento.<sup class="text-zinc-500 font-normal">*</sup>
+          </p>
+
+          <!-- H1 PERGUNTA (estilo Genesis) -->
+          <h1 class="reveal in text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05] mb-6">
+            <span class="grad-text">Eliminamos trabalho manual com IA</span>
+          </h1>
+
+          <!-- DESCRIÇÃO -->
+          <p class="reveal reveal-d1 text-base md:text-lg text-zinc-400 leading-relaxed mb-7 max-w-xl">
+            A Horizon é uma empresa de software especializada em <span class="grad-text-warm font-semibold">aumento de faturamento</span> e <span class="grad-text-warm font-semibold">redução de custos</span> em diferentes mercados. Com uma equipe composta de engenheiros com <span class="grad-text-warm font-semibold">décadas de experiência</span> no mercado real, entregamos soluções de extrema qualidade <span class="text-zinc-100 font-semibold">sem promessas ilusórias</span>.
+          </p>
+
+          <!-- BADGE OFERTA -->
+          <div class="reveal reveal-d1 mb-7">
+            <span class="badge-offer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+              Demonstração gratuita · Sem compromisso
+            </span>
+          </div>
+
+          <!-- DOIS CTAs -->
+          <div class="reveal reveal-d2 flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-10">
+            <a href="#contato" class="btn-grad">
+              Agende uma chamada conosco
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a href="#contato" class="btn-outline">
+              Falar com especialista
+            </a>
+          </div>
+
+          <!-- STATS -->
+          <div class="reveal reveal-d3 grid grid-cols-3 gap-8 pt-8 border-t border-zinc-800/80">
+            <div>
+              <div class="stat-num" data-target="40" data-suffix="%" data-prefix="+">+0%</div>
+              <div class="stat-label">Aumento de faturamento*</div>
+            </div>
+            <div>
+              <div class="stat-num">24/7</div>
+              <div class="stat-label">Atendimento automático</div>
+            </div>
+            <div>
+              <div class="stat-num" data-target="90" data-suffix=" dias">0 dias</div>
+              <div class="stat-label">Para ver resultados</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna direita: VSL -->
+        <div id="vsl" class="reveal reveal-d2">
+          <div class="vsl-frame">
+            <div class="vsl-play" onclick="playVSL()">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="#0a0a0a"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="vsl-controls">
+              <div class="vsl-volume">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#7da9d3"><path d="M3 9v6h4l5 5V4L7 9H3zM16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                <div class="vsl-bar"><div class="vsl-bar-fill"></div></div>
+              </div>
+              <div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="absolute bottom-0 left-0 right-0 horizon-line"></div>
+  </section>
+
+  <!-- ========== SEGUNDA DOBRA: WHATSAPP 24H ========== -->
+  <section id="whatsapp-24h" class="py-24 border-b border-zinc-900 relative overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+
+      <!-- Frase de impacto centralizada -->
+      <div class="reveal text-center max-w-4xl mx-auto mb-20">
+        <h2 class="text-2xl md:text-4xl font-bold tracking-tight leading-snug text-zinc-100">
+          IA que atende seus clientes pelo <span class="grad-text">WhatsApp 24h</span>, sem pedir hora extra!
+        </h2>
+      </div>
+
+      <!-- Split: vídeo à esquerda, copy à direita -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+        <!-- Vídeo demo à esquerda -->
+        <div class="reveal">
+          <div class="vsl-frame">
+            <div class="vsl-play" onclick="playWhatsAppDemo()">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="#0a0a0a"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="vsl-controls">
+              <div class="vsl-volume">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#7da9d3"><path d="M3 9v6h4l5 5V4L7 9H3zM16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                <div class="vsl-bar"><div class="vsl-bar-fill"></div></div>
+              </div>
+              <div class="vsl-volume" style="font-size: 11px; color: #d4d4d8; font-weight: 500;">
+                Demo · WhatsApp Agentic
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Copy à direita -->
+        <div class="reveal reveal-d1">
+          <h3 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight text-zinc-50 mb-6">
+            Não perca clientes por <span class="grad-text">falta de resposta</span>.
+          </h3>
+
+          <p class="text-base md:text-lg text-zinc-400 leading-relaxed mb-5">
+            Quantos futuros clientes você já perdeu porque não havia ninguém disponível para atender no WhatsApp fora do horário comercial? Essa é uma realidade que afeta a maioria das empresas.
+          </p>
+
+          <p class="text-base md:text-lg text-zinc-400 leading-relaxed mb-8">
+            Segundo pesquisas, <span class="grad-text-warm font-bold">78% dos leads fecham com quem responde primeiro</span>. Quando um interessado busca atendimento e não recebe, ele simplesmente procura o seu <span class="text-zinc-100 font-semibold">concorrente</span>.
+          </p>
+
+          <!-- Callout da pergunta final -->
+          <div class="border-l-2 border-blue-500 bg-blue-500/5 pl-5 py-4 pr-4 rounded-r-lg">
+            <p class="text-lg md:text-xl font-bold text-zinc-50 leading-snug">
+              Mas como resolver isso sem manter uma equipe disponível 24 horas por dia?
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TERCEIRA DOBRA: SERVIÇOS COM ROTAÇÃO ========== -->
+  <section id="servicos" class="py-24 border-b border-zinc-900 relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="reveal max-w-3xl mb-16 text-center mx-auto">
+        <p class="text-sm font-bold tracking-wider uppercase text-blue-400 mb-5">O que fazemos</p>
+        <h2 class="text-3xl md:text-5xl font-bold tracking-tight leading-tight">
+          Cinco frentes para a sua empresa <span class="grad-text">crescer no seu tempo</span>.
+        </h2>
+        <p class="text-lg text-zinc-400 mt-5">Implemente cada produto no seu tempo.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+
+        <!-- COLUNA ESQUERDA: 4 cards clicáveis -->
+        <div class="lg:col-span-2 space-y-3" id="services-tabs">
+          <button class="service-tab active w-full text-left p-5 rounded-2xl border border-blue-500/40 bg-zinc-900/60 transition-all" data-slide="0">
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-blue-400 font-mono">01</span>
+                <span class="font-bold text-zinc-100">Organize seus processos</span>
+              </div>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5b8dbe" stroke-width="2" class="service-arrow"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+            <div class="service-progress mt-3 h-0.5 bg-zinc-800 rounded-full overflow-hidden">
+              <div class="service-progress-fill h-full bg-gradient-to-r from-blue-400 to-sky-400" style="width: 0%;"></div>
+            </div>
+          </button>
+
+          <button class="service-tab w-full text-left p-5 rounded-2xl border border-zinc-800 bg-zinc-900/30 transition-all hover:border-zinc-700" data-slide="1">
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-zinc-500 font-mono">02</span>
+                <span class="font-bold text-zinc-300">Cobrança automatizada</span>
+              </div>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2" class="service-arrow"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="service-tab w-full text-left p-5 rounded-2xl border border-zinc-800 bg-zinc-900/30 transition-all hover:border-zinc-700" data-slide="2">
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-zinc-500 font-mono">03</span>
+                <span class="font-bold text-zinc-300">SDR que reativa leads</span>
+              </div>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2" class="service-arrow"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="service-tab w-full text-left p-5 rounded-2xl border border-zinc-800 bg-zinc-900/30 transition-all hover:border-zinc-700" data-slide="3">
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-zinc-500 font-mono">04</span>
+                <span class="font-bold text-zinc-300">Relatórios inteligentes</span>
+              </div>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2" class="service-arrow"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+
+          <button class="service-tab w-full text-left p-5 rounded-2xl border border-zinc-800 bg-zinc-900/30 transition-all hover:border-zinc-700" data-slide="4">
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-zinc-500 font-mono">05</span>
+                <span class="font-bold text-zinc-300">Squad temporária</span>
+              </div>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2" class="service-arrow"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </div>
+          </button>
+        </div>
+
+        <!-- COLUNA DIREITA: card destaque com fade -->
+        <div class="lg:col-span-3">
+          <div class="relative border border-blue-500/30 bg-gradient-to-br from-zinc-900/80 to-zinc-950 rounded-3xl p-8 md:p-10 overflow-hidden">
+            <div class="absolute top-0 right-0 w-72 h-72 bg-blue-500/8 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="services-stack relative">
+
+            <!-- Slide 1: Organize seus processos / CRM personalizado -->
+            <div class="service-slide active relative" data-slide="0">
+              <div class="flex items-center gap-3 mb-5">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-sky-500/10 border border-blue-500/30 flex items-center justify-center">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5b8dbe" stroke-width="1.75"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                </div>
+                <span class="text-xs font-bold text-blue-400 tracking-wider uppercase">Serviço 01 · CRM personalizado</span>
+              </div>
+              <h3 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-2">
+                <span class="grad-text">Controle o seu atendimento com um CRM personalizado.</span>
+              </h3>
+              <div class="service-video">
+                <div class="service-video-play" onclick="playServiceVideo('crm')">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#0a0a0a"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div class="service-video-meta">
+                  <span class="service-video-tag"><span style="color:#5b8dbe">●</span> DEMO · 1:54</span>
+                  <span class="service-video-tag">CRM em ação</span>
+                </div>
+              </div>
+              <p class="text-zinc-300 leading-relaxed mb-6">
+                Pare de perder tempo com planilhas e ferramentas genéricas. Construímos um CRM <span class="grad-text-warm font-semibold">sob medida</span> para o seu negócio: integrado aos seus canais de atendimento (WhatsApp, e-mail, telefone), com pipeline visual do funil real, automações de follow-up e relatórios contextualizados.
+              </p>
+              <p class="text-zinc-400 leading-relaxed text-sm mb-8">
+                Sem funcionalidades que você nunca vai usar, sem custo por usuário, sem plataformas infladas e genéricas. Nasce alinhado ao seu fluxo, evolui no seu ritmo.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">CRM sob medida</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Multi-canal</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Sem custo por usuário</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Sem lock-in</span>
+              </div>
+            </div>
+
+            <!-- Slide 2: Cobrança -->
+            <div class="service-slide relative" data-slide="1">
+              <div class="flex items-center gap-3 mb-5">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-sky-500/10 border border-blue-500/30 flex items-center justify-center">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5b8dbe" stroke-width="1.75"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                </div>
+                <span class="text-xs font-bold text-blue-400 tracking-wider uppercase">Serviço 02 · Cobrança</span>
+              </div>
+              <h3 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-2">
+                <span class="grad-text">Cobre seus clientes de forma automatizada</span>
+              </h3>
+              <div class="service-video">
+                <div class="service-video-play" onclick="playServiceVideo('cobranca')">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#0a0a0a"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div class="service-video-meta">
+                  <span class="service-video-tag"><span style="color:#5b8dbe">●</span> DEMO · 1:48</span>
+                  <span class="service-video-tag">Cobrança em ação</span>
+                </div>
+              </div>
+              <p class="text-zinc-300 leading-relaxed mb-6">
+                Recupere a inadimplência <span class="grad-text-warm font-semibold">sem custo fixo</span>. Nosso agente executa todo o ciclo de cobrança: localiza o devedor, negocia em multi-canais (WhatsApp, e-mail, voz), gera acordo eletrônico assinado e acompanha o pagamento. Você só paga quando recuperamos.
+              </p>
+              <p class="text-zinc-400 leading-relaxed text-sm mb-8">
+                Compliance Lei 14.181 (superendividamento) e LGPD por desenho. Tom respeitoso, opt-out fácil, audit log imutável. Para escritórios jurídicos, clínicas, escolas e SaaS de assinatura.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">% do recuperado</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Multi-canal</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Lei 14.181</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">LGPD nativo</span>
+              </div>
+            </div>
+
+            <!-- Slide 2: SDR -->
+            <div class="service-slide relative" data-slide="2">
+              <div class="flex items-center gap-3 mb-5">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-sky-500/10 border border-blue-500/30 flex items-center justify-center">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5b8dbe" stroke-width="1.75"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                </div>
+                <span class="text-xs font-bold text-blue-400 tracking-wider uppercase">Serviço 03 · SDR</span>
+              </div>
+              <h3 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-2">
+                <span class="grad-text">Não deixe a conversa esfriar e recupere aquele cliente!</span>
+              </h3>
+              <div class="service-video">
+                <div class="service-video-play" onclick="playServiceVideo('sdr')">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#0a0a0a"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div class="service-video-meta">
+                  <span class="service-video-tag"><span style="color:#5b8dbe">●</span> DEMO · 2:12</span>
+                  <span class="service-video-tag">SDR reativando lead</span>
+                </div>
+              </div>
+              <p class="text-zinc-300 leading-relaxed mb-6">
+                Lead que demorou para responder, parou de responder ou virou um <span class="text-zinc-100 font-semibold">"depois eu vejo"</span> não precisa morrer. Nosso SDR Agentic identifica o resfriamento, reativa com mensagem contextual no canal certo, qualifica BANT e devolve a reunião agendada na agenda do profissional.
+              </p>
+              <p class="text-zinc-400 leading-relaxed text-sm mb-8">
+                Plug-in para qualquer CRM (RD, Pipedrive, HubSpot, Ploomes). Verticalizado para advocacia, clínicas e escritórios de contabilidade — scripts e cadência calibrados por nicho, com compliance setorial respeitado (OAB, CFM, CFC).
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Multi-CRM</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Reativação automática</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Agenda direta</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Verticalizado</span>
+              </div>
+            </div>
+
+            <!-- Slide 3: Relatórios -->
+            <div class="service-slide relative" data-slide="3">
+              <div class="flex items-center gap-3 mb-5">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-sky-500/10 border border-blue-500/30 flex items-center justify-center">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5b8dbe" stroke-width="1.75"><path d="M3 3v18h18M7 14l4-4 4 4 6-6"/></svg>
+                </div>
+                <span class="text-xs font-bold text-blue-400 tracking-wider uppercase">Serviço 04 · Relatórios</span>
+              </div>
+              <h3 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-2">
+                <span class="grad-text">Cansado de relatórios genéricos?</span>
+              </h3>
+              <div class="service-video">
+                <div class="service-video-play" onclick="playServiceVideo('relatorios')">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#0a0a0a"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div class="service-video-meta">
+                  <span class="service-video-tag"><span style="color:#5b8dbe">●</span> DEMO · 1:36</span>
+                  <span class="service-video-tag">Relatório semanal gerado</span>
+                </div>
+              </div>
+              <p class="text-zinc-300 leading-relaxed mb-6">
+                Relatórios padrão de SaaS contam <span class="text-zinc-100 font-semibold">o que aconteceu</span>. Os nossos contam <span class="grad-text-warm font-semibold">por que aconteceu</span> e <span class="grad-text-warm font-semibold">o que fazer</span>. Geração automática semanal e mensal por área, com narrativa em português, gráficos contextualizados e recomendação acionável.
+              </p>
+              <p class="text-zinc-400 leading-relaxed text-sm mb-8">
+                Construídos pela mesma IA que opera o seu negócio — então o relatório enxerga padrões que dashboards genéricos nunca pegam. Cadência, foco e profundidade configuráveis por diretoria.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Narrativa em PT-BR</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Recomendação acionável</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Multi-área</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Cadência configurável</span>
+              </div>
+            </div>
+
+            <!-- Slide 4: Squad -->
+            <div class="service-slide relative" data-slide="4">
+              <div class="flex items-center gap-3 mb-5">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-sky-500/10 border border-blue-500/30 flex items-center justify-center">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5b8dbe" stroke-width="1.75"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                </div>
+                <span class="text-xs font-bold text-blue-400 tracking-wider uppercase">Serviço 05 · Squad on-demand</span>
+              </div>
+              <h3 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-2">
+                <span class="grad-text">Alugue uma equipe temporária!</span>
+              </h3>
+              <div class="service-video">
+                <div class="service-video-play" onclick="playServiceVideo('squad')">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#0a0a0a"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div class="service-video-meta">
+                  <span class="service-video-tag"><span style="color:#5b8dbe">●</span> CASE · 2:48</span>
+                  <span class="service-video-tag">Squad em ação · 90 dias</span>
+                </div>
+              </div>
+              <p class="text-zinc-300 leading-relaxed mb-6">
+                Para projetos pontuais, MVPs ou picos de operação: alugue por <span class="grad-text-warm font-semibold">1 a 6 meses</span> uma squad enxuta da Horizon — engenheiro full-stack, especialista em IA agentic e designer de produto, já calibrados para entregar juntos.
+              </p>
+              <p class="text-zinc-400 leading-relaxed text-sm mb-8">
+                Você recebe uma squad, não freelancers soltos. Sem CLT, sem onboarding longo, sem contrato anual. Com a mesma engenharia que sustenta os outros produtos da Horizon — então o que sai daqui já nasce com qualidade de produto.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">1 a 6 meses</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Squad calibrada</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Sem CLT</span>
+                <span class="px-3 py-1.5 rounded-full bg-zinc-800/60 border border-zinc-800 text-xs font-semibold text-zinc-300">Entrega de produto</span>
+              </div>
+            </div>
+
+            </div><!-- /services-stack -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== A EMPRESA (estilo Maven, ícones flutuantes) ========== -->
+  <section id="empresa" class="py-24 border-b border-zinc-900 relative overflow-hidden">
+    <div class="absolute top-1/2 right-0 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="empresa-card">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+          <!-- Coluna esquerda: copy -->
+          <div class="reveal">
+            <div class="empresa-pill">A empresa</div>
+
+            <h2 class="text-3xl md:text-5xl font-bold tracking-tight leading-[1.1] mb-8">
+              Construindo soluções que <span class="grad-text">escalam negócios brasileiros</span>
+            </h2>
+
+            <ul class="space-y-4 mb-8">
+              <li class="flex items-start text-base md:text-lg text-zinc-300">
+                <span class="empresa-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+                <span>Agentes de IA personalizados para <span class="grad-text-warm font-bold">Automatizar Vendas</span></span>
+              </li>
+              <li class="flex items-start text-base md:text-lg text-zinc-300">
+                <span class="empresa-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+                <span>Sistemas inteligentes para <span class="grad-text-warm font-bold">Eliminar Processos Manuais</span></span>
+              </li>
+              <li class="flex items-start text-base md:text-lg text-zinc-300">
+                <span class="empresa-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+                <span>Integração completa para <span class="grad-text-warm font-bold">Unificar Operações</span></span>
+              </li>
+            </ul>
+
+            <p class="text-base md:text-lg text-zinc-400 leading-relaxed italic">
+              A Horizon é uma empresa especializada em desenvolvimento de software utilizando inteligência artificial empresarial. Desenvolvemos agentes inteligentes, automações personalizadas e integrações estratégicas que eliminam processos manuais e escalam operações. Nosso foco é criar soluções sob medida que reduzem custos operacionais, aumentam conversões e permitem crescimento acelerado de empresas brasileiras sem expandir equipes.
+            </p>
+          </div>
+
+          <!-- Coluna direita: ícones flutuantes -->
+          <div class="reveal reveal-d2">
+            <div class="icons-stage">
+              <div class="icons-glow"></div>
+              <div class="icons-orbit-ring outer"></div>
+              <div class="icons-orbit-ring"></div>
+
+              <!-- WhatsApp (verde) -->
+              <div class="floating-icon fi-light" style="top: 6%; left: 22%; width: 64px; height: 64px; --bob-dur: 5s; --bob-delay: 0s;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#25D366"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448L.057 24zM6.597 20.13c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.371-.025-.52-.075-.149-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+              </div>
+
+              <!-- Claude (Anthropic) -->
+              <div class="floating-icon fi-amber" style="top: 18%; right: 8%; width: 72px; height: 72px; --bob-dur: 6s; --bob-delay: 1.2s;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="#0a0a0a"><path d="M4.7 17.4l4.3-9.4 4.3 9.4h-1.8l-1-2.3H7.5l-1 2.3H4.7zm5.5-3.7l-1.2-2.7-1.2 2.7h2.4zm5.4 3.7v-9.4h1.7v9.4h-1.7z"/></svg>
+              </div>
+
+              <!-- Postgres -->
+              <div class="floating-icon fi-light" style="top: 38%; left: 6%; width: 56px; height: 56px; --bob-dur: 4.5s; --bob-delay: 0.8s;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="#336791"><path d="M17.128 0a8.617 8.617 0 0 0-2.276.32l-.043.013A8.473 8.473 0 0 0 13.473.024C12.404.012 11.486.282 10.78.756c-.7-.235-2.121-.654-3.617-.6-.913.029-1.91.222-2.836.792-.926.572-1.77 1.527-2.378 2.96-1.395 3.29-.482 8.733.385 11.348.434 1.308.953 2.044 1.51 2.51.28.232.567.408.876.508.31.103.65.137 1.03.06.541-.114.946-.474 1.282-.92.107.123.218.222.329.299.295.211.625.305.94.328.314.022.61-.025.872-.103.077-.022.179-.058.282-.103-.013.412-.005.834.027 1.26.046.6.13 1.227.378 1.798.248.572.682 1.106 1.396 1.397.708.288 1.66.348 2.97.012l.005-.001.018-.005a5.06 5.06 0 0 0 1.64-.762 5.92 5.92 0 0 0 1.165-1.085c.673-.81 1.156-1.752 1.397-2.34.124-.302.205-.553.244-.74.02-.094.029-.171.026-.232a.297.297 0 0 0-.024-.11.16.16 0 0 0-.064-.077c-.063-.038-.144-.046-.236-.04-.092.005-.198.027-.32.054l-.011.002c-.197.044-.428.094-.66.082a.587.587 0 0 1-.252-.075.486.486 0 0 1-.16-.142c-.134-.193-.187-.55-.135-.937.05-.385.184-.777.323-1.149l.05-.137c.12-.328.262-.71.312-1.077.05-.367.014-.734-.182-1.025a.974.974 0 0 0-.402-.345 1.488 1.488 0 0 0-.516-.139c-.5-.046-.876.011-1.158.121V8.628c0-.6.07-2.198 1.42-2.96.456-.258 1.025-.39 1.66-.39.564 0 1.143.103 1.658.298.515.196.964.486 1.245.83.281.345.388.749.272 1.16-.139.495-.519 1.044-1.072 1.523-.554.48-1.276.892-2.06 1.073l.01.027c.267.668.587 1.345.864 2.039.277.694.51 1.405.61 2.137.052.366.038.741-.03 1.108a3.075 3.075 0 0 1-.272.83c-.146.296-.327.557-.55.778-.222.222-.486.404-.79.532-.305.128-.65.198-1.034.183-.385-.014-.81-.115-1.272-.323-.926-.42-1.776-1.235-2.392-2.193-.616-.957-1.005-2.057-1.067-2.984-.06-.927.176-1.687.71-2.05.535-.364 1.376-.32 2.503.282l.024.013c.052.027.103.054.155.078z"/></svg>
+              </div>
+
+              <!-- .NET -->
+              <div class="floating-icon fi-dark fi-cycle" style="top: 52%; right: 14%; width: 60px; height: 60px; --bob-dur: 5.5s; --bob-delay: 2s; --cycle-dur: 14s; --cycle-delay: 3s;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#7da9d3"><path d="M24 8.77h-2.468v7.565h-1.425V8.77h-2.462V7.53H24zm-6.852 7.565h-4.821V7.53h4.63v1.24h-3.205v2.494h2.953v1.234h-2.953v2.604h3.396zm-6.708 0h-1.74l-4.583-7.155a3.057 3.057 0 0 1-.286-.541h-.058c.034.137.06.331.06.776v6.92H2.467V7.53h1.85l4.43 6.99c.16.247.226.398.286.541h.038c-.072-.215-.1-.412-.1-.747V7.53h1.428zm-9.99-.967a.99.99 0 0 1-.703-.27.901.901 0 0 1-.288-.685.91.91 0 0 1 .288-.687.992.992 0 0 1 .703-.273c.279 0 .517.092.717.273a.93.93 0 0 1 .087 1.318l-.087.094a1.01 1.01 0 0 1-.717.273z"/></svg>
+              </div>
+
+              <!-- Conta Azul -->
+              <div class="floating-icon fi-light" style="bottom: 24%; left: 18%; width: 60px; height: 60px; --bob-dur: 4.8s; --bob-delay: 1.5s;">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="#0099FF"><path d="M12 2L2 7l10 5 10-5-10-5zm0 13l-10-5v7l10 5 10-5v-7l-10 5z"/></svg>
+              </div>
+
+              <!-- HubSpot -->
+              <div class="floating-icon fi-dark fi-cycle" style="bottom: 8%; right: 20%; width: 56px; height: 56px; --bob-dur: 6s; --bob-delay: 0.5s; --cycle-dur: 16s; --cycle-delay: 7s;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="#FF7A59"><path d="M18.164 7.93V5.084a2.198 2.198 0 0 0 1.267-1.978v-.067A2.2 2.2 0 0 0 17.238.846h-.067a2.2 2.2 0 0 0-2.193 2.193v.067a2.196 2.196 0 0 0 1.252 1.973l.013.005V7.93a6.219 6.219 0 0 0-2.954 1.3L5.43 3.108a2.473 2.473 0 1 0-1.158 1.547l-.013-.008 7.756 6.04a6.234 6.234 0 0 0 .093 7.026l-2.36 2.36a2.04 2.04 0 0 0-.567-.083h-.005a2.043 2.043 0 1 0 1.435 3.486l-.001.001 2.339-2.341a6.255 6.255 0 1 0 5.215-11.205z"/></svg>
+              </div>
+
+              <!-- React -->
+              <div class="floating-icon fi-dark" style="top: 28%; left: 38%; width: 50px; height: 50px; --bob-dur: 5.2s; --bob-delay: 2.5s;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="#61DAFB"><circle cx="12" cy="12" r="2"/><path d="M12 21.6c-.6 0-2.4-.7-4.5-3.6-1.4-2-2.7-4.5-3.7-7.1.5-1.7 1.7-4.4 3.7-7C9.6 1.1 11.4.4 12 .4c.6 0 2.4.7 4.5 3.6 1.4 2 2.7 4.5 3.7 7.1-.5 1.7-1.7 4.4-3.7 7-2.1 2.8-3.9 3.5-4.5 3.5zm0-1c.5 0 5.4-2.7 7.4-9.6-2-6.9-6.9-9.6-7.4-9.6-.5 0-5.4 2.7-7.4 9.6 2 6.9 6.9 9.6 7.4 9.6z" stroke="#61DAFB" stroke-width="0.5"/></svg>
+              </div>
+
+              <!-- iClinic -->
+              <div class="floating-icon fi-light fi-cycle" style="top: 62%; left: 32%; width: 56px; height: 56px; --bob-dur: 5s; --bob-delay: 3s; --cycle-dur: 13s; --cycle-delay: 5s;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="#00B5C2"><path d="M19 8h-2V6c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H5c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2zM9 6h6v2H9V6zm6 9h-2v2h-2v-2H9v-2h2v-2h2v2h2v2z"/></svg>
+              </div>
+
+              <!-- Pipedrive -->
+              <div class="floating-icon fi-light" style="top: 5%; right: 28%; width: 52px; height: 52px; --bob-dur: 4.6s; --bob-delay: 0.3s;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="#017737"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm0 18c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6z"/></svg>
+              </div>
+
+              <!-- Docker -->
+              <div class="floating-icon fi-dark" style="bottom: 28%; right: 4%; width: 54px; height: 54px; --bob-dur: 5.8s; --bob-delay: 2.2s;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="#2496ED"><path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.186m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.888c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.184-.186h-2.12a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.185-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 00-.75.748 11.376 11.376 0 00.692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 003.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288z"/></svg>
+              </div>
+
+              <!-- Asaas -->
+              <div class="floating-icon fi-light fi-cycle" style="bottom: 12%; left: 8%; width: 50px; height: 50px; --bob-dur: 4.7s; --bob-delay: 1.8s; --cycle-dur: 15s; --cycle-delay: 4s;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="#1976d2"><path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z"/></svg>
+              </div>
+
+              <!-- TOTVS -->
+              <div class="floating-icon fi-amber" style="top: 70%; right: 32%; width: 48px; height: 48px; --bob-dur: 5.3s; --bob-delay: 0.9s;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#0a0a0a"><path d="M3 5h18v2H13v12h-2V7H3z"/></svg>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== COMO FUNCIONA — 3 ETAPAS ========== -->
+  <section id="como-funciona" class="py-24 border-b border-zinc-900 relative overflow-hidden">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-blue-500/5 rounded-full blur-3xl"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="reveal max-w-3xl mb-16">
+        <p class="text-sm font-bold tracking-wider uppercase text-blue-400 mb-5">Etapas</p>
+        <h2 class="text-4xl md:text-6xl font-bold tracking-tight leading-[1.05] mb-6">
+          <span class="grad-text">Como funciona</span>
+        </h2>
+        <p class="text-lg md:text-xl text-zinc-400 leading-relaxed">
+          Não tenha medo de modernizar sua empresa com <span class="grad-text-warm font-semibold">Inteligência Artificial</span>. A automação é complicada, implementá-la não precisa ser. Simplificamos o processo para você em <span class="text-zinc-100 font-bold">três etapas</span>.
+        </p>
+      </div>
+
+      <!-- Linha de progresso com 3 etapas -->
+      <div class="reveal mb-10">
+        <div class="hidden md:flex items-center w-full">
+          <div class="step-num filled">1</div>
+          <div class="step-line"></div>
+          <div class="step-num filled">2</div>
+          <div class="step-line"></div>
+          <div class="step-num outline">3</div>
+        </div>
+        <!-- Mobile: stack vertical -->
+        <div class="md:hidden flex justify-center gap-3">
+          <div class="step-num filled">1</div>
+          <div class="step-num filled">2</div>
+          <div class="step-num outline">3</div>
+        </div>
+      </div>
+
+      <!-- 3 cards descritivos -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
+
+        <div class="reveal step-card">
+          <h3 class="text-xl md:text-2xl font-bold text-zinc-50 mb-3">Consultoria gratuita</h3>
+          <p class="text-zinc-400 leading-relaxed mb-5">
+            Fale com nossos especialistas com <span class="grad-text-warm font-semibold">experiência de mercado real</span>, em uma conversa de uma hora. Sem deck pronto, sem agenda comercial disfarçada. Mapeamos juntos qual frente faz sentido para o seu negócio agora: vendas, cobrança, SDR, relatórios ou combinação.
+          </p>
+          <a href="#contato" class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-bold transition-colors border-b border-blue-500/40 hover:border-blue-300 pb-1">
+            Entrar em contato
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+
+        <div class="reveal reveal-d1 step-card">
+          <h3 class="text-xl md:text-2xl font-bold text-zinc-50 mb-3">Escopo e diagnóstico</h3>
+          <p class="text-zinc-400 leading-relaxed mb-5">
+            Com base na conversa, entregamos diagnóstico técnico e proposta detalhada: o que vamos automatizar, integrações necessárias, cronograma realista, modelo de cobrança (<span class="grad-text-warm font-semibold">% do recuperado</span>, mensalidade ou projeto fechado) e estimativa honesta de retorno.
+          </p>
+          <a href="#contato" class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-bold transition-colors border-b border-blue-500/40 hover:border-blue-300 pb-1">
+            Entrar em contato
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+
+        <div class="reveal reveal-d2 step-card">
+          <h3 class="text-xl md:text-2xl font-bold text-zinc-50 mb-3">Implementação e go-live</h3>
+          <p class="text-zinc-400 leading-relaxed mb-5">
+            Aprovação fechada, squad calibrada entra em campo. Setup, integrações com seus sistemas, calibração do agente em ambiente real e go-live monitorado. Você acompanha por dashboard. Os primeiros resultados aparecem em até <span class="grad-text-warm font-semibold">90 dias</span>.<sup class="text-zinc-500">*</sup>
+          </p>
+          <a href="#contato" class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-bold transition-colors border-b border-blue-500/40 hover:border-blue-300 pb-1">
+            Entrar em contato
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MANIFESTO / SOBRE ========== -->
+  <section id="manifesto" class="py-24 border-b border-zinc-900 relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="reveal max-w-4xl mb-16 text-center mx-auto">
+        <p class="text-sm font-bold tracking-wider uppercase text-blue-400 mb-5">Quem somos</p>
+        <h2 class="text-3xl md:text-5xl font-bold tracking-tight leading-tight mb-6">
+          A Horizon é especializada em <span class="grad-text">aumento de faturamento</span> e <span class="grad-text">redução de custos</span> em diferentes mercados.
+        </h2>
+        <p class="text-lg md:text-xl text-zinc-400 leading-relaxed max-w-3xl mx-auto">
+          Equipe composta por engenheiros com <span class="grad-text-warm font-semibold">décadas de experiência</span> no mercado real. Entregamos soluções de extrema qualidade. <span class="text-zinc-200 font-semibold">Sem promessas ilusórias</span>.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="reveal card-hov">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-sky-500/10 border border-blue-500/30 flex items-center justify-center mb-5">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5b8dbe" stroke-width="1.75"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-zinc-100 mb-3">Mais faturamento</h3>
+          <p class="text-zinc-400 leading-relaxed text-sm">SDR Agentic prospecta, nutre e agenda direto na agenda do profissional. Mais reuniões qualificadas, sem ampliar time de vendas.</p>
+        </div>
+        <div class="reveal reveal-d1 card-hov">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-sky-500/10 border border-blue-500/30 flex items-center justify-center mb-5">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5b8dbe" stroke-width="1.75"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-zinc-100 mb-3">Menos custo operacional</h3>
+          <p class="text-zinc-400 leading-relaxed text-sm">Auxiliar contábil, cobrança e atendimento que executam tarefas 24/7. Time humano foca no que precisa de humano.</p>
+        </div>
+        <div class="reveal reveal-d2 card-hov">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-sky-500/10 border border-blue-500/30 flex items-center justify-center mb-5">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5b8dbe" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 014 10 15 15 0 01-4 10 15 15 0 01-4-10 15 15 0 014-10z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-zinc-100 mb-3">Foco brasileiro</h3>
+          <p class="text-zinc-400 leading-relaxed text-sm">Português nativo. Integração com PJe, eSocial, iClinic, Conta Azul, WhatsApp Business. Compliance LGPD, OAB, CFM, CFC.</p>
+        </div>
+        <div class="reveal reveal-d3 card-hov">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-sky-500/10 border border-blue-500/30 flex items-center justify-center mb-5">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5b8dbe" stroke-width="1.75"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold text-zinc-100 mb-3">Sem promessas ilusórias</h3>
+          <p class="text-zinc-400 leading-relaxed text-sm">Engenheiros com décadas no mercado real. Stack escolhida para durar. Cases reais antes de vender ar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FILOSOFIA TÉCNICA ========== -->
+  <section id="filosofia" class="py-24 border-b border-zinc-900 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="reveal max-w-3xl mb-16 text-center mx-auto">
+        <p class="text-sm font-bold tracking-wider uppercase text-blue-400 mb-5">Filosofia técnica</p>
+        <h2 class="text-3xl md:text-5xl font-bold tracking-tight leading-tight">
+          Ferramentas escolhidas para <span class="grad-text">durar décadas</span>.
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+        <div class="reveal card-hov">
+          <h3 class="text-xl font-bold text-zinc-100 mb-3">Longa duração</h3>
+          <p class="text-zinc-400 leading-relaxed">.NET 9 LTS, PostgreSQL 16, Kotlin 2, React Native, React + Vite. Tecnologias com ciclo de vida longo, sem hype cycle.</p>
+        </div>
+        <div class="reveal reveal-d1 card-hov">
+          <h3 class="text-xl font-bold text-zinc-100 mb-3">Open source first</h3>
+          <p class="text-zinc-400 leading-relaxed">OpenClaw, Postgres, Linux, Docker, Caddy. Sem lock-in de SaaS proprietário onde alternativa sólida existe.</p>
+        </div>
+        <div class="reveal reveal-d2 card-hov">
+          <h3 class="text-xl font-bold text-zinc-100 mb-3">Soberania de dados</h3>
+          <p class="text-zinc-400 leading-relaxed">VPS Brasil. Backups Backblaze. LGPD desde o primeiro dia. Sem dependência de cloud single-vendor.</p>
+        </div>
+      </div>
+
+      <div class="marquee py-4">
+        <div class="marquee-track">
+          <span class="stack-chip">.NET 9</span><span class="stack-chip">PostgreSQL 16</span><span class="stack-chip">pgvector</span><span class="stack-chip">Claude Sonnet</span><span class="stack-chip">OpenClaw</span><span class="stack-chip">Kotlin 2</span><span class="stack-chip">React Native</span><span class="stack-chip">React + Vite</span><span class="stack-chip">EMQX</span><span class="stack-chip">Docker + Caddy</span><span class="stack-chip">Hangfire</span><span class="stack-chip">MassTransit</span>
+          <span class="stack-chip">.NET 9</span><span class="stack-chip">PostgreSQL 16</span><span class="stack-chip">pgvector</span><span class="stack-chip">Claude Sonnet</span><span class="stack-chip">OpenClaw</span><span class="stack-chip">Kotlin 2</span><span class="stack-chip">React Native</span><span class="stack-chip">React + Vite</span><span class="stack-chip">EMQX</span><span class="stack-chip">Docker + Caddy</span><span class="stack-chip">Hangfire</span><span class="stack-chip">MassTransit</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA FINAL — AGENDE UMA CHAMADA ========== -->
+  <section id="contato" class="py-32 relative overflow-hidden">
+    <div class="aurora opacity-90"></div>
+    <div class="absolute inset-0 grid-bg opacity-60"></div>
+
+    <div class="relative max-w-5xl mx-auto px-6 lg:px-8">
+
+      <div class="relative border border-blue-500/40 bg-gradient-to-br from-zinc-900/80 via-zinc-950 to-zinc-950 rounded-[32px] p-10 md:p-16 overflow-hidden">
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-400/8 rounded-full blur-3xl"></div>
+
+        <div class="relative text-center">
+          <!-- Eyebrow -->
+          <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/5 text-xs font-bold text-blue-400 tracking-wider uppercase mb-8">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+            Próxima ação
+          </div>
+
+          <!-- Headline -->
+          <h2 class="reveal text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-8">
+            <span class="text-zinc-100">Agende uma</span><br/>
+            <span class="grad-text">chamada conosco</span>
+          </h2>
+
+          <!-- Sub -->
+          <p class="reveal reveal-d1 text-lg md:text-xl text-zinc-300 leading-relaxed mb-10 max-w-3xl mx-auto">
+            <span class="text-zinc-100 font-bold">Uma hora de reunião estratégica.</span> Você sai dessa conversa com <span class="grad-text-warm font-bold">diagnóstico aplicável</span>, mesmo que não feche com a gente.
+          </p>
+
+          <!-- 3 bullets do que esperar -->
+          <div class="reveal reveal-d2 grid grid-cols-1 md:grid-cols-3 gap-5 max-w-3xl mx-auto mb-12">
+            <div class="flex items-start gap-3 text-left">
+              <span class="empresa-check shrink-0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span class="text-sm text-zinc-300 leading-relaxed">Mapeamento honesto da sua maior dor operacional</span>
+            </div>
+            <div class="flex items-start gap-3 text-left">
+              <span class="empresa-check shrink-0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span class="text-sm text-zinc-300 leading-relaxed">Estimativa realista de retorno e prazo</span>
+            </div>
+            <div class="flex items-start gap-3 text-left">
+              <span class="empresa-check shrink-0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span class="text-sm text-zinc-300 leading-relaxed">Auxílio e diagnóstico da dor da sua empresa</span>
+            </div>
+          </div>
+
+          <!-- CTAs -->
+          <div class="reveal reveal-d3 flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+            <a href="mailto:suporte@consultoriahorizon.com.br" class="btn-grad !text-base md:!text-lg !px-10 !py-5">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Agendar conversa
+            </a>
+            <a href="https://wa.me/" class="btn-outline !text-base !px-8 !py-4">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448L.057 24zM6.597 20.13c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+              Falar no WhatsApp
+            </a>
+          </div>
+
+          <!-- Contato direto -->
+          <div class="reveal reveal-d3 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-zinc-500">
+            <a href="mailto:suporte@consultoriahorizon.com.br" class="inline-flex items-center gap-2 hover:text-blue-400 transition-colors font-medium font-mono">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6L12 13 2 6"/></svg>
+              suporte@consultoriahorizon.com.br
+            </a>
+            <span class="hidden sm:inline text-zinc-700">·</span>
+            <span class="inline-flex items-center gap-2 font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+              Resposta em até 24h úteis
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="border-t border-zinc-900 py-12">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8">
+        <div class="flex items-center gap-2.5">
+          <img src="/lp2/assets/logo-azul.png" alt="Horizon" style="height: 108px; width: auto;" />
+          <span class="text-zinc-600 ml-1 text-sm">· Construído no Brasil</span>
+        </div>
+        <div class="flex items-center gap-6 text-sm text-zinc-500 font-medium">
+          <a href="#" class="hover:text-zinc-300 transition-colors">LinkedIn</a>
+          <a href="mailto:suporte@consultoriahorizon.com.br" class="hover:text-zinc-300 transition-colors">Contato</a>
+          <span>© 2026 Horizon</span>
+        </div>
+      </div>
+      <p class="text-xs text-zinc-600 leading-relaxed max-w-3xl">
+        <sup>*</sup>Estimativa baseada em projeção de modelo de uso dos agentes Horizon em ambiente operacional. Resultados variam conforme nicho, maturidade operacional e adoção interna. Não constitui garantia contratual de retorno.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+    const animateCounter = (el) => {
+      const target = parseInt(el.dataset.target, 10);
+      const suffix = el.dataset.suffix || '';
+      const prefix = el.dataset.prefix || '';
+      const duration = 1600; const start = performance.now();
+      const tick = (now) => {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = prefix + Math.round(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    const cIO = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting && e.target.dataset.target) { animateCounter(e.target); cIO.unobserve(e.target); } });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-num').forEach((el) => cIO.observe(el));
+
+    function playVSL() {
+      alert('Placeholder do player VSL. Substituir por embed YouTube/Vimeo/Mux quando o vídeo estiver pronto.');
+    }
+    function playWhatsAppDemo() {
+      alert('Placeholder do vídeo demo do WhatsApp Agentic. Substituir por embed quando o vídeo estiver pronto.');
+    }
+    function playServiceVideo(serviceId) {
+      const labels = {
+        cobranca: 'Demo · Cobrança Agentic',
+        sdr: 'Demo · SDR reativando lead',
+        relatorios: 'Demo · Relatório semanal',
+        squad: 'Case · Squad em 90 dias'
+      };
+      alert('Placeholder: ' + (labels[serviceId] || serviceId) + '. Substituir por embed do vídeo correspondente.');
+    }
+
+    // ===== Services rotator (terceira dobra) =====
+    (function() {
+      const tabs = document.querySelectorAll('.service-tab');
+      const slides = document.querySelectorAll('.service-slide');
+      const total = tabs.length;
+      const intervalMs = 10000;
+      let current = 0;
+      let timer = null;
+      let progressTimer = null;
+
+      function setActive(idx) {
+        tabs.forEach((t, i) => {
+          if (i === idx) {
+            t.classList.add('active');
+            t.classList.remove('border-zinc-800', 'bg-zinc-900/30');
+          } else {
+            t.classList.remove('active');
+            t.classList.add('border-zinc-800', 'bg-zinc-900/30');
+          }
+        });
+        slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+        startProgress(idx);
+        current = idx;
+      }
+
+      function startProgress(idx) {
+        if (progressTimer) clearInterval(progressTimer);
+        const fill = tabs[idx].querySelector('.service-progress-fill');
+        if (!fill) return;
+        let pct = 0;
+        fill.style.width = '0%';
+        const step = 100 / (intervalMs / 100);
+        progressTimer = setInterval(() => {
+          pct += step;
+          if (pct >= 100) { pct = 100; clearInterval(progressTimer); }
+          fill.style.width = pct + '%';
+        }, 100);
+      }
+
+      function next() { setActive((current + 1) % total); }
+
+      function startAuto() {
+        if (timer) clearInterval(timer);
+        timer = setInterval(next, intervalMs);
+      }
+
+      tabs.forEach((tab, idx) => {
+        tab.addEventListener('click', () => {
+          setActive(idx);
+          startAuto();
+        });
+      });
+
+      const section = document.getElementById('servicos');
+      if (section) {
+        section.addEventListener('mouseenter', () => { if (timer) clearInterval(timer); if (progressTimer) clearInterval(progressTimer); });
+        section.addEventListener('mouseleave', () => { startAuto(); startProgress(current); });
+      }
+
+      const sIO = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            setActive(0);
+            startAuto();
+            sIO.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      if (section) sIO.observe(section);
+    })();
+
+  </script>
+
+</body>
+</html>

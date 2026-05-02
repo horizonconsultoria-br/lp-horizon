@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" aria-label="Horizon symbol">
+  <g>
+    <path d="M 22 14 Q 30 30 48 42"/>
+    <path d="M 32 12 Q 38 28 55 38"/>
+    <path d="M 42 11 Q 46 27 60 35"/>
+    <path d="M 52 12 Q 53 26 64 32"/>
+  </g>
+  <g transform="rotate(90 50 50)">
+    <path d="M 22 14 Q 30 30 48 42"/>
+    <path d="M 32 12 Q 38 28 55 38"/>
+    <path d="M 42 11 Q 46 27 60 35"/>
+    <path d="M 52 12 Q 53 26 64 32"/>
+  </g>
+  <g transform="rotate(180 50 50)">
+    <path d="M 22 14 Q 30 30 48 42"/>
+    <path d="M 32 12 Q 38 28 55 38"/>
+    <path d="M 42 11 Q 46 27 60 35"/>
+    <path d="M 52 12 Q 53 26 64 32"/>
+  </g>
+  <g transform="rotate(270 50 50)">
+    <path d="M 22 14 Q 30 30 48 42"/>
+    <path d="M 32 12 Q 38 28 55 38"/>
+    <path d="M 42 11 Q 46 27 60 35"/>
+    <path d="M 52 12 Q 53 26 64 32"/>
+  </g>
+</svg>
