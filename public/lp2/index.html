@@ -383,6 +383,40 @@
       padding: 4px 9px; border-radius: 5px; background: rgba(0,0,0,0.6);
       backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1);
     }
+
+    /* ===== MATRIX RAIN (DOM-based, CSS keyframes — paridade visual com FinalCTA da v1 em paleta azul) ===== */
+    .matrix-rain {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .matrix-col {
+      position: absolute;
+      top: 0;
+      font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.25;
+      white-space: pre;
+      color: #93c5fd; /* sky-300 — leading char */
+      text-shadow: 0 0 4px rgba(96, 165, 250, 0.6), 0 0 8px rgba(59, 130, 246, 0.3);
+      animation: matrix-fall linear infinite;
+      will-change: transform;
+    }
+    .matrix-col::before {
+      /* Trail mais escuro acumulado via overlay */
+      content: '';
+    }
+    @keyframes matrix-fall {
+      0%   { transform: translateY(-100%); opacity: 0; }
+      8%   { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { transform: translateY(120vh); opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .matrix-rain { display: none; }
+    }
   </style>
 </head>
 <body class="antialiased">
@@ -1064,13 +1098,13 @@
   </section>
 
   <!-- ========== CTA FINAL — AGENDE UMA CHAMADA ========== -->
-  <section id="contato" class="py-32 relative overflow-hidden">
-    <div class="aurora opacity-90"></div>
-    <div class="absolute inset-0 grid-bg opacity-60"></div>
+  <section id="contato" class="py-32 relative overflow-hidden bg-zinc-950">
+    <!-- Matrix-style code rain BG — DOM/CSS-based (paleta azul, paridade visual com FinalCTA da v1) -->
+    <div id="matrix-rain-cta" class="matrix-rain" aria-hidden="true"></div>
 
     <div class="relative max-w-5xl mx-auto px-6 lg:px-8">
 
-      <div class="relative border border-blue-500/40 bg-gradient-to-br from-zinc-900/80 via-zinc-950 to-zinc-950 rounded-[32px] p-10 md:p-16 overflow-hidden">
+      <div class="relative border border-blue-500/40 bg-zinc-950/30 backdrop-blur-md rounded-[32px] p-10 md:p-16 overflow-hidden">
         <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl"></div>
         <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-400/8 rounded-full blur-3xl"></div>
 
@@ -1267,6 +1301,63 @@
         });
       }, { threshold: 0.3 });
       if (section) sIO.observe(section);
+    })();
+
+    /* ============================================================
+       MATRIX RAIN — BG do CTA final
+       Implementação DOM/CSS-based: cada column é um <div> com chars
+       randômicos + animação CSS keyframe `matrix-fall`. Sem canvas,
+       sem RAF — browser cuida de tudo via compositor. Opt-out via
+       prefers-reduced-motion já tratado em CSS (display: none).
+       ============================================================ */
+    (function matrixRain() {
+      const container = document.getElementById('matrix-rain-cta');
+      if (!container) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const chars = '01<>{}[]()=>;@#$%^&*-+/\\|~`AIClaudeMCPGPTLLMnpmRAGRESTSDKAPIyamljson';
+      const colWidth = 14; // px — espaçamento entre colunas
+
+      function build() {
+        container.innerHTML = '';
+        const w = container.offsetWidth;
+        const h = container.offsetHeight;
+        const numCols = Math.max(1, Math.floor(w / colWidth));
+        const charsPerCol = Math.ceil(h / 16) + 10; // ~1 char por linha de 16px + margem
+
+        for (let i = 0; i < numCols; i++) {
+          const col = document.createElement('div');
+          col.className = 'matrix-col';
+          col.style.left = (i * colWidth) + 'px';
+
+          // String aleatória de chars separados por \n (white-space: pre preserva)
+          let txt = '';
+          for (let j = 0; j < charsPerCol; j++) {
+            txt += chars[Math.floor(Math.random() * chars.length)] + '\n';
+          }
+          col.textContent = txt;
+
+          // Duration 8-20s, delay negativo pra começarem em fases diferentes
+          const duration = 8 + Math.random() * 12;
+          const delay = -Math.random() * duration;
+          col.style.animationDuration = duration.toFixed(2) + 's';
+          col.style.animationDelay = delay.toFixed(2) + 's';
+
+          // Variação sutil de opacity por column pra textura
+          col.style.opacity = (0.55 + Math.random() * 0.45).toFixed(2);
+
+          container.appendChild(col);
+        }
+      }
+
+      build();
+
+      // Rebuild com debounce em resize (raro, mas cobre orientation change)
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(build, 200);
+      });
     })();
 
   </script>
