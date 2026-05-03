@@ -10,13 +10,15 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return [
-      // v2 (Cowork) servida como static one-pager pra comparativo A/B
-      { source: "/lp2", destination: "/lp2/index.html" },
+      // v2 (Cowork azul) é a oficial agora — serve em / a partir de public/v2/index.html
+      // Pasta interna se chama "v2" (não "lp2") pra não conflitar com app/lp2/page.tsx que é a v1
+      { source: "/", destination: "/v2/index.html" },
     ];
   },
   async headers() {
-    // CSP relaxada só pra rota /lp2 — Tailwind via CDN + Google Fonts inline da v2
-    const lp2Headers = [
+    // CSP relaxada pra v2 (raiz) — Tailwind via CDN + Google Fonts inline
+    // Também aplica em /v2/* pra cobrir os assets servidos diretamente (logos, etc)
+    const v2Headers = [
       { key: "X-Frame-Options", value: "DENY" },
       { key: "X-Content-Type-Options", value: "nosniff" },
       { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
@@ -35,12 +37,13 @@ const nextConfig: NextConfig = {
       },
     ];
     return [
-      // 2 matchers porque /lp2/:path* não casa com /lp2 puro (sem trailing slash + sem path)
-      { source: "/lp2", headers: lp2Headers },
-      { source: "/lp2/:path*", headers: lp2Headers },
+      // Raiz (v2) + assets internos — CSP relaxada
+      { source: "/", headers: v2Headers },
+      { source: "/v2/:path*", headers: v2Headers },
       {
-        // Catch-all exceto /lp2 e /lp2/* (que já têm CSP própria acima) — sintaxe path-to-regexp precisa de named param
-        source: "/:path((?!lp2(?:$|/)).*)",
+        // Catch-all CSP estrita pra resto — exceto raiz (já tratada acima) e assets v2
+        // /lp2 (v1 Next.js) cai aqui e ganha CSP estrita normalmente, igual a v1 antes em /
+        source: "/:path((?!v2(?:$|/)).+)",
         headers: [
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
