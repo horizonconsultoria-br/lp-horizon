@@ -93,6 +93,10 @@
       -webkit-text-fill-color: transparent;
     }
     .stat-label { font-size: 13px; color: #a1a1aa; font-weight: 500; margin-top: 6px; }
+    @media (max-width: 640px) {
+      .stat-num { font-size: 28px; }
+      .stat-label { font-size: 11px; margin-top: 4px; }
+    }
 
     /* === AURORA ORBES === */
     .aurora { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
@@ -443,22 +447,22 @@
         <!-- Coluna esquerda -->
         <div>
           <!-- EYEBROW (era a antiga H1) -->
-          <p class="reveal in text-base md:text-lg font-bold text-zinc-100 leading-snug mb-5 max-w-xl">
+          <p class="reveal in text-sm md:text-lg font-bold text-zinc-100 leading-snug mb-4 md:mb-5 max-w-xl">
             Aumente em até 40% o faturamento da sua empresa em até 90 dias com inteligência artificial aplicada a vendas e atendimento.<sup class="text-zinc-500 font-normal">*</sup>
           </p>
 
           <!-- H1 PERGUNTA (estilo Genesis) -->
-          <h1 class="reveal in text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05] mb-6">
+          <h1 class="reveal in text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05] mb-5 md:mb-6">
             <span class="grad-text">Eliminamos trabalho manual com IA</span>
           </h1>
 
           <!-- DESCRIÇÃO -->
-          <p class="reveal reveal-d1 text-base md:text-lg text-zinc-400 leading-relaxed mb-7 max-w-xl">
+          <p class="reveal reveal-d1 text-sm md:text-lg text-zinc-400 leading-relaxed mb-5 md:mb-7 max-w-xl">
             A Horizon é uma empresa de software especializada em <span class="grad-text-warm font-semibold">aumento de faturamento</span> e <span class="grad-text-warm font-semibold">redução de custos</span> em diferentes mercados. Com uma equipe composta de engenheiros com <span class="grad-text-warm font-semibold">décadas de experiência</span> no mercado real, entregamos soluções de extrema qualidade <span class="text-zinc-100 font-semibold">sem promessas ilusórias</span>.
           </p>
 
           <!-- BADGE OFERTA -->
-          <div class="reveal reveal-d1 mb-7">
+          <div class="reveal reveal-d1 mb-5 md:mb-7">
             <span class="badge-offer">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
               Demonstração gratuita · Sem compromisso
@@ -466,18 +470,18 @@
           </div>
 
           <!-- DOIS CTAs -->
-          <div class="reveal reveal-d2 flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-10">
-            <a href="#contato" class="btn-grad">
+          <div class="reveal reveal-d2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-7 md:mb-10">
+            <a href="#contato" class="btn-grad justify-center">
               Agende uma chamada conosco
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
-            <a href="#contato" class="btn-outline">
+            <a href="#contato" class="btn-outline justify-center">
               Falar com especialista
             </a>
           </div>
 
           <!-- STATS -->
-          <div class="reveal reveal-d3 grid grid-cols-3 gap-8 pt-8 border-t border-zinc-800/80">
+          <div class="reveal reveal-d3 grid grid-cols-3 gap-3 md:gap-8 pt-6 md:pt-8 border-t border-zinc-800/80">
             <div>
               <div class="stat-num" data-target="40" data-suffix="%" data-prefix="+">+0%</div>
               <div class="stat-label">Aumento de faturamento*</div>
