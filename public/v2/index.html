@@ -172,6 +172,32 @@
     .reveal-d2 { transition-delay: 0.2s; }
     .reveal-d3 { transition-delay: 0.3s; }
 
+    /* === CARROSSEL HORIZONTAL (mobile-only) ===
+       Containers com .h-carousel viram scroll horizontal swipável em mobile;
+       em desktop continuam com o layout grid original (md:grid-cols-N). */
+    @media (max-width: 767px) {
+      .h-carousel {
+        display: flex !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        gap: 16px;
+        padding: 4px 24px 16px;
+        margin: 0 -24px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .h-carousel::-webkit-scrollbar { display: none; }
+      .h-carousel > * {
+        flex: 0 0 85%;
+        max-width: 85%;
+        scroll-snap-align: center;
+        scroll-snap-stop: always;
+      }
+    }
+
     /* === CARD COM HOVER === */
     .card-hov {
       position: relative; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
@@ -1041,7 +1067,7 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 h-carousel">
         <div class="reveal card-hov">
           <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-sky-500/10 border border-blue-500/30 flex items-center justify-center mb-5">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5b8dbe" stroke-width="1.75"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
@@ -1084,7 +1110,7 @@
         </h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 h-carousel">
         <div class="reveal card-hov">
           <h3 class="text-xl font-bold text-zinc-100 mb-3">Longa duração</h3>
           <p class="text-zinc-400 leading-relaxed">.NET 9 LTS, PostgreSQL 16, Kotlin 2, React Native, React + Vite. Tecnologias com ciclo de vida longo, sem hype cycle.</p>
