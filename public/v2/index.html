@@ -445,9 +445,9 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
         <!-- Coluna esquerda -->
-        <div>
+        <div class="text-center lg:text-left">
           <!-- EYEBROW (era a antiga H1) -->
-          <p class="reveal in text-sm md:text-lg font-bold text-zinc-100 leading-snug mb-4 md:mb-5 max-w-xl">
+          <p class="reveal in text-sm md:text-lg font-bold text-zinc-100 leading-snug mb-4 md:mb-5 max-w-xl mx-auto lg:mx-0">
             Aumente em até 40% o faturamento da sua empresa em até 90 dias com inteligência artificial aplicada a vendas e atendimento.<sup class="text-zinc-500 font-normal">*</sup>
           </p>
 
@@ -457,7 +457,7 @@
           </h1>
 
           <!-- DESCRIÇÃO -->
-          <p class="reveal reveal-d1 text-sm md:text-lg text-zinc-400 leading-relaxed mb-5 md:mb-7 max-w-xl">
+          <p class="reveal reveal-d1 text-sm md:text-lg text-zinc-400 leading-relaxed mb-5 md:mb-7 max-w-xl mx-auto lg:mx-0">
             A Horizon é uma empresa de software especializada em <span class="grad-text-warm font-semibold">aumento de faturamento</span> e <span class="grad-text-warm font-semibold">redução de custos</span> em diferentes mercados. Com uma equipe composta de engenheiros com <span class="grad-text-warm font-semibold">décadas de experiência</span> no mercado real, entregamos soluções de extrema qualidade <span class="text-zinc-100 font-semibold">sem promessas ilusórias</span>.
           </p>
 
@@ -552,8 +552,8 @@
         </div>
 
         <!-- Copy à direita -->
-        <div class="reveal reveal-d1">
-          <h3 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight text-zinc-50 mb-6">
+        <div class="reveal reveal-d1 text-center lg:text-left">
+          <h3 class="text-2xl md:text-4xl font-bold tracking-tight leading-tight text-zinc-50 mb-6">
             Não perca clientes por <span class="grad-text">falta de resposta</span>.
           </h3>
 
@@ -565,9 +565,9 @@
             Segundo pesquisas, <span class="grad-text-warm font-bold">78% dos leads fecham com quem responde primeiro</span>. Quando um interessado busca atendimento e não recebe, ele simplesmente procura o seu <span class="text-zinc-100 font-semibold">concorrente</span>.
           </p>
 
-          <!-- Callout da pergunta final -->
-          <div class="border-l-2 border-blue-500 bg-blue-500/5 pl-5 py-4 pr-4 rounded-r-lg">
-            <p class="text-lg md:text-xl font-bold text-zinc-50 leading-snug">
+          <!-- Callout da pergunta final (em mobile fica sem borda esquerda + centralizado pra coerência visual) -->
+          <div class="bg-blue-500/5 lg:border-l-2 lg:border-blue-500 lg:pl-5 p-4 lg:py-4 lg:pr-4 rounded-lg lg:rounded-r-lg lg:rounded-l-none">
+            <p class="text-base md:text-xl font-bold text-zinc-50 leading-snug">
               Mas como resolver isso sem manter uma equipe disponível 24 horas por dia?
             </p>
           </div>
@@ -648,8 +648,8 @@
           </button>
         </div>
 
-        <!-- COLUNA DIREITA: card destaque com fade -->
-        <div class="lg:col-span-3">
+        <!-- COLUNA DIREITA: card destaque com fade (em mobile reposicionado via JS pra logo abaixo da aba ativa — accordion) -->
+        <div class="lg:col-span-3 services-card-wrapper">
           <div class="relative border border-blue-500/30 bg-gradient-to-br from-zinc-900/80 to-zinc-950 rounded-3xl p-8 md:p-10 overflow-hidden">
             <div class="absolute top-0 right-0 w-72 h-72 bg-blue-500/8 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -1239,11 +1239,25 @@
     (function() {
       const tabs = document.querySelectorAll('.service-tab');
       const slides = document.querySelectorAll('.service-slide');
+      const tabsContainer = document.getElementById('services-tabs');
+      const cardWrapper = document.querySelector('.services-card-wrapper');
+      const mobileMQ = window.matchMedia('(max-width: 1023px)');
       const total = tabs.length;
       const intervalMs = 10000;
       let current = 0;
       let timer = null;
       let progressTimer = null;
+
+      // Em mobile, move o card pra logo depois da aba ativa (accordion).
+      // Em desktop, garante que o card está na coluna direita (next sibling do #services-tabs).
+      function reposicionarCard(idx) {
+        if (!cardWrapper || !tabsContainer) return;
+        if (mobileMQ.matches) {
+          tabs[idx].insertAdjacentElement('afterend', cardWrapper);
+        } else if (cardWrapper.previousElementSibling !== tabsContainer) {
+          tabsContainer.insertAdjacentElement('afterend', cardWrapper);
+        }
+      }
 
       function setActive(idx) {
         tabs.forEach((t, i) => {
@@ -1256,9 +1270,13 @@
           }
         });
         slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+        reposicionarCard(idx);
         startProgress(idx);
         current = idx;
       }
+
+      // Re-aplica posicionamento quando viewport cruza o breakpoint mobile/desktop
+      mobileMQ.addEventListener('change', () => reposicionarCard(current));
 
       function startProgress(idx) {
         if (progressTimer) clearInterval(progressTimer);
