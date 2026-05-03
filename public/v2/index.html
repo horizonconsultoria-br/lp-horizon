@@ -271,9 +271,20 @@
       background-repeat: repeat-x;
       opacity: 0.7;
     }
-    .step-card { transition: all 0.3s ease; }
-    .step-card:hover .step-num.filled { transform: scale(1.05); box-shadow: 0 14px 36px -10px rgba(59,130,246,0.7); }
-    .step-card:hover .step-num.outline { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.7); }
+    .step-num { cursor: pointer; }
+    .step-num:hover.filled { transform: scale(1.05); box-shadow: 0 14px 36px -10px rgba(59,130,246,0.7); }
+    .step-num:hover.outline { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.7); }
+    /* Accordion stack: só o card ativo aparece, com cross-fade entre transições */
+    .steps-stack { position: relative; }
+    .step-card {
+      position: absolute; top: 0; left: 0; right: 0;
+      opacity: 0; pointer-events: none;
+      transition: opacity 350ms ease;
+    }
+    .step-card.active {
+      position: relative; /* só o ativo dá altura ao parent */
+      opacity: 1; pointer-events: auto;
+    }
 
     /* === SEÇÃO A EMPRESA — ÍCONES ORBITAIS === */
     .empresa-card {
@@ -958,27 +969,27 @@
         </p>
       </div>
 
-      <!-- Linha de progresso com 3 etapas -->
-      <div class="reveal mb-10">
+      <!-- Linha de progresso com 3 etapas (números clicáveis — controlam o accordion abaixo) -->
+      <div class="reveal mb-10" id="steps-nav">
         <div class="hidden md:flex items-center w-full">
-          <div class="step-num filled">1</div>
+          <div class="step-num filled" data-step="1" role="button" tabindex="0" aria-label="Ver etapa 1: Consultoria gratuita">1</div>
           <div class="step-line"></div>
-          <div class="step-num filled">2</div>
+          <div class="step-num outline" data-step="2" role="button" tabindex="0" aria-label="Ver etapa 2: Escopo e diagnóstico">2</div>
           <div class="step-line"></div>
-          <div class="step-num outline">3</div>
+          <div class="step-num outline" data-step="3" role="button" tabindex="0" aria-label="Ver etapa 3: Implementação e go-live">3</div>
         </div>
-        <!-- Mobile: stack vertical -->
+        <!-- Mobile: stack horizontal -->
         <div class="md:hidden flex justify-center gap-3">
-          <div class="step-num filled">1</div>
-          <div class="step-num filled">2</div>
-          <div class="step-num outline">3</div>
+          <div class="step-num filled" data-step="1" role="button" tabindex="0" aria-label="Ver etapa 1: Consultoria gratuita">1</div>
+          <div class="step-num outline" data-step="2" role="button" tabindex="0" aria-label="Ver etapa 2: Escopo e diagnóstico">2</div>
+          <div class="step-num outline" data-step="3" role="button" tabindex="0" aria-label="Ver etapa 3: Implementação e go-live">3</div>
         </div>
       </div>
 
-      <!-- 3 cards descritivos -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
+      <!-- Accordion: 3 cards no mesmo slot, cross-fade entre eles via .active -->
+      <div class="steps-stack max-w-3xl mx-auto">
 
-        <div class="reveal step-card">
+        <div class="step-card active" data-step-card="1">
           <h3 class="text-xl md:text-2xl font-bold text-zinc-50 mb-3">Consultoria gratuita</h3>
           <p class="text-zinc-400 leading-relaxed mb-5">
             Fale com nossos especialistas com <span class="grad-text-warm font-semibold">experiência de mercado real</span>, em uma conversa de uma hora. Sem deck pronto, sem agenda comercial disfarçada. Mapeamos juntos qual frente faz sentido para o seu negócio agora: vendas, cobrança, SDR, relatórios ou combinação.
@@ -989,7 +1000,7 @@
           </a>
         </div>
 
-        <div class="reveal reveal-d1 step-card">
+        <div class="step-card" data-step-card="2">
           <h3 class="text-xl md:text-2xl font-bold text-zinc-50 mb-3">Escopo e diagnóstico</h3>
           <p class="text-zinc-400 leading-relaxed mb-5">
             Com base na conversa, entregamos diagnóstico técnico e proposta detalhada: o que vamos automatizar, integrações necessárias, cronograma realista, modelo de cobrança (<span class="grad-text-warm font-semibold">% do recuperado</span>, mensalidade ou projeto fechado) e estimativa honesta de retorno.
@@ -1000,7 +1011,7 @@
           </a>
         </div>
 
-        <div class="reveal reveal-d2 step-card">
+        <div class="step-card" data-step-card="3">
           <h3 class="text-xl md:text-2xl font-bold text-zinc-50 mb-3">Implementação e go-live</h3>
           <p class="text-zinc-400 leading-relaxed mb-5">
             Aprovação fechada, squad calibrada entra em campo. Setup, integrações com seus sistemas, calibração do agente em ambiente real e go-live monitorado. Você acompanha por dashboard. Os primeiros resultados aparecem em até <span class="grad-text-warm font-semibold">90 dias</span>.<sup class="text-zinc-500">*</sup>
@@ -1322,6 +1333,41 @@
         });
       }, { threshold: 0.3 });
       if (section) sIO.observe(section);
+    })();
+
+    /* ============================================================
+       Accordion das 3 etapas (Como funciona)
+       Clica num número (1/2/3) — o card correspondente faz cross-fade
+       sobre o anterior. Default: etapa 1 ativa. Sempre 1 ativo.
+       ============================================================ */
+    (function stepsAccordion() {
+      const nums = document.querySelectorAll('#steps-nav .step-num[data-step]');
+      const cards = document.querySelectorAll('.step-card[data-step-card]');
+      if (!nums.length || !cards.length) return;
+
+      function setActiveStep(stepId) {
+        nums.forEach(n => {
+          if (n.dataset.step === stepId) {
+            n.classList.add('filled'); n.classList.remove('outline');
+          } else {
+            n.classList.add('outline'); n.classList.remove('filled');
+          }
+        });
+        cards.forEach(c => {
+          c.classList.toggle('active', c.dataset.stepCard === stepId);
+        });
+      }
+
+      nums.forEach(n => {
+        n.addEventListener('click', () => setActiveStep(n.dataset.step));
+        n.addEventListener('keydown', (e) => {
+          // Acessibilidade: Enter ou Space ativa
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setActiveStep(n.dataset.step);
+          }
+        });
+      });
     })();
 
     /* ============================================================
