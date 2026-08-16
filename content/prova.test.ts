@@ -55,6 +55,20 @@ function algumBlocoAssocia(blocos: Bloco[], entidade: RegExp, termoProibido: Reg
   return textoAgrupadoPorBloco(blocos).some((t) => entidade.test(t) && termoProibido.test(t));
 }
 
+/**
+ * Verdadeiro se nenhum bloco que menciona `entidade` deixa de mencionar `afirmacao`.
+ * Usa `textoAgrupadoPorBloco` para garantir que a verificação vê coexistência em
+ * campos diferentes do mesmo bloco. Se algum bloco tem a entidade mas não tem a
+ * afirmação, retorna falso.
+ */
+function nenhumBlocoTemEntidadeSemAfirmacao(
+  blocos: Bloco[],
+  entidade: RegExp,
+  afirmacao: RegExp,
+): boolean {
+  return !textoAgrupadoPorBloco(blocos).some((t) => entidade.test(t) && !afirmacao.test(t));
+}
+
 describe("estrutura", () => {
   it("tem exatamente os 8 blocos da spec, na ordem", () => {
     expect(conteudoProva.blocos.map((b) => b.id)).toEqual(IDS_ESPERADOS);
@@ -77,14 +91,10 @@ describe("regra de veracidade (spec §4)", () => {
   });
 
   it("descreve DocsGrowth como demo onde ele aparece", () => {
-    const blocosComDocs = conteudoProva.blocos.filter((b) =>
-      textoAgrupadoPorBloco([b])[0].match(/DocsGrowth/i)
-    );
-    expect(blocosComDocs.length).toBeGreaterThan(0);
-    for (const b of blocosComDocs) {
-      const textoBloco = textoAgrupadoPorBloco([b])[0];
-      expect(/demo/i.test(textoBloco), `bloco ${b.id} menciona DocsGrowth mas sem "demo" em nenhum campo`).toBe(true);
-    }
+    expect(
+      nenhumBlocoTemEntidadeSemAfirmacao(conteudoProva.blocos, /DocsGrowth/i, /demo/i),
+      "algum bloco menciona DocsGrowth mas não contém demo em nenhum campo",
+    ).toBe(true);
   });
 
   it("nunca chama PipePro de cliente pagante no mesmo bloco", () => {
@@ -116,8 +126,8 @@ describe("regra de veracidade (spec §4)", () => {
   it("REGRESSAO: aceita DocsGrowth descrito como demo mesmo quando em campos diferentes do mesmo bloco", () => {
     // Cenario que explica o conserto: nome do item é "DocsGrowth", mas descrição
     // do mesmo item (campo diferente, mesmo bloco) é "Demo hi-fi...". A guarda
-    // agora agrupa por bloco e valida que o bloco COMO UM TODO contém "demo".
-    // Isso corrige o problema onde achatamento por campo rejeitava o bloco.
+    // agora agrupa por bloco e valida que nenhum bloco com DocsGrowth deixa de
+    // ter "demo". Isso corrige o problema onde achatamento por campo rejeitava.
     const blocoBom: Bloco = {
       id: "teste",
       eyebrow: "teste",
@@ -127,9 +137,10 @@ describe("regra de veracidade (spec §4)", () => {
         { nome: "DocsGrowth", descricao: "Demo hi-fi de CRM construída." },
       ],
     };
-    const textoBloco = textoAgrupadoPorBloco([blocoBom])[0];
-    expect(/DocsGrowth/i.test(textoBloco), "bloco contém DocsGrowth").toBe(true);
-    expect(/demo/i.test(textoBloco), "bloco contém demo").toBe(true);
+    expect(
+      nenhumBlocoTemEntidadeSemAfirmacao([blocoBom], /DocsGrowth/i, /demo/i),
+      "bloco com DocsGrowth em campo diferente de demo deveria passar",
+    ).toBe(true);
   });
 });
 

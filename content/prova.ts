@@ -17,13 +17,6 @@ export type CTA = { acoes: Acao[] };
 
 export type ConteudoProva = { blocos: Bloco[]; cta: CTA };
 
-const semente = (id: string): Bloco => ({
-  id,
-  eyebrow: id,
-  titulo: `Título de ${id}`,
-  paragrafos: ["Parágrafo semente."],
-});
-
 export const conteudoProva: ConteudoProva = {
   blocos: [
     {
