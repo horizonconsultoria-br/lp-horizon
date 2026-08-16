@@ -46,8 +46,27 @@ export default function ProvaPage() {
         <div className="prova-heroi-veu-pe" aria-hidden="true" />
 
         <nav className="prova-nav" aria-label="Principal">
-          <a className="prova-marca" href="/prova">
-            Horiz<span>on</span>
+          {/* O logo real da casa, o mesmo de consultoriahorizon.com.br. O
+              arquivo oficial e um lockup VERTICAL numa tela 3300x3300 com
+              metade de margem vazia; aqui ele vem recortado e remontado na
+              horizontal, que e o que uma barra de navegacao comporta. */}
+          <a className="prova-marca" href="/prova" aria-label="Horizon, ir para o topo">
+            <Image
+              className="prova-marca-simbolo"
+              src="/prova/logo-simbolo.png"
+              alt=""
+              width={39}
+              height={38}
+              priority
+            />
+            <Image
+              className="prova-marca-palavra"
+              src="/prova/logo-palavra.png"
+              alt=""
+              width={99}
+              height={15}
+              priority
+            />
           </a>
 
           {/* Cada item aponta para uma seção que EXISTE nesta página. Item de

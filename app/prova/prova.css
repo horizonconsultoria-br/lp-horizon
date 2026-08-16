@@ -162,16 +162,29 @@
   padding: var(--hzn-space-6) var(--hzn-container-padding);
 }
 
+/* Lockup horizontal do logo oficial: simbolo + palavra lado a lado. */
 .prova-marca {
-  font-family: var(--prova-display);
-  font-size: 1.35rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--gelo);
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
   text-decoration: none;
+  flex-shrink: 0;
 }
-.prova-marca span {
-  color: var(--sinal);
+.prova-marca-simbolo {
+  height: 38px;
+  width: auto;
+}
+.prova-marca-palavra {
+  height: 15px;
+  width: auto;
+  /* A palavra vem palida do arquivo original; sobre a foto ela precisa de
+     um pouco mais de presenca sem virar branco puro. */
+  opacity: 0.92;
+}
+@media (max-width: 520px) {
+  .prova-marca-palavra {
+    display: none;
+  }
 }
 
 /* Os links do menu somem abaixo de 900px em vez de virarem hambúrguer: um
