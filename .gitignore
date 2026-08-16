@@ -12,6 +12,7 @@ coverage
 reports/desktop.json
 reports/mobile.json
 .turbo
+tsconfig.tsbuildinfo
 
 # SDD workspace (ledger, briefs, review packages) — scratch, nao versionar
 .superpowers/
