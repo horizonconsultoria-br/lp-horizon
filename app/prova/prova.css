@@ -7,9 +7,9 @@
  * solta, atmosfera) e vai CHEGANDO PERTO conforme desce (mais denso, mais
  * concreto, mais dado). Longe é aspiração; perto é prova.
  *
- * PALETA: amostrada da própria fotografia, não inventada. Uma única nota
- * quente (--brasa) existe na página, tirada da faixa de brasa que a foto tem
- * no horizonte, e aparece uma vez só, no mesmo lugar em que a imagem a tem.
+ * PALETA: amostrada da própria fotografia, não inventada. A foto é uma
+ * cordilheira azul se dissolvendo em bancos de névoa, então a página inteira
+ * é fria por consequência, sem nenhum acento quente para destoar.
  *
  * ISOLAMENTO: tudo vive dentro de .theme-v3, que redefine os mesmos tokens
  * --hzn-* do design system. A landing v1 âmbar em /lp2 fica intacta.
@@ -22,7 +22,7 @@
   --bruma: #8fa6c4;   /* a névoa entre as camadas */
   --gelo: #e8eef7;    /* branco frio */
   --sinal: #3b82f6;   /* a marca */
-  --brasa: #c8794f;   /* a única nota quente, do horizonte da foto */
+  --neve: #a9c6e8;    /* o claro da névoa entre as cristas */
 
   /* ─── Ponte para o design system: os mesmos nomes, valores desta paleta ─── */
   --hzn-bg-base: var(--noite);
@@ -65,8 +65,8 @@
 
 /* ═══════════════════════════════════════════════════════════════
    HERÓI
-   A manchete assenta na linha do horizonte da fotografia, onde a
-   terra encontra o céu. Só faz sentido nesta foto e nesta marca.
+   A manchete assenta na massa escura do sopé, logo abaixo da faixa
+   de névoa. Uma foto de horizonte, para uma empresa chamada Horizon.
    ═══════════════════════════════════════════════════════════════ */
 
 .prova-heroi {
@@ -85,21 +85,31 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 38%;
+  object-position: 50% 52%;
   z-index: -2;
 }
 
-/* Véu: escurece o pé e a esquerda para o texto respirar, e preserva o céu
-   e as estrelas no alto à direita. Sem ele a faixa de brasa do horizonte
-   competiria com a manchete. */
+/* Véu em três tempos, desenhado para ESTA fotografia, que é clara em cima e
+   escura embaixo. Escurece o topo para a nav respirar em creme, abre no meio
+   para a faixa de névoa BRILHAR (é ela o assunto), e fecha no pé onde a
+   manchete assenta. O resultado é uma banda luminosa de bruma atravessando
+   a tela, que é o efeito de fumaça pedido, em azul e sem truque de CSS. */
 .prova-heroi::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(to top, var(--noite) 1%, rgba(10, 15, 26, 0.52) 26%, rgba(10, 15, 26, 0.08) 62%),
-    linear-gradient(to right, rgba(10, 15, 26, 0.8) 0%, rgba(10, 15, 26, 0.3) 54%, transparent 82%);
+    linear-gradient(
+      to bottom,
+      rgba(10, 15, 26, 0.88) 0%,
+      rgba(10, 15, 26, 0.58) 14%,
+      rgba(10, 15, 26, 0.22) 34%,
+      rgba(10, 15, 26, 0.55) 62%,
+      rgba(10, 15, 26, 0.92) 86%,
+      var(--noite) 100%
+    ),
+    linear-gradient(to right, rgba(10, 15, 26, 0.62) 0%, rgba(10, 15, 26, 0.18) 58%, transparent 88%);
 }
 
 .prova-nav {
@@ -125,6 +135,35 @@
   color: var(--sinal);
 }
 
+/* Os links do menu somem abaixo de 900px em vez de virarem hambúrguer: um
+   menu de 5 itens numa LP de rolagem única não justifica JavaScript de
+   runtime, e as seções continuam alcançáveis rolando. */
+.prova-nav-links {
+  display: none;
+  gap: clamp(18px, 2.2vw, 34px);
+  margin-inline: auto;
+}
+@media (min-width: 900px) {
+  .prova-nav-links {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.prova-nav-links a {
+  font-family: var(--hzn-font-sans);
+  font-size: 0.9rem;
+  color: rgba(232, 238, 247, 0.78);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+.prova-nav-links a:hover {
+  color: var(--gelo);
+  border-bottom-color: var(--sinal);
+}
+
 .prova-nav a.prova-nav-cta {
   font-family: var(--hzn-font-sans);
   font-size: 0.875rem;
@@ -134,6 +173,7 @@
   padding: 0.6rem 1.15rem;
   border-radius: 999px;
   text-decoration: none;
+  white-space: nowrap;
   transition: transform 200ms ease, box-shadow 200ms ease;
 }
 .prova-nav a.prova-nav-cta:hover {
@@ -141,9 +181,8 @@
   box-shadow: var(--hzn-glow-amber);
 }
 
-/* A manchete assenta perto do sopé da imagem, logo acima das cristas, que é
-   onde a fotografia tem a linha do horizonte. Deixa o céu e as estrelas
-   respirando por cima e ainda ganha contraste, porque ali a foto é escura. */
+/* A manchete assenta no pé da imagem, onde a fotografia é mais escura, e
+   deixa a faixa de névoa respirando por cima dela. Contraste vem de graça. */
 .prova-heroi-corpo {
   align-self: end;
   width: 100%;
@@ -153,15 +192,17 @@
   padding-block: 0 clamp(28px, 5vh, 56px);
 }
 
-/* O eyebrow é a única nota quente da página, no mesmo lugar em que a
-   fotografia tem a faixa de brasa. */
+/* O eyebrow usa o claro da própria névoa. A versão anterior tinha um acento
+   quente, justificado por uma faixa de brasa que a foto antiga tinha no
+   horizonte; esta fotografia é inteiramente fria, então aquele acento virou
+   enfeite sem âncora e saiu. A paleta continua nascendo da imagem. */
 .prova-eyebrow {
   font-family: var(--hzn-font-mono);
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--brasa);
+  color: var(--neve);
   margin: 0 0 clamp(20px, 3vh, 34px);
 }
 
@@ -216,7 +257,7 @@
   font-size: 0.98rem;
   color: rgba(232, 238, 247, 0.9);
   text-decoration: none;
-  border-bottom: 1px solid var(--brasa);
+  border-bottom: 1px solid var(--neve);
   padding-bottom: 3px;
   transition: color 200ms ease;
 }

@@ -13,7 +13,7 @@ export default function ProvaPage() {
           horizonte em hora azul, para uma empresa chamada Horizon. */}
       <header className="prova-heroi" id={abertura.id}>
         <Image
-          src="/prova/hero.jpg"
+          src="/prova/hero-bruma.jpg"
           alt=""
           fill
           priority
@@ -26,6 +26,16 @@ export default function ProvaPage() {
           <a className="prova-marca" href="/prova">
             Horiz<span>on</span>
           </a>
+
+          {/* Cada item aponta para uma seção que EXISTE nesta página. Item de
+              menu sem destino é o defeito que a landing oficial tem hoje. */}
+          <div className="prova-nav-links">
+            <a href="#como-entramos">O que fazemos</a>
+            <a href="#antes-de-assinar">Como funciona</a>
+            <a href="#para-outros">Nichos</a>
+            <a href="#objecoes">Perguntas</a>
+          </div>
+
           {acaoForte && (
             <a className="prova-nav-cta" href={acaoForte.href}>
               {acaoForte.rotulo}
