@@ -722,6 +722,148 @@ function SimulacaoStack() {
   );
 }
 
+/**
+ * Simulação da inteligência de mercado: o radar de concorrência.
+ *
+ * ILUSTRAÇÃO encenada, não registro de monitoramento real, e escondida de
+ * leitor de tela (`aria-hidden`) por isso. As fontes citadas no feed são as
+ * ferramentas reais desse trabalho (Semrush, DataForSEO, SimilarWeb,
+ * Ahrefs), com as cores de cada marca no ponto do selo, por decisão
+ * explícita do founder no precedente das outras abas: uso nominativo,
+ * nenhum logo em arquivo.
+ *
+ * O detalhe de ofício: cada alvo pinga no radar NO INSTANTE em que o feixe
+ * passa por ele. O ângulo do alvo vira delay no servidor
+ * (inicio + ang/360 * ciclo), então a primeira volta da varredura "descobre"
+ * os alvos um a um, e o alerta correspondente entra no feed logo depois.
+ *
+ * A mecânica é a das outras simulações: linha do tempo no servidor via
+ * custom properties, animações só sob a aba marcada (reinicia a cada
+ * seleção), estado base = estado FINAL, movimento reduzido recebe a cena
+ * montada. Zero JavaScript no navegador.
+ */
+function SimulacaoRadar() {
+  // A varredura: uma volta completa a cada `ciclo` segundos, começando em
+  // `inicio` apontada para cima.
+  const varredura = { inicio: 0.5, ciclo: 3.6 };
+
+  // Os alvos no prato do radar. `ang` é o ângulo em graus a partir do topo,
+  // em sentido horário; `raio` é a distância do centro (0 a 1). Cada alvo
+  // carrega o alerta que ele dispara no feed e a fonte que o interceptou.
+  const alvos: Array<{
+    rotulo: string;
+    ang: number;
+    raio: number;
+    fonte: string;
+    cor: "semrush" | "dataforseo" | "similarweb" | "ahrefs";
+    texto: string;
+  }> = [
+    {
+      rotulo: "A",
+      ang: 52,
+      raio: 0.6,
+      fonte: "Semrush",
+      cor: "semrush",
+      texto: "Concorrente A comprou 'crm com IA' no Google Ads",
+    },
+    {
+      rotulo: "B",
+      ang: 128,
+      raio: 0.72,
+      fonte: "DataForSEO",
+      cor: "dataforseo",
+      texto: "Você caiu 4 posições em 'automação de vendas'",
+    },
+    {
+      rotulo: "C",
+      ang: 217,
+      raio: 0.52,
+      fonte: "SimilarWeb",
+      cor: "similarweb",
+      texto: "Tráfego do concorrente C caiu 18% no mês",
+    },
+    {
+      rotulo: "D",
+      ang: 305,
+      raio: 0.66,
+      fonte: "Ahrefs",
+      cor: "ahrefs",
+      texto: "Concorrente D ganhou 40 backlinks na semana",
+    },
+  ];
+
+  // Posição no prato e instante da descoberta, ambos derivados do ângulo.
+  // Convenção: 0 grau aponta pra cima e cresce em sentido horário, a mesma
+  // da varredura em conic-gradient, senão feixe e alvo saem de fase.
+  const alvosCalc = alvos.map((a) => {
+    const rad = (a.ang * Math.PI) / 180;
+    const x = Math.round((50 + a.raio * 50 * Math.sin(rad)) * 10) / 10;
+    const y = Math.round((50 - a.raio * 50 * Math.cos(rad)) * 10) / 10;
+    const pinga = Math.round((varredura.inicio + (a.ang / 360) * varredura.ciclo) * 100) / 100;
+    return { ...a, x, y, pinga, alerta: pinga + 0.35 };
+  });
+
+  return (
+    <div className="esp" aria-hidden="true">
+      <div className="esp-topo">
+        <i className="esp-farol" />
+        <strong>Radar de concorrência</strong>
+        <span className="esp-estado">24/7</span>
+      </div>
+
+      <div className="esp-cena">
+        <div className="esp-radar">
+          <i className="esp-anel esp-anel-1" />
+          <i className="esp-anel esp-anel-2" />
+          <i className="esp-mira" />
+          <i
+            className="esp-varredura"
+            style={
+              {
+                "--inicio": varredura.inicio,
+                "--ciclo": varredura.ciclo,
+              } as React.CSSProperties
+            }
+          />
+          {alvosCalc.map((a) => (
+            <span
+              key={a.rotulo}
+              className="esp-alvo"
+              style={
+                {
+                  "--x": a.x,
+                  "--y": a.y,
+                  "--pinga": a.pinga,
+                } as React.CSSProperties
+              }
+            >
+              <i />
+              {a.rotulo}
+            </span>
+          ))}
+        </div>
+
+        <div className="esp-feed">
+          <span className="esp-feed-titulo">Sinais interceptados</span>
+          {alvosCalc.map((a) => (
+            <div
+              key={a.rotulo}
+              className="esp-alerta"
+              style={{ "--inicio": a.alerta } as React.CSSProperties}
+            >
+              <span className={`esp-fonte esp-fonte-${a.cor}`}>
+                <i />
+                {a.fonte}
+              </span>
+              <p>{a.texto}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Server Component puro. Sem "use client", sem estado, sem efeito.
 export default function ProvaPage() {
   const { blocos, cta } = conteudoProva;
@@ -891,6 +1033,7 @@ export default function ProvaPage() {
                         {item.visual === "funil" && <SimulacaoFunil />}
                         {item.visual === "membros" && <SimulacaoMembros />}
                         {item.visual === "stack" && <SimulacaoStack />}
+                        {item.visual === "radar" && <SimulacaoRadar />}
                       </article>
                     </div>
                   ))}

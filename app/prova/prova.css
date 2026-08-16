@@ -3063,3 +3063,284 @@ body:has(.theme-v3) .skip-link {
     display: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   SIMULAÇÃO DE INTELIGÊNCIA DE MERCADO (radar de concorrência)
+   Um radar de espionagem clássico, verde sobre o escuro da casa:
+   o prato com anéis e mira, a varredura girando em loop, e os
+   alvos pingando NO INSTANTE em que o feixe passa por eles (o
+   ângulo do alvo vira delay, calculado no servidor). Cada alvo
+   dispara um alerta no feed de sinais interceptados, com a fonte
+   real do trabalho e a cor da marca no ponto do selo: Semrush
+   #ff642d, DataForSEO, SimilarWeb, Ahrefs. Uso nominativo por
+   decisão explícita do founder; nenhum logo em arquivo.
+
+   A mecânica é a mesma das outras simulações: tudo em CSS, zero
+   JavaScript de runtime, e as animações declaradas SÓ sob a aba
+   marcada, então a cena recomeça a cada seleção da aba. Isso
+   vale inclusive para a varredura em loop.
+
+   Os elementos ficam no estado FINAL e os keyframes de entrada
+   definem só o `from`: o destino de cada animação é o próprio
+   estado base. Assim, `animation: none` (movimento reduzido)
+   entrega a cena montada; a varredura some nesse modo, porque um
+   feixe congelado parece defeito, não radar.
+   ═══════════════════════════════════════════════════════════════ */
+
+.esp {
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 18px;
+  background: var(--noite);
+  overflow: hidden;
+  max-width: 372px;
+  width: 100%;
+  justify-self: center;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* ─── Cabeçalho: o nome do posto e o farol de plantão ─── */
+.esp-topo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+.esp-farol {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2fbf71;
+  box-shadow: 0 0 8px rgba(47, 191, 113, 0.8);
+  flex-shrink: 0;
+}
+.esp-topo strong {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.esp-estado {
+  margin-left: auto;
+  font-family: var(--hzn-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2fbf71;
+}
+
+.esp-cena {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background-image: radial-gradient(rgba(143, 166, 196, 0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* ─── O prato do radar ─── */
+.esp-radar {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 1px solid rgba(47, 191, 113, 0.4);
+  background: radial-gradient(circle, rgba(47, 191, 113, 0.1), rgba(47, 191, 113, 0.02) 58%, rgba(47, 191, 113, 0) 72%);
+}
+.esp-anel {
+  position: absolute;
+  border: 1px solid rgba(47, 191, 113, 0.22);
+  border-radius: 50%;
+}
+.esp-anel-1 {
+  inset: 17%;
+}
+.esp-anel-2 {
+  inset: 34%;
+}
+/* A mira: as duas linhas de eixo, pintadas por gradiente. */
+.esp-mira {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    linear-gradient(rgba(47, 191, 113, 0.16), rgba(47, 191, 113, 0.16)) 50% 0 / 1px 100% no-repeat,
+    linear-gradient(90deg, rgba(47, 191, 113, 0.16), rgba(47, 191, 113, 0.16)) 0 50% / 100% 1px no-repeat;
+}
+
+/* A varredura: um cone com o rastro ATRÁS do feixe, como radar de
+   verdade. O brilho máximo fica na borda dos 360 graus, que é a linha
+   do feixe; o rastro decai contra o sentido do giro. */
+.esp-varredura {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(47, 191, 113, 0) 0deg,
+    rgba(47, 191, 113, 0) 288deg,
+    rgba(47, 191, 113, 0.04) 300deg,
+    rgba(47, 191, 113, 0.42) 356deg,
+    rgba(47, 191, 113, 0.6) 360deg
+  );
+}
+
+/* O alvo: ponto com rótulo, cravado na posição que o servidor calculou.
+   Estado final: descoberto, aceso no prato. */
+.esp-alvo {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  font-weight: 700;
+  color: rgba(232, 238, 247, 0.85);
+}
+.esp-alvo i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2fbf71;
+  box-shadow: 0 0 7px rgba(47, 191, 113, 0.9);
+}
+
+/* ─── O feed de sinais ─── */
+.esp-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.esp-feed-titulo {
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hzn-text-muted);
+}
+.esp-alerta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: rgba(22, 32, 58, 0.85);
+  border: 1px solid var(--hzn-border-subtle);
+}
+.esp-alerta p {
+  margin: 0;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9.5px;
+  line-height: 1.35;
+  color: var(--gelo);
+}
+
+/* O selo da fonte: nome da ferramenta com o ponto na cor da marca. */
+.esp-fonte {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  min-width: 74px;
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--hzn-text-muted);
+}
+.esp-fonte i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.esp-fonte-semrush i {
+  background: #ff642d;
+}
+.esp-fonte-dataforseo i {
+  background: #1f9be0;
+}
+.esp-fonte-similarweb i {
+  background: #4d7cfe;
+}
+.esp-fonte-ahrefs i {
+  background: #ff8800;
+}
+
+/* ─── A encenação: só existe sob a aba marcada, então reinicia ───
+   Inclusive o loop da varredura. O pop do alvo escreve em transform e
+   opacidade; o brilho infinito só em box-shadow, de propósito, para as
+   duas animações do mesmo elemento não se atropelarem. */
+.prova-aba input:checked ~ .prova-aba-painel .esp-varredura {
+  animation: esp-gira calc(var(--ciclo) * 1s) linear infinite;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .esp-alvo {
+  animation:
+    esp-pinga 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+    esp-brilha 2.4s ease-in-out infinite;
+  animation-delay: calc(var(--pinga) * 1s), calc((var(--pinga) + 0.3) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .esp-alerta {
+  animation: esp-entra 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .esp-farol {
+  animation: esp-pulsa 2.2s ease-in-out infinite;
+}
+
+/* Keyframes de entrada só com `from`: o destino é o estado base. */
+@keyframes esp-gira {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@keyframes esp-pinga {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+}
+@keyframes esp-brilha {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.55);
+  }
+}
+@keyframes esp-entra {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@keyframes esp-pulsa {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* Movimento reduzido: a cena aparece montada. A varredura some porque
+   um feixe congelado no prato parece defeito, não radar; os alvos e o
+   feed ficam, que são o conteúdo. */
+@media (prefers-reduced-motion: reduce) {
+  .prova-aba input:checked ~ .prova-aba-painel .esp-alvo,
+  .prova-aba input:checked ~ .prova-aba-painel .esp-alerta,
+  .prova-aba input:checked ~ .prova-aba-painel .esp-farol {
+    animation: none;
+  }
+  .prova-aba input:checked ~ .prova-aba-painel .esp-varredura {
+    display: none;
+  }
+}

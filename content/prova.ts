@@ -7,8 +7,9 @@ export type Item = {
    *  lead scoring executando nó a nó até atualizar o CRM; "funil" mostra a
    *  captação atravessando o funil até virar linha no CRM; "membros" é a
    *  área de membros com módulos de vendas e de Claude; "stack" são as
-   *  ferramentas de prospecção em balões flutuantes. */
-  visual?: "whatsapp" | "n8n" | "funil" | "membros" | "stack";
+   *  ferramentas de prospecção em balões flutuantes; "radar" é o radar de
+   *  concorrência com o feed de sinais interceptados. */
+  visual?: "whatsapp" | "n8n" | "funil" | "membros" | "stack" | "radar";
 };
 
 export type Bloco = {
@@ -85,6 +86,7 @@ export const conteudoProva: ConteudoProva = {
         },
         {
           nome: "Inteligência de Mercado",
+          visual: "radar",
           descricao:
             "Monitora seus concorrentes, rastreia mudanças de preço, identifica empresas procurando sua solução. Meio como ter um espião, só que sem infringir leis e que opera no automático.",
         },

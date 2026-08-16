@@ -75,6 +75,7 @@ describe.skipIf(!disponivel)("HTML pré-renderizado de /prova", () => {
       'class="funil"',
       'class="memb"',
       'class="stack"',
+      'class="esp"',
     ]) {
       const tag = html.match(new RegExp(`<div[^>]*${classe}[^>]*>`));
       expect(tag, `faltou a ilustração ${classe}`).not.toBeNull();
