@@ -40,7 +40,7 @@ export default function ProvaPage() {
             </dl>
           )}
 
-          {bloco.id === "cta" && (
+          {indice === blocos.length - 1 && (
             <div className="prova-cta">
               {cta.acoes.map((acao) => (
                 <a
