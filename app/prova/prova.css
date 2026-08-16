@@ -48,6 +48,12 @@
   --prova-display: var(--font-instrument-serif), Georgia, serif;
   --prova-prosa: var(--font-newsreader), Georgia, serif;
   --prova-medida: 68ch;
+
+  /* Aponta o token de mono do design system para a fonte self-hosted que o
+     layout carrega. Sem isto, `--hzn-font-mono` é só um NOME de fonte e o
+     número em destaque cai em ui-monospace em quem não tem a JetBrains
+     instalada, apesar de a gente estar servindo o arquivo. */
+  --hzn-font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
 /* Casca: pinta o fundo por cima do body, que é pintado no :root com o grafite da v1 */
