@@ -34,7 +34,6 @@ export const conteudoProva: ConteudoProva = {
     },
     {
       id: "crm-proprio",
-      eyebrow: "O que usamos todo dia",
       titulo: "Sua squad técnica para soluções de vendas e vazão no backlog",
       subtitulo: "Onde a IA faz diferença para você",
       layout: "abas",
@@ -44,12 +43,41 @@ export const conteudoProva: ConteudoProva = {
       // parágrafo seguinte continuou começando com "Ele descobre empresas".
       paragrafos: [],
       itens: [
-        { nome: "Ingestão", descricao: "Varredura de mapa por nicho e cidade, com fila de revisão." },
-        { nome: "Prospecção", descricao: "Board de contas, carteira por vendedor e histórico." },
-        { nome: "Diagnóstico", descricao: "Análise do negócio do prospect, publicada em página própria." },
-        { nome: "Proposta", descricao: "Valores, escopo e prazo, publicados no mesmo endereço da análise." },
-        { nome: "Conversas", descricao: "WhatsApp e Instagram na mesma caixa de entrada." },
-        { nome: "Espaços do cliente", descricao: "Tarefas, checklists e arquivos por cliente, em bucket privado." },
+        {
+          nome: "AI Chatbots",
+          descricao:
+            "Qualifica, agenda, responde em 3 segundos. Clone do hello seu melhor vendedor online 24/7, sem folga, sem café, sem segunda-feira ruim.",
+        },
+        {
+          nome: "Sistema de qualificação de leads",
+          descricao:
+            "Encontra tudo sobre o lead, analisa se é fit, personaliza a primeira mensagem e entrega um dossiê completo já dentro do CRM. Sua equipe falando por mais tempo com quem pode comprar.",
+        },
+        {
+          nome: "Sistema de prospecção",
+          descricao:
+            "Aborda automaticamente com mensagens personalizadas 1-pra-1, só que agora no automático para listas ultrasegmentadas. Uma equipe de hunters sistemáticos para encher o pipeline.",
+        },
+        {
+          nome: "Sistemas de treinamento",
+          descricao:
+            "Acompanha calls, identifica gaps e recomenda melhorias em tempo real. Cada vendedor recebe coaching personalizado baseado em dados, não em achismo.",
+        },
+        {
+          nome: "CRM Automation",
+          descricao:
+            "CRM que se atualiza sozinho. Automações que preenchem campos, movem deals e criam tarefas sem ninguém clicar em nada. Seu pipeline sempre atualizado, seu forecast sempre confiável.",
+        },
+        {
+          nome: "Inteligência de Mercado",
+          descricao:
+            "Monitora seus concorrentes, rastreia mudanças de preço, identifica empresas procurando sua solução. Meio como ter um espião, só que sem infringir leis e que opera no automático.",
+        },
+        {
+          nome: "Dados",
+          descricao:
+            "Converse com seus dados como se fosse o ChatGPT. “Qual vendedor converte melhor?” “Onde perdemos mais deals?” Respostas instantâneas, sem abrir uma planilha sequer.",
+        },
       ],
     },
     {
