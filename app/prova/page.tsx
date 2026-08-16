@@ -980,7 +980,11 @@ export default function ProvaPage() {
               key={bloco.id}
               id={bloco.id}
               className={
-                bloco.layout === "abas" ? "prova-bloco prova-bloco-centro" : "prova-bloco"
+                bloco.layout === "abas"
+                  ? "prova-bloco prova-bloco-centro"
+                  : bloco.layout === "cartoes"
+                    ? "prova-bloco prova-bloco-centro prova-bloco-cartoes"
+                    : "prova-bloco"
               }
             >
               {bloco.eyebrow && <p className="prova-eyebrow">{bloco.eyebrow}</p>}
@@ -1044,6 +1048,29 @@ export default function ProvaPage() {
                 </div>
               )}
 
+              {/* Cartões espelhados da referência: glifo desenhado em CSS no
+                  tile do topo, título e texto. Os 4 <i> são ganchos que cada
+                  variante de glifo posiciona como quiser. */}
+              {bloco.layout === "cartoes" && bloco.itens && (
+                <div className="prova-cartoes">
+                  {bloco.itens.map((item) => (
+                    <article key={item.nome} className="prova-cartao">
+                      <div
+                        className={`prova-cartao-arte prova-arte-${item.icone}`}
+                        aria-hidden="true"
+                      >
+                        <i />
+                        <i />
+                        <i />
+                        <i />
+                      </div>
+                      <h3>{item.nome}</h3>
+                      <p>{item.descricao}</p>
+                    </article>
+                  ))}
+                </div>
+              )}
+
               {bloco.destaque && (
                 <dl className="prova-destaque">
                   <dt>{bloco.destaque.valor}</dt>
@@ -1054,9 +1081,9 @@ export default function ProvaPage() {
                 </dl>
               )}
 
-              {/* Na dobra de abas os itens já viraram painéis acima; sem esta
-                  guarda eles apareceriam duas vezes na mesma seção. */}
-              {bloco.itens && bloco.layout !== "abas" && (
+              {/* Nas dobras de abas e cartões os itens já foram renderizados
+                  acima; sem esta guarda apareceriam duas vezes na seção. */}
+              {bloco.itens && !bloco.layout && (
                 <dl className="prova-itens">
                   {bloco.itens.map((item) => (
                     <div key={item.nome} className="prova-item">

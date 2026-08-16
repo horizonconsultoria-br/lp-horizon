@@ -10,6 +10,8 @@ export type Item = {
    *  ferramentas de prospecção em balões flutuantes; "radar" é o radar de
    *  concorrência com o feed de sinais interceptados. */
   visual?: "whatsapp" | "n8n" | "funil" | "membros" | "stack" | "radar";
+  /** Glifo do cartão na dobra de layout "cartoes", desenhado em CSS. */
+  icone?: "squad" | "diagnostico" | "treinamento" | "projeto" | "saas";
 };
 
 export type Bloco = {
@@ -18,8 +20,9 @@ export type Bloco = {
   eyebrow?: string;
   /** Opcional: linha de apoio logo abaixo do título da dobra. */
   subtitulo?: string;
-  /** "abas" renderiza os `itens` como painéis selecionáveis em vez de lista. */
-  layout?: "abas";
+  /** "abas" renderiza os `itens` como painéis selecionáveis em vez de lista;
+   *  "cartoes" renderiza como grade de cartões com glifo, título e texto. */
+  layout?: "abas" | "cartoes";
   titulo: string;
   paragrafos: string[];
   destaque?: Destaque;
@@ -93,18 +96,47 @@ export const conteudoProva: ConteudoProva = {
       ],
     },
     {
-      id: "numeros",
-      eyebrow: "Medido, não estimado",
-      titulo: "A diferença entre achar e saber é ter medido.",
-      paragrafos: [
-        "Numa única operação de prospecção, a varredura cobriu quatro cidades e quatro segmentos e trouxe empresas qualificadas com nome, telefone, site e Instagram de cada uma.",
-        "Não é projeção nem estimativa de modelo. É o resultado de uma execução real, registrado no dia em que aconteceu.",
+      id: "playbook",
+      // Dobra espelhada de playbooklab.com.br ("O jeito Playbook Lab"), por
+      // instrução do founder: mesma estrutura e copy, paleta e nomes da casa.
+      // Os cartões "Projetos fechados" e "SAAS" são adição nossa, escritos na
+      // mesma voz e tamanho dos demais.
+      eyebrow: "Nossos serviços",
+      titulo: "O Playbook da Horizon",
+      layout: "cartoes",
+      paragrafos: [],
+      itens: [
+        {
+          nome: "Squad multidisciplinar",
+          icone: "squad",
+          descricao:
+            "Sales specialist, project manager e automation expert. Três perfis que falam a língua de vendas e escrevem em código. Seu time de IA desde o dia 1.",
+        },
+        {
+          nome: "Diagnóstico e Auditoria com IA",
+          icone: "diagnostico",
+          descricao:
+            "Antes de automatizar qualquer coisa, a gente entende o que trava. Diagnóstico completo da sua operação com um plano claro de onde IA faz diferença de verdade.",
+        },
+        {
+          nome: "Treinamento de IA",
+          icone: "treinamento",
+          descricao:
+            "Mini cursos práticos para seu time usar IA no dia a dia, sem depender de ninguém. Sua equipe extraindo o máximo das ferramentas de IA que já tem em mãos.",
+        },
+        {
+          nome: "Projetos fechados",
+          icone: "projeto",
+          descricao:
+            "Escopo, prazo e preço definidos antes de começar, pagos por entrega. Você sabe o que recebe e quando. O jeito de tirar do papel o sistema que o seu time não tem braço pra construir.",
+        },
+        {
+          nome: "SAAS",
+          icone: "saas",
+          descricao:
+            "Do zero ao produto no ar: arquitetura, código, deploy e operação. A gente constrói e opera o seu SaaS como se fosse nosso, porque o nosso também roda assim.",
+        },
       ],
-      destaque: {
-        valor: "1.465",
-        legenda: "empresas qualificadas numa única operação, em 4 cidades e 4 segmentos",
-        fonte: "progress.md HorizonConsultoria, entrada de 2026-08-03/04",
-      },
     },
     {
       id: "para-outros",

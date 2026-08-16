@@ -3349,3 +3349,350 @@ body:has(.theme-v3) .skip-link {
     display: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DOBRA "O PLAYBOOK DA HORIZON" (cartões de serviço)
+   Espelhada de playbooklab.com.br ("O jeito Playbook Lab"), por
+   instrução do founder: mesma estrutura e medidas, paleta e nomes
+   da casa. Medido no navegador na referência: cartões de 380px,
+   gap 20, raio 22, padding 20; tile de ilustração de 148px de
+   altura; título do cartão Syne 20px/20px 600 na cor de acento;
+   parágrafo Poppins 14px/19.6px; h2 Syne 42px/1 centrado; eyebrow
+   em pílula com contorno, Syne 14 600 caixa alta. As ilustrações
+   deles são PNG; as nossas são glifos desenhados em CSS, na regra
+   da página (nenhum arquivo de imagem novo).
+   ═══════════════════════════════════════════════════════════════ */
+
+/* O h2 desta dobra volta ao 42px fixo da referência (o título é curto e
+   cabe em uma linha em qualquer tela razoável); ganha do clamp da dobra
+   de abas por vir depois no arquivo, na mesma especificidade. */
+.prova-bloco-cartoes > h2 {
+  font-size: clamp(30px, 3.4vw, 42px);
+  line-height: 1;
+}
+
+/* A pílula do eyebrow: contorno fino, caixa alta, centrada. */
+.prova-bloco-cartoes > .prova-eyebrow {
+  display: block;
+  width: fit-content;
+  margin-inline: auto;
+  margin-bottom: clamp(28px, 4vw, 48px);
+  padding: 9px 18px;
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 8px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--gelo);
+}
+
+/* Flex com quebra em vez de grid: com 5 cartões numa referência de 3
+   colunas, a segunda fileira fica com 2 e o flex centrado a centraliza,
+   coisa que o grid deixaria alinhada à esquerda com um buraco. */
+.prova-cartoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.prova-cartao {
+  width: 380px;
+  max-width: 100%;
+  padding: 20px;
+  border-radius: 22px;
+  background: var(--hzn-bg-raised);
+  border: 1px solid var(--hzn-border-subtle);
+  text-align: left;
+}
+.prova-cartao h3 {
+  font-family: var(--font-syne), sans-serif;
+  font-variation-settings: normal;
+  font-size: 20px;
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: normal;
+  color: var(--hzn-brand-300);
+  margin: 18px 0 12px;
+}
+.prova-cartao p {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 19.6px;
+  color: var(--gelo);
+  margin: 0;
+}
+
+/* O tile da ilustração: painel interno com a malha pontilhada da casa. */
+.prova-cartao-arte {
+  position: relative;
+  height: 148px;
+  border-radius: 14px;
+  background-color: rgba(22, 32, 58, 0.6);
+  background-image: radial-gradient(rgba(143, 166, 196, 0.06) 1px, transparent 1px);
+  background-size: 16px 16px;
+  border: 1px solid var(--hzn-border-subtle);
+  overflow: hidden;
+}
+.prova-cartao-arte i {
+  position: absolute;
+  display: block;
+}
+
+/* ─── squad: dois avatares e duas pílulas de conversa ─── */
+.prova-arte-squad i:nth-child(1),
+.prova-arte-squad i:nth-child(2) {
+  border: 2px solid var(--bruma);
+  border-radius: 50%;
+}
+.prova-arte-squad i:nth-child(1) {
+  width: 46px;
+  height: 46px;
+  left: 24%;
+  top: 26%;
+}
+.prova-arte-squad i:nth-child(2) {
+  width: 36px;
+  height: 36px;
+  right: 22%;
+  top: 42%;
+}
+.prova-arte-squad i:nth-child(1)::before,
+.prova-arte-squad i:nth-child(2)::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 26%;
+  transform: translateX(-50%);
+  width: 32%;
+  height: 32%;
+  border-radius: 50%;
+  background: var(--bruma);
+}
+.prova-arte-squad i:nth-child(1)::after,
+.prova-arte-squad i:nth-child(2)::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  width: 62%;
+  height: 30%;
+  border-radius: 999px 999px 4px 4px;
+  background: var(--bruma);
+}
+.prova-arte-squad i:nth-child(3),
+.prova-arte-squad i:nth-child(4) {
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.55);
+}
+.prova-arte-squad i:nth-child(3) {
+  width: 64px;
+  left: 38%;
+  top: 22%;
+}
+.prova-arte-squad i:nth-child(4) {
+  width: 46px;
+  left: 30%;
+  bottom: 22%;
+  background: rgba(143, 166, 196, 0.35);
+}
+
+/* ─── diagnóstico: matriz de células com três acesas ─── */
+.prova-arte-diagnostico i:nth-child(1) {
+  inset: 24px 56px;
+  border-radius: 10px;
+  background-image: radial-gradient(rgba(143, 166, 196, 0.35) 5px, transparent 5.5px);
+  background-size: 26px 26px;
+  background-position: 6px 4px;
+}
+.prova-arte-diagnostico i:nth-child(2),
+.prova-arte-diagnostico i:nth-child(3),
+.prova-arte-diagnostico i:nth-child(4) {
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  background: var(--neve);
+  box-shadow: 0 0 10px rgba(169, 198, 232, 0.6);
+}
+.prova-arte-diagnostico i:nth-child(2) {
+  left: 84px;
+  top: 50px;
+}
+.prova-arte-diagnostico i:nth-child(3) {
+  right: 96px;
+  top: 76px;
+  background: var(--sinal);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
+}
+.prova-arte-diagnostico i:nth-child(4) {
+  left: 132px;
+  bottom: 28px;
+}
+
+/* ─── treinamento: trilha de aulas e o aluno ao lado ─── */
+.prova-arte-treinamento i:nth-child(1),
+.prova-arte-treinamento i:nth-child(2),
+.prova-arte-treinamento i:nth-child(3) {
+  left: 15%;
+  width: 100px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(143, 166, 196, 0.3);
+}
+.prova-arte-treinamento i:nth-child(1) {
+  top: 30px;
+}
+.prova-arte-treinamento i:nth-child(2) {
+  top: 66px;
+}
+.prova-arte-treinamento i:nth-child(3) {
+  top: 102px;
+}
+.prova-arte-treinamento i:nth-child(1)::before,
+.prova-arte-treinamento i:nth-child(2)::before,
+.prova-arte-treinamento i:nth-child(3)::before {
+  content: "";
+  position: absolute;
+  left: -18px;
+  top: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sinal);
+}
+.prova-arte-treinamento i:nth-child(4) {
+  right: 18%;
+  top: 40px;
+  width: 52px;
+  height: 52px;
+  border: 2px solid var(--bruma);
+  border-radius: 50%;
+}
+.prova-arte-treinamento i:nth-child(4)::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 24%;
+  transform: translateX(-50%);
+  width: 32%;
+  height: 32%;
+  border-radius: 50%;
+  background: var(--bruma);
+}
+.prova-arte-treinamento i:nth-child(4)::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border: 1.5px dashed rgba(143, 166, 196, 0.45);
+  border-radius: 14px;
+}
+
+/* ─── projeto fechado: o documento de escopo com o check ─── */
+.prova-arte-projeto i:nth-child(1) {
+  left: 50%;
+  top: 50%;
+  transform: translate(-58%, -50%);
+  width: 92px;
+  height: 108px;
+  border-radius: 10px;
+  border: 1.5px solid var(--bruma);
+  background-image:
+    linear-gradient(rgba(143, 166, 196, 0.45), rgba(143, 166, 196, 0.45)),
+    linear-gradient(rgba(143, 166, 196, 0.45), rgba(143, 166, 196, 0.45)),
+    linear-gradient(rgba(143, 166, 196, 0.45), rgba(143, 166, 196, 0.45));
+  background-repeat: no-repeat;
+  background-size: 56px 5px, 44px 5px, 50px 5px;
+  background-position: 16px 22px, 16px 42px, 16px 62px;
+}
+.prova-arte-projeto i:nth-child(2) {
+  left: 50%;
+  top: 50%;
+  transform: translate(28px, 14px);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--sinal);
+  border: 3px solid var(--noite);
+}
+.prova-arte-projeto i:nth-child(2)::before {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ─── SAAS: a janela do produto e a nuvem ─── */
+.prova-arte-saas i:nth-child(1) {
+  left: 50%;
+  top: 54%;
+  transform: translate(-54%, -50%);
+  width: 128px;
+  height: 88px;
+  border-radius: 10px;
+  border: 1.5px solid var(--bruma);
+}
+.prova-arte-saas i:nth-child(1)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 18px;
+  border-bottom: 1.5px solid rgba(143, 166, 196, 0.5);
+  background-image:
+    radial-gradient(rgba(143, 166, 196, 0.7) 2.5px, transparent 3px),
+    radial-gradient(rgba(143, 166, 196, 0.7) 2.5px, transparent 3px),
+    radial-gradient(rgba(143, 166, 196, 0.7) 2.5px, transparent 3px);
+  background-repeat: no-repeat;
+  background-size: 8px 8px;
+  background-position: 8px 5px, 20px 5px, 32px 5px;
+}
+.prova-arte-saas i:nth-child(1)::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  width: 58px;
+  height: 34px;
+  border-radius: 6px;
+  background: rgba(59, 130, 246, 0.35);
+}
+.prova-arte-saas i:nth-child(2) {
+  right: 20%;
+  top: 24px;
+  width: 54px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--neve);
+}
+.prova-arte-saas i:nth-child(2)::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: -12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--neve);
+}
+.prova-arte-saas i:nth-child(2)::after {
+  content: "";
+  position: absolute;
+  right: 8px;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--neve);
+}
