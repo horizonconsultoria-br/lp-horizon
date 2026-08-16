@@ -190,7 +190,8 @@ describe("título da dobra de abas: uma linha", () => {
    * defeito aparece em produção, não aqui. Então a copy fica presa: mudou,
    * este teste fica vermelho e a mensagem diz o que fazer.
    */
-  const TITULO_MEDIDO = "Sua squad técnica para soluções de vendas e vazão no backlog";
+  const TITULO_MEDIDO =
+    "Seu time técnico para soluções de vendas, automações e desenvolvimento de software";
 
   it("a copy do título continua sendo a que foi medida", () => {
     const dobra = conteudoProva.blocos.find((b) => b.layout === "abas");
