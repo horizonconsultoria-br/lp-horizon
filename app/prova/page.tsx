@@ -12,7 +12,12 @@ export default function ProvaPage() {
       {/* HERÓI. A fotografia é o argumento antes da primeira palavra: um
           horizonte em hora azul, para uma empresa chamada Horizon. */}
       <header className="prova-heroi" id={abertura.id}>
+        {/* A pilha de camadas do herói, cada uma com um trabalho só.
+            A fotografia é a base e também o fallback: se o vídeo não tocar
+            (dados economizados, movimento reduzido, formato não suportado),
+            a cena continua de pé. */}
         <Image
+          className="prova-heroi-foto"
           src="/prova/hero-bruma.jpg"
           alt=""
           fill
@@ -21,6 +26,24 @@ export default function ProvaPage() {
           sizes="100vw"
           aria-hidden="true"
         />
+
+        {/* A neblina em movimento. Fumaça tingida no azul da marca, em loop
+            palíndromo para a emenda não aparecer, composta em `screen`: o
+            fundo escuro do vídeo some e só a luz da fumaça soma sobre a foto. */}
+        <video
+          className="prova-heroi-bruma"
+          src="/prova/bruma.webm"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+        />
+
+        <div className="prova-heroi-veu" aria-hidden="true" />
+        <div className="prova-heroi-veu-topo" aria-hidden="true" />
+        <div className="prova-heroi-veu-pe" aria-hidden="true" />
 
         <nav className="prova-nav" aria-label="Principal">
           <a className="prova-marca" href="/prova">
