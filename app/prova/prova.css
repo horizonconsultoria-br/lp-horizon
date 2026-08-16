@@ -62,6 +62,20 @@
   --hzn-font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
 }
 
+/* O skip-link vive fora do wrapper .theme-v3 (é irmão de <main> no layout
+   raiz), então herdaria o âmbar global e apareceria laranja sobre a página
+   azul no primeiro Tab. Alcançamos ele por :has() sem tocar o layout raiz,
+   que é compartilhado com a landing em produção.
+
+   Dentro desta regra, var(--hzn-brand-500) resolveria no próprio .skip-link,
+   que fica FORA do escopo .theme-v3 — pegaria o âmbar global de novo. Por
+   isso os valores abaixo são literais azuis, a mesma cópia de
+   public/v2/index.html que .theme-v3 já usa, e não var(). */
+body:has(.theme-v3) .skip-link {
+  background: #3b82f6;
+  color: #0a0a0a;
+}
+
 /* Casca: pinta o fundo por cima do body, que é pintado no :root com o grafite da v1 */
 .prova-shell {
   min-height: 100vh;
