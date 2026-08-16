@@ -86,7 +86,6 @@ export default function ProvaPage() {
         </nav>
 
         <div className="prova-heroi-corpo">
-          <p className="prova-eyebrow">{abertura.eyebrow}</p>
           <h1>{abertura.titulo}</h1>
           {abertura.paragrafos[0] && (
             <p className="prova-heroi-sub">{abertura.paragrafos[0]}</p>
@@ -113,7 +112,7 @@ export default function ProvaPage() {
         <article>
           {demais.map((bloco, indice) => (
             <section key={bloco.id} id={bloco.id} className="prova-bloco">
-              <p className="prova-eyebrow">{bloco.eyebrow}</p>
+              {bloco.eyebrow && <p className="prova-eyebrow">{bloco.eyebrow}</p>}
               <h2>{bloco.titulo}</h2>
 
               <div className="prova-prosa">

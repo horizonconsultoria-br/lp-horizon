@@ -233,15 +233,23 @@
   box-shadow: var(--hzn-glow-amber);
 }
 
-/* A manchete assenta no pé da imagem, onde a fotografia é mais escura, e
-   deixa a faixa de névoa respirando por cima dela. Contraste vem de graça. */
+/* Bloco de texto centralizado na vertical do herói. A nav ocupa a primeira
+   faixa do grid e o marcador de rolagem a última, então centrar aqui é
+   centrar no espaço que sobra entre os dois, que é o que o olho lê como
+   meio da tela. */
 .prova-heroi-corpo {
-  align-self: end;
+  align-self: center;
   width: 100%;
   max-width: var(--hzn-container-max);
   margin-inline: auto;
   padding-inline: var(--hzn-container-padding);
-  padding-block: 0 clamp(28px, 5vh, 56px);
+  padding-block: clamp(24px, 4vh, 48px);
+}
+
+/* Sem o eyebrow, a manchete é o primeiro elemento do bloco e não precisa
+   mais do espaço que existia acima dela. */
+.prova-heroi-corpo > h1 {
+  margin-top: 0;
 }
 
 /* O eyebrow usa o claro da própria névoa. A versão anterior tinha um acento

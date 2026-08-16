@@ -3,7 +3,8 @@ export type Item = { nome: string; descricao: string };
 
 export type Bloco = {
   id: string;
-  eyebrow: string;
+  /** Opcional: o herói não usa. */
+  eyebrow?: string;
   titulo: string;
   paragrafos: string[];
   destaque?: Destaque;
@@ -21,7 +22,6 @@ export const conteudoProva: ConteudoProva = {
   blocos: [
     {
       id: "abertura",
-      eyebrow: "Software e IA para quem já tem produto",
       titulo: "Tecnologia e Inteligência Artificial aplicada a vendas e otimização operacional",
       paragrafos: [
         "Aumente sua receita e diminua seu custo operacional usando tecnologia, automação e inteligência artificial do jeito certo",

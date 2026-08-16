@@ -23,7 +23,7 @@ const IDS_ESPERADOS = [
 function textosVisiveis(): string[] {
   const out: string[] = [];
   for (const b of conteudoProva.blocos) {
-    out.push(b.eyebrow, b.titulo, ...b.paragrafos);
+    out.push(b.eyebrow ?? "", b.titulo, ...b.paragrafos);
     if (b.destaque) out.push(b.destaque.valor, b.destaque.legenda);
     for (const i of b.itens ?? []) out.push(i.nome, i.descricao);
   }
@@ -40,7 +40,7 @@ function textosVisiveis(): string[] {
  */
 function textoAgrupadoPorBloco(blocos: Bloco[]): string[] {
   return blocos.map((b) => {
-    const partes: string[] = [b.eyebrow, b.titulo, ...b.paragrafos];
+    const partes: string[] = [b.eyebrow ?? "", b.titulo, ...b.paragrafos];
     if (b.destaque) partes.push(b.destaque.valor, b.destaque.legenda);
     for (const i of b.itens ?? []) partes.push(i.nome, i.descricao);
     return partes.join(" ");
