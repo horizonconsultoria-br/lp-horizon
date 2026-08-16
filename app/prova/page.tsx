@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Fragment } from "react";
 import { conteudoProva } from "@/content/prova";
 
 /**
@@ -128,6 +129,112 @@ function SimulacaoWhatsApp() {
       <div className="zap-barra">
         <span className="zap-campo">Mensagem</span>
         <span className="zap-enviar" />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Simulação da automação de lead scoring executando no n8n.
+ *
+ * Mesma natureza da simulação de WhatsApp: ILUSTRAÇÃO encenada, não registro
+ * de execução real, e escondida de leitor de tela pelo mesmo motivo. O visual
+ * usa o vocabulário do n8n (nós, fios, execução em sequência) nas cores da
+ * casa, sem logo nem identidade da ferramenta além do nome.
+ *
+ * A linha do tempo é calculada aqui, no servidor, e vira custom properties.
+ * Quem toca a cena é o CSS, sob a aba marcada, então ela recomeça a cada
+ * seleção da aba, como a conversa de WhatsApp. Zero JavaScript no navegador.
+ */
+function SimulacaoN8N() {
+  // Cada passo roda por `dur` segundos; o pulso parte quando o nó termina e
+  // chega um pouco antes do próximo acender.
+  const passos: Array<{
+    titulo: string;
+    sub: string;
+    icone: "raio" | "mais" | "base";
+    dur: number;
+  }> = [
+    { titulo: "Novo lead", sub: "Chegou pelo formulário do site", icone: "raio", dur: 0.7 },
+    { titulo: "Lead score", sub: "Cargo e porte somam +35", icone: "mais", dur: 0.9 },
+    { titulo: "CRM atualizado", sub: "Sobe pro topo da fila", icone: "base", dur: 0.8 },
+  ];
+
+  let t = 0.5;
+  const nos = passos.map((p, i) => {
+    const inicio = t;
+    const fim = inicio + p.dur;
+    const fio = i < passos.length - 1 ? { inicio: fim + 0.05, dur: 0.5 } : null;
+    t = fim + 0.6;
+    return { ...p, inicio, fim, fio };
+  });
+  // O cartão só muda depois que o último nó grava: primeiro a barra sobe,
+  // depois o número troca, e os selos são o ponto final.
+  const iniciaCarta = nos[nos.length - 1].fim + 0.25;
+
+  return (
+    <div className="n8n" aria-hidden="true">
+      <div className="n8n-topo">
+        <span className="n8n-pontos">
+          <i />
+          <i />
+          <i />
+        </span>
+        <span className="n8n-titulo">n8n · lead score</span>
+      </div>
+
+      <div className="n8n-tela">
+        {nos.map((no) => (
+          <Fragment key={no.titulo}>
+            <div
+              className="n8n-no"
+              style={{ "--inicio": no.inicio, "--dur": no.dur } as React.CSSProperties}
+            >
+              <span className={`n8n-icone n8n-icone-${no.icone}`} />
+              <span className="n8n-info">
+                <strong>{no.titulo}</strong>
+                <em>{no.sub}</em>
+              </span>
+              <span className="n8n-status">
+                <i className="n8n-spinner" />
+                <i className="n8n-check">✓</i>
+              </span>
+            </div>
+            {no.fio && (
+              <div
+                className="n8n-fio"
+                style={{ "--inicio": no.fio.inicio, "--dur": no.fio.dur } as React.CSSProperties}
+              >
+                <i className="n8n-pulso" />
+              </div>
+            )}
+          </Fragment>
+        ))}
+      </div>
+
+      <div className="n8n-card" style={{ "--carta": iniciaCarta } as React.CSSProperties}>
+        <span className="n8n-card-selo">CRM</span>
+        <div className="n8n-card-topo">
+          <span className="n8n-avatar" />
+          <span className="n8n-quem">
+            <strong>M. Ribeiro</strong>
+            <em>Diretora comercial</em>
+          </span>
+          <span className="n8n-score">
+            <span className="n8n-score-rotulo">lead score</span>
+            <span className="n8n-score-valor">
+              <span className="n8n-score-antes">52</span>
+              <span className="n8n-score-depois">87</span>
+            </span>
+          </span>
+        </div>
+        <div className="n8n-barra">
+          <i className="n8n-barra-fill" />
+        </div>
+        <div className="n8n-card-pe">
+          <span className="n8n-chip">+35 pontos</span>
+          <span className="n8n-selo-quente">Lead quente</span>
+        </div>
       </div>
     </div>
   );
@@ -298,6 +405,7 @@ export default function ProvaPage() {
                           <p>{item.descricao}</p>
                         </div>
                         {item.visual === "whatsapp" && <SimulacaoWhatsApp />}
+                        {item.visual === "n8n" && <SimulacaoN8N />}
                       </article>
                     </div>
                   ))}

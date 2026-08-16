@@ -3,8 +3,9 @@ export type Item = {
   nome: string;
   descricao: string;
   /** Ilustração opcional do painel. "whatsapp" simula um atendimento que
-   *  termina virando compromisso na agenda. */
-  visual?: "whatsapp";
+   *  termina virando compromisso na agenda; "n8n" encena uma automação de
+   *  lead scoring executando nó a nó até atualizar o CRM. */
+  visual?: "whatsapp" | "n8n";
 };
 
 export type Bloco = {
@@ -72,6 +73,7 @@ export const conteudoProva: ConteudoProva = {
         },
         {
           nome: "CRM Automation",
+          visual: "n8n",
           descricao:
             "CRM que se atualiza sozinho. Automações que preenchem campos, movem deals e criam tarefas sem ninguém clicar em nada. Seu pipeline sempre atualizado, seu forecast sempre confiável.",
         },
