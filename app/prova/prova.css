@@ -138,7 +138,7 @@
   margin-top: var(--hzn-space-3);
   font-family: var(--hzn-font-sans);
   font-size: var(--hzn-text-xs);
-  color: var(--hzn-text-muted);
+  color: var(--hzn-text-secondary);
 }
 
 /* Itens: lista de definição, não card com hover */
