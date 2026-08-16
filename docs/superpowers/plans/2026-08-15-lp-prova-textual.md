@@ -124,7 +124,6 @@ function textosVisiveis(): string[] {
     if (b.destaque) out.push(b.destaque.valor, b.destaque.legenda);
     for (const i of b.itens ?? []) out.push(i.nome, i.descricao);
   }
-  out.push(conteudoProva.cta.titulo, conteudoProva.cta.subtitulo);
   for (const a of conteudoProva.cta.acoes) out.push(a.rotulo);
   return out;
 }
@@ -221,7 +220,9 @@ export type Bloco = {
 };
 
 export type Acao = { rotulo: string; href: string; primaria: boolean };
-export type CTA = { titulo: string; subtitulo: string; acoes: Acao[] };
+// Só as ações. O bloco "cta" já carrega título e parágrafos como qualquer outro
+// bloco; um segundo par título/subtítulo aqui seria dado que ninguém renderiza.
+export type CTA = { acoes: Acao[] };
 
 export type ConteudoProva = { blocos: Bloco[]; cta: CTA };
 
@@ -247,8 +248,6 @@ export const conteudoProva: ConteudoProva = {
     semente("cta"),
   ],
   cta: {
-    titulo: "Título do CTA",
-    subtitulo: "Subtítulo do CTA",
     acoes: [{ rotulo: "Agendar conversa", href: "#", primaria: true }],
   },
 };
@@ -424,8 +423,6 @@ export const conteudoProva: ConteudoProva = {
     },
   ],
   cta: {
-    titulo: "Agende uma conversa",
-    subtitulo: "Resposta em até 24h úteis. Direto com quem vai tocar o projeto.",
     acoes: [
       { rotulo: "Agendar conversa", href: "https://consultoriahorizon.com.br/#contato", primaria: true },
       { rotulo: "Falar no WhatsApp", href: "https://consultoriahorizon.com.br/#contato", primaria: false },
@@ -477,7 +474,9 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-const css = readFileSync(join(__dirname, "prova.css"), "utf-8");
+// process.cwd() e não __dirname: o Vitest roda os .ts como ESM, onde __dirname
+// não é garantido. Mesma forma que build-output.test.ts usa.
+const css = readFileSync(join(process.cwd(), "app", "prova", "prova.css"), "utf-8");
 
 /** Tokens cujo valor âmbar apareceria visualmente se não fossem redefinidos. */
 const TOKENS_OBRIGATORIOS = [
@@ -633,6 +632,9 @@ Expected: FAIL com `ENOENT` em `prova.css`.
   border-bottom: 0;
 }
 
+/* h1 e h2 compartilham o estilo: só a abertura é h1, e visualmente
+   os títulos de bloco são o mesmo objeto. */
+.prova-bloco h1,
 .prova-bloco h2 {
   font-family: var(--prova-display);
   font-weight: 400;
@@ -867,10 +869,12 @@ export default function ProvaPage() {
 
   return (
     <article>
-      {blocos.map((bloco) => (
+      {blocos.map((bloco, indice) => (
         <section key={bloco.id} id={bloco.id} className="prova-bloco">
           <p className="eyebrow">{bloco.eyebrow}</p>
-          <h2>{bloco.titulo}</h2>
+          {/* Só a abertura é h1. Página sem h1 quebra hierarquia de heading
+              pra leitor de tela e perde ponto de SEO no Lighthouse. */}
+          {indice === 0 ? <h1>{bloco.titulo}</h1> : <h2>{bloco.titulo}</h2>}
 
           <div className="prova-prosa">
             {bloco.paragrafos.map((p, i) => (
@@ -1035,6 +1039,10 @@ describe.skipIf(!disponivel)("HTML pré-renderizado de /prova", () => {
 
   it("aplica o tema escopado", () => {
     expect(html).toContain("theme-v3");
+  });
+
+  it("tem exatamente um h1", () => {
+    expect(html.match(/<h1[\s>]/gi)?.length ?? 0).toBe(1);
   });
 
   it("nunca chama DocsGrowth de cliente no HTML final", () => {
