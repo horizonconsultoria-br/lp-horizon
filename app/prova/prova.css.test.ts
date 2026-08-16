@@ -42,6 +42,46 @@ const AMBAR_PROIBIDO = [
   "rgba(245,158,11",
 ];
 
+/**
+ * Extrai só o corpo do primeiro bloco `.theme-v3 { ... }`, contando chaves
+ * pra achar o fechamento certo. Checar tokens dentro desse recorte (em vez
+ * do arquivo inteiro) evita que uma declaração em QUALQUER outra regra —
+ * ou um comentário em outro lugar do arquivo — conte como redefinição.
+ */
+function extrairBlocoThemeV3(cssTexto: string): string {
+  const inicio = cssTexto.indexOf(".theme-v3");
+  if (inicio === -1) throw new Error("bloco .theme-v3 não encontrado no CSS");
+
+  const aberturaChave = cssTexto.indexOf("{", inicio);
+  if (aberturaChave === -1) throw new Error("chave de abertura de .theme-v3 não encontrada");
+
+  let profundidade = 0;
+  let i = aberturaChave;
+  for (; i < cssTexto.length; i++) {
+    if (cssTexto[i] === "{") profundidade++;
+    else if (cssTexto[i] === "}") {
+      profundidade--;
+      if (profundidade === 0) break;
+    }
+  }
+
+  return cssTexto.slice(aberturaChave + 1, i);
+}
+
+/**
+ * Casa a DECLARAÇÃO de verdade de um token — o nome seguido de dois-pontos —
+ * dentro de um recorte de CSS já isolado ao bloco certo. Não usa
+ * `.includes()`, que seria satisfeito por qualquer menção do nome, inclusive
+ * dentro de um comentário ou de um `var(--token)` de consumo.
+ */
+function tokenEstaDeclarado(blocoCss: string, token: string): boolean {
+  const escapado = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const padraoDeDeclaracao = new RegExp(`${escapado}\\s*:`);
+  return padraoDeDeclaracao.test(blocoCss);
+}
+
+const blocoThemeV3 = extrairBlocoThemeV3(css);
+
 describe("tema escopado", () => {
   it("define o escopo .theme-v3", () => {
     expect(css).toMatch(/\.theme-v3\s*\{/);
@@ -49,7 +89,7 @@ describe("tema escopado", () => {
 
   it("redefine todos os tokens que teriam vazamento âmbar", () => {
     for (const t of TOKENS_OBRIGATORIOS) {
-      expect(css.includes(t), `token não redefinido: ${t}`).toBe(true);
+      expect(tokenEstaDeclarado(blocoThemeV3, t), `token não declarado dentro de .theme-v3: ${t}`).toBe(true);
     }
   });
 
@@ -100,5 +140,45 @@ describe("regressão: glow âmbar em rgba", () => {
       }
     }
     expect(encontrado, "lista deveria detectar rgba âmbar").toBe(true);
+  });
+});
+
+describe("regressão: guarda de token com dentes de verdade", () => {
+  /**
+   * Prova 1: a guarda antiga usava `css.includes(token)` sobre o arquivo
+   * inteiro, satisfeita por qualquer menção do nome — inclusive um
+   * comentário que promete a declaração sem entregar. Este CSS de exemplo
+   * reproduz exatamente esse caso: --hzn-glow-amber só existe dentro de um
+   * comentário, nunca como declaração real. A guarda tem que reprovar.
+   */
+  it("reprova quando o token só aparece dentro de um comentário", () => {
+    const cssComTokenSoEmComentario = `
+      .theme-v3 {
+        /* TODO: lembrar de redefinir --hzn-glow-amber aqui algum dia */
+        --hzn-bg-base: #131316;
+      }
+    `;
+    const bloco = extrairBlocoThemeV3(cssComTokenSoEmComentario);
+    expect(tokenEstaDeclarado(bloco, "--hzn-glow-amber")).toBe(false);
+  });
+
+  /**
+   * Prova 2: usando o CSS real do arquivo, remove a declaração verdadeira
+   * de --hzn-glow-amber do bloco .theme-v3 (a mesma que, se apagada,
+   * devolveria o glow âmbar ao :hover do .btn-primary) e confirma que a
+   * guarda fica vermelha. O regex de remoção usa `--hzn-glow-amber:` com
+   * dois-pontos colado, então não risca --hzn-glow-amber-strong por engano
+   * — e o teste confirma isso explicitamente.
+   */
+  it("fica vermelha se a declaração real de --hzn-glow-amber for apagada do bloco", () => {
+    expect(tokenEstaDeclarado(blocoThemeV3, "--hzn-glow-amber")).toBe(true);
+
+    const blocoSemGlowAmbar = blocoThemeV3.replace(/--hzn-glow-amber:\s*[^;]+;/, "");
+    expect(tokenEstaDeclarado(blocoSemGlowAmbar, "--hzn-glow-amber")).toBe(false);
+
+    // --hzn-glow-amber-strong não pode ter sido afetado pela remoção acima:
+    // prova que o regex de escape/match é específico ao token exato, não a
+    // um prefixo compartilhado.
+    expect(tokenEstaDeclarado(blocoSemGlowAmbar, "--hzn-glow-amber-strong")).toBe(true);
   });
 });
