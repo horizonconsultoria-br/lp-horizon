@@ -262,12 +262,14 @@
   font-family: var(--prova-display);
   font-variation-settings: "SOFT" 0, "WONK" 1, "opsz" 120;
   font-weight: 400;
-  font-size: clamp(2.6rem, 7.2vw, 5.6rem);
-  line-height: 0.98;
-  letter-spacing: -0.028em;
+  /* Escala recalibrada para a manchete longa (79 caracteres). Na frase curta
+     anterior 5.6rem respirava; aqui ela tomaria o herói inteiro. */
+  font-size: clamp(2.2rem, 5.4vw, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.026em;
   color: var(--gelo);
   margin: 0;
-  max-width: 15ch;
+  max-width: 19ch;
   text-wrap: balance;
 }
 
@@ -276,7 +278,9 @@
   font-size: clamp(1.02rem, 1.35vw, 1.2rem);
   line-height: 1.62;
   color: rgba(232, 238, 247, 0.82);
-  max-width: 46ch;
+  max-width: 56ch;
+  /* `pretty` evita a última linha órfã, que aqui deixava "certo" sozinho. */
+  text-wrap: pretty;
   margin: clamp(22px, 3.4vh, 34px) 0 0;
 }
 

@@ -30,14 +30,14 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "A gente roda a própria operação no software que vende",
+  title: "Tecnologia e Inteligência Artificial aplicada a vendas e otimização operacional",
   description:
-    "O CRM que a Horizon usa para prospectar, diagnosticar e propor foi construído pela Horizon e roda em produção. Veja a operação e os números que ela gerou.",
+    "Aumente sua receita e diminua seu custo operacional usando tecnologia, automação e inteligência artificial do jeito certo.",
   alternates: { canonical: "/prova" },
   openGraph: {
-    title: "A gente roda a própria operação no software que vende",
+    title: "Tecnologia e Inteligência Artificial aplicada a vendas e otimização operacional",
     description:
-      "O CRM que a Horizon usa para prospectar, diagnosticar e propor foi construído pela Horizon e roda em produção.",
+      "Aumente sua receita e diminua seu custo operacional usando tecnologia, automação e inteligência artificial do jeito certo.",
     url: "https://consultoriahorizon.com.br/prova",
     type: "website",
     locale: "pt_BR",
@@ -46,15 +46,15 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "A Horizon rodando o próprio CRM, o software que ela usa para vender aos clientes.",
+        alt: "Tecnologia e inteligência artificial aplicadas a vendas e operação, pela Horizon.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "A gente roda a própria operação no software que vende",
+    title: "Tecnologia e Inteligência Artificial aplicada a vendas e otimização operacional",
     description:
-      "O CRM que a Horizon usa para prospectar, diagnosticar e propor foi construído pela Horizon e roda em produção.",
+      "Aumente sua receita e diminua seu custo operacional usando tecnologia, automação e inteligência artificial do jeito certo.",
     images: ["/og-image.png"],
   },
 };

@@ -22,9 +22,9 @@ export const conteudoProva: ConteudoProva = {
     {
       id: "abertura",
       eyebrow: "Software e IA para quem já tem produto",
-      titulo: "A gente roda a própria operação no software que vende.",
+      titulo: "Tecnologia e Inteligência Artificial aplicada a vendas e otimização operacional",
       paragrafos: [
-        "Toda software house diz que domina IA. Poucas usam o que constroem para tocar o próprio negócio.",
+        "Aumente sua receita e diminua seu custo operacional usando tecnologia, automação e inteligência artificial do jeito certo",
         "O CRM que a Horizon usa para prospectar, diagnosticar e propor foi construído pela Horizon, roda em produção e muda quase todo dia. O que você lê abaixo não é portfólio: é a nossa operação, com os números que ela gerou.",
       ],
     },
