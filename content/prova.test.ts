@@ -77,10 +77,13 @@ describe("regra de veracidade (spec §4)", () => {
   });
 
   it("descreve DocsGrowth como demo onde ele aparece", () => {
-    const mencoes = textosVisiveis().filter((t) => /DocsGrowth/i.test(t));
-    expect(mencoes.length).toBeGreaterThan(0);
-    for (const t of mencoes) {
-      expect(/demo/i.test(t), `sem a palavra demo: "${t}"`).toBe(true);
+    const blocosComDocs = conteudoProva.blocos.filter((b) =>
+      textoAgrupadoPorBloco([b])[0].match(/DocsGrowth/i)
+    );
+    expect(blocosComDocs.length).toBeGreaterThan(0);
+    for (const b of blocosComDocs) {
+      const textoBloco = textoAgrupadoPorBloco([b])[0];
+      expect(/demo/i.test(textoBloco), `bloco ${b.id} menciona DocsGrowth mas sem "demo" em nenhum campo`).toBe(true);
     }
   });
 
@@ -108,6 +111,25 @@ describe("regra de veracidade (spec §4)", () => {
       algumBlocoAssocia([blocoRuim], /DocsGrowth/i, /cliente/i),
       "a guarda deveria pegar DocsGrowth associado a cliente no mesmo bloco, mesmo em campos diferentes",
     ).toBe(true);
+  });
+
+  it("REGRESSAO: aceita DocsGrowth descrito como demo mesmo quando em campos diferentes do mesmo bloco", () => {
+    // Cenario que explica o conserto: nome do item é "DocsGrowth", mas descrição
+    // do mesmo item (campo diferente, mesmo bloco) é "Demo hi-fi...". A guarda
+    // agora agrupa por bloco e valida que o bloco COMO UM TODO contém "demo".
+    // Isso corrige o problema onde achatamento por campo rejeitava o bloco.
+    const blocoBom: Bloco = {
+      id: "teste",
+      eyebrow: "teste",
+      titulo: "Produtos",
+      paragrafos: ["Lista de produtos."],
+      itens: [
+        { nome: "DocsGrowth", descricao: "Demo hi-fi de CRM construída." },
+      ],
+    };
+    const textoBloco = textoAgrupadoPorBloco([blocoBom])[0];
+    expect(/DocsGrowth/i.test(textoBloco), "bloco contém DocsGrowth").toBe(true);
+    expect(/demo/i.test(textoBloco), "bloco contém demo").toBe(true);
   });
 });
 

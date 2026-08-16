@@ -86,7 +86,7 @@ export const conteudoProva: ConteudoProva = {
             "Ferramenta de gestão de projetos com WhatsApp integrado, construída pela Horizon e hoje em staging.",
         },
         {
-          nome: "DocsGrowth (demo)",
+          nome: "DocsGrowth",
           descricao:
             "Demo hi-fi de CRM sob medida, construída para a DocsGrowth e publicada com dados coerentes, feita para ser navegada antes de qualquer contrato.",
         },
