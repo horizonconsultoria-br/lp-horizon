@@ -54,6 +54,12 @@
      número em destaque cai em ui-monospace em quem não tem a JetBrains
      instalada, apesar de a gente estar servindo o arquivo. */
   --hzn-font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /* Mesmo defeito, mesma solução: --hzn-font-sans é só uma lista de NOMES
+     ('Inter', system-ui, ...) e o layout raiz serve Inter self-hosted sob
+     --font-inter, mas nenhuma regra consumia essa variável. Sem isto, a
+     camada de interface cai em system-ui pra quem não tem Inter instalada. */
+  --hzn-font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
 }
 
 /* Casca: pinta o fundo por cima do body, que é pintado no :root com o grafite da v1 */
