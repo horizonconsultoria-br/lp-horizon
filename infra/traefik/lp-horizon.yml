@@ -1,12 +1,35 @@
 # Traefik file-provider config — sincronizar em /etc/easypanel/traefik/config/lp-horizon.yml na VPS.
 # Padrão herdado do DocsGrowth (decisão 2026-04-17 em decisions.md).
 #
-# Roteia consultoriahorizon.com.br + www.consultoriahorizon.com.br pro container lp-horizon:3000
-# Apex sem A record → fazemos redirect www→apex (ou inverso conforme decisão founder).
+# Roteia consultoriahorizon.com.br pro container lp-horizon:3000.
 #
-# Pré-requisito: DNS A record APEX `consultoriahorizon.com.br` apontando pra 31.97.93.85.
-# (Já existe o registro de WWW — falta o APEX. Se não puder configurar APEX, inverter
-#  redirect pra mandar todo tráfego pra www. Ver §"Decisão DNS" no docs/handoff-claudecode-local.md)
+# Pré-requisito: DNS A record APEX `consultoriahorizon.com.br` apontando pra 31.97.93.85. (OK)
+#
+# ⚠️ INCIDENTE 2026-08-15 — certificado vencido 18 dias. LEIA ANTES DE MEXER NO www.
+#
+# O certificado do apex venceu em 28/07/2026 e o Traefik falhou toda renovação diária:
+#   "Error renewing ACME certificate: {consultoriahorizon.com.br []}
+#    [www.consultoriahorizon.com.br] invalid authorization:
+#    DNS problem: NXDOMAIN looking up A for www.consultoriahorizon.com.br"
+#
+# Causa: o `www` PERDEU o registro A em algum momento após a emissão original (abr/2026).
+# O certificado emitido cobre os DOIS nomes (SANs: apex + www — confira com
+# `openssl s_client ... | openssl x509 -text | grep -A2 "Subject Alternative Name"`).
+# Na renovação, a Let's Encrypt valida o pedido inteiro ou nada: o `www` morto derrubava
+# junto o apex, que resolve e funciona normalmente.
+#
+# 🔑 A LIÇÃO QUE CUSTOU CARO: remover o SAN daqui NÃO conserta um cert já emitido.
+# A config governa certificados NOVOS; a renovação usa o conjunto de nomes do certificado
+# QUE JÁ ESTÁ no acme.json. Enquanto o cert apex+www existir no cofre, o Traefik vai pedir
+# os dois nomes independente do que estiver escrito neste arquivo. Conserto real = ou o
+# nome volta a resolver no DNS, ou a entrada sai do acme.json (que guarda os certs de
+# TODOS os sites da VPS — mexer ali é operação de risco, com backup obrigatório).
+#
+# Resolução escolhida pelo founder em 15/08: recriar `www A 31.97.93.85` no registro.br.
+# Por isso o www CONTINUA aqui — ele voltou a existir.
+#
+# Regra derivada: nome só entra como SAN depois de resolver em DNS, e se um dia for
+# aposentado, tirar do DNS exige tirar do cert (senão a renovação do principal morre junto).
 
 http:
   routers:
