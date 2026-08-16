@@ -620,19 +620,31 @@ body:has(.theme-v3) .skip-link {
 .prova-aba-painel {
   grid-column: 2;
   grid-row: 1 / -1;
-  opacity: 0;
-  visibility: hidden;
+  /* `display: none` em vez de opacidade: sair de `none` RECRIA a caixa e
+     reinicia as animacoes de dentro. E o que faz a encenacao do atendimento
+     tocar de novo toda vez que a aba e selecionada, sem JavaScript. Com
+     opacidade, a animacao rodava uma vez e nunca mais. */
+  display: none;
   min-height: 525px;
   /* 20px é o padding real da referência, medido no navegador. */
   padding: 20px 28px;
   background: var(--hzn-bg-raised);
   border: 1px solid var(--hzn-border-default);
   border-radius: 14px;
-  transition: opacity 260ms ease;
 }
 .prova-aba input:checked ~ .prova-aba-painel {
-  opacity: 1;
-  visibility: visible;
+  display: block;
+  animation: painel-entra 240ms ease both;
+}
+/* O painel com ilustracao e grid de duas colunas; precisa vir depois para
+   ganhar do `display: block` acima. */
+.prova-aba input:checked ~ .prova-aba-painel-visual {
+  display: grid;
+}
+
+@keyframes painel-entra {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
 }
 
 .prova-aba-painel h3 {
@@ -676,8 +688,8 @@ body:has(.theme-v3) .skip-link {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .prova-aba-painel {
-    transition: none;
+  .prova-aba input:checked ~ .prova-aba-painel {
+    animation: none;
   }
 }
 
@@ -770,8 +782,7 @@ body:has(.theme-v3) .skip-link {
   background: rgba(22, 32, 58, 0.95);
   padding-right: 6px;
   color: var(--hzn-brand-300);
-  animation: zap-rotulo calc(var(--dur) * 1s) linear both;
-  animation-delay: calc(var(--inicio) * 1s);
+  opacity: 0;
 }
 @keyframes zap-rotulo {
   0% { opacity: 0; }
@@ -835,8 +846,6 @@ body:has(.theme-v3) .skip-link {
   font-size: 12.5px;
   line-height: 1.45;
   color: var(--gelo);
-  animation: zap-surge 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: calc(var(--inicio) * 1s);
 }
 .zap-msg::after {
   content: '';
@@ -896,8 +905,6 @@ body:has(.theme-v3) .skip-link {
   margin: 0 0 6px;
   border-radius: 9px 9px 9px 2px;
   background: #16203a;
-  animation: zap-digita calc(var(--dur) * 1s) linear both;
-  animation-delay: calc(var(--inicio) * 1s);
 }
 .zap-digitando i {
   width: 5px;
@@ -973,8 +980,6 @@ body:has(.theme-v3) .skip-link {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  animation: zap-agenda-surge 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: calc(var(--inicio) * 1s);
 }
 .zap-agenda-selo {
   font-family: var(--hzn-font-mono);
@@ -1079,14 +1084,40 @@ body:has(.theme-v3) .skip-link {
 
 /* Quem pediu menos movimento recebe a conversa inteira montada, sem encenacao,
    e sem o indicador de digitando, que so faria sentido em movimento. */
+
+/* ─── O gatilho de reinicio ───
+   As animacoes da encenacao so existem enquanto a aba esta marcada. Ao trocar
+   de aba a propriedade `animation` some, e ao voltar ela e aplicada de novo,
+   o que faz o navegador comecar do zero. Foi o unico caminho sem JavaScript:
+   `display: none` sozinho NAO reinicia animacao ja concluida, porque o
+   `fill: both` segura o estado final e reexibir nao retoca o que terminou.
+   Medido no navegador antes e depois. */
+.prova-aba input:checked ~ .prova-aba-painel .zap-msg {
+  animation: zap-surge 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .zap-digitando {
+  animation: zap-digita calc(var(--dur) * 1s) linear both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .zap-agenda {
+  animation: zap-agenda-surge 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .zap-digitando-rotulo {
+  animation: zap-rotulo calc(var(--dur) * 1s) linear both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .zap-msg,
-  .zap-agenda {
+  .prova-aba input:checked ~ .prova-aba-painel .zap-msg,
+  .prova-aba input:checked ~ .prova-aba-painel .zap-agenda {
     animation: none;
     opacity: 1;
     transform: none;
   }
-  .zap-digitando {
+  .prova-aba input:checked ~ .prova-aba-painel .zap-digitando,
+  .prova-aba input:checked ~ .prova-aba-painel .zap-digitando-rotulo {
     display: none;
   }
 }
