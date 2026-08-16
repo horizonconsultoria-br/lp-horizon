@@ -1,5 +1,11 @@
 import type { NextConfig } from "next";
 
+// O react-refresh do modo dev roda via eval; sem liberar 'unsafe-eval' SÓ em
+// desenvolvimento, a CSP estrita mata a hidratação inteira no `next dev` e
+// qualquer ilha de cliente (ex.: a rotação de abas da /prova) fica morta no
+// ambiente local. Produção continua sem eval.
+const dev = process.env.NODE_ENV === "development";
+
 const nextConfig: NextConfig = {
   output: "standalone", // habilita Dockerfile multi-stage com node_modules mínimo
   reactStrictMode: true,
@@ -54,7 +60,7 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
+              `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com`,
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https://www.google-analytics.com",

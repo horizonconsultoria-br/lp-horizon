@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Fragment } from "react";
 import { conteudoProva } from "@/content/prova";
+import { RotacaoAbas } from "./RotacaoAbas";
 
 /**
  * Simulação de um atendimento que qualifica, responde e agenda sozinho.
@@ -864,7 +865,8 @@ function SimulacaoRadar() {
   );
 }
 
-// Server Component puro. Sem "use client", sem estado, sem efeito.
+// Server Component puro. O único JS autoral da página vive na ilha
+// RotacaoAbas, dentro da dobra de abas.
 export default function ProvaPage() {
   const { blocos, cta } = conteudoProva;
   const [abertura, ...demais] = blocos;
@@ -995,15 +997,17 @@ export default function ProvaPage() {
                 </div>
               )}
 
-              {/* Abas em CSS puro: um grupo de radio com labels. Zero JavaScript
-                  de runtime, e a navegação por setas do teclado vem de graça no
-                  grupo de radio, coisa que uma aba feita em JS só tem se alguém
-                  implementar à mão. O painel aparece via :checked ~ . */}
+              {/* Abas em CSS: um grupo de radio com labels. A navegação por
+                  setas do teclado vem de graça no grupo de radio, e o painel
+                  aparece via :checked ~ . A única ilha de JS é a RotacaoAbas,
+                  que gira as abas a cada 12s até o usuário assumir; todo o
+                  resto continua sendo o CSS reagindo ao radio marcado. */}
               {bloco.layout === "abas" && bloco.itens && (
                 <div
                   className="prova-abas"
                   style={{ "--abas": bloco.itens.length } as React.CSSProperties}
                 >
+                  <RotacaoAbas grupo={`abas-${bloco.id}`} />
                   {bloco.itens.map((item, i) => (
                     // `display: contents` faz o input, o rótulo e o painel
                     // virarem itens do mesmo grid. Eles continuam irmãos no
