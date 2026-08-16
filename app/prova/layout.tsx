@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
+import { Fraunces, Inter, JetBrains_Mono, Syne, Poppins } from "next/font/google";
 import "./prova.css";
 
 // next/font baixa e serve local no build. Zero requisição a host de terceiro,
@@ -19,6 +19,22 @@ const fraunces = Fraunces({
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter-prova",
+  display: "swap",
+});
+
+// Fontes da referencia playbooklab, usadas na dobra de abas por instrucao
+// explicita do founder ("mesma formatacao e tamanho, so mude as cores").
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["600"],
+  variable: "--font-syne",
+  display: "swap",
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-poppins",
   display: "swap",
 });
 
@@ -62,7 +78,7 @@ export const metadata: Metadata = {
 export default function ProvaLayout({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className={`theme-v3 ${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      className={`theme-v3 ${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable} ${syne.variable} ${poppins.variable}`}
     >
       {children}
     </div>
