@@ -253,6 +253,475 @@ function SimulacaoN8N() {
   );
 }
 
+/**
+ * Simulação do sistema de qualificação de leads: formulário, funil, CRM.
+ *
+ * É ILUSTRAÇÃO, não registro: nomes e números são encenados para mostrar a
+ * forma do sistema. Fica `aria-hidden` de propósito, porque narrar um funil
+ * falso em voz alta confunde quem usa leitor de tela mais do que ajuda.
+ *
+ * Três atores empilhados: o formulário que captura, o funil que filtra em
+ * três estágios de trapézio, e o CRM onde só os prontos chegam com selo.
+ * O movimento contínuo é a chuva de leads: bolinhas nascem sob o formulário
+ * e caem pelo funil em loop; as filtradas somem na borda do estágio, as
+ * aprovadas atravessam até a saída. Os números batem de propósito: 128
+ * capturados viram 37 com fit e 12 prontos, e são os prontos que aparecem
+ * embaixo, um a um, com o selo verde.
+ *
+ * A mecânica é a mesma das outras simulações: linha do tempo calculada no
+ * servidor, custom properties, animações declaradas só sob a aba marcada
+ * (a cena reinicia a cada seleção), estado base = estado final (movimento
+ * reduzido recebe a cena montada). Zero JavaScript no navegador.
+ */
+function SimulacaoFunil() {
+  const campos = ["Nome", "WhatsApp"];
+
+  const estagios: Array<{ nome: string; qtd: number }> = [
+    { nome: "Capturados", qtd: 128 },
+    { nome: "Com fit", qtd: 37 },
+    { nome: "Prontos", qtd: 12 },
+  ];
+
+  const leads: Array<{ iniciais: string; nome: string; nota: string }> = [
+    { iniciais: "AS", nome: "A. Souza", nota: "Orçamento aprovado" },
+    { iniciais: "MC", nome: "M. Costa", nota: "Decisora direta" },
+    { iniciais: "RL", nome: "R. Lima", nota: "Quer começar já" },
+  ];
+
+  // A chuva de leads, em loop. `x` é onde a gota nasce (% da largura do
+  // funil); `queda` é até onde ela desce, em px: 132 atravessa o funil
+  // inteiro, 48 e 90 morrem na borda dos estágios 1 e 2, que é o desenho da
+  // filtragem. `desvio` puxa a gota pro eixo central na proporção da descida,
+  // pra ela acompanhar o afunilamento em vez de vazar pela parede do
+  // trapézio. Delays escalonados fazem a chuva parecer contínua.
+  const quedaTotal = 132;
+  const gotas: Array<{ x: number; queda: number; ciclo: number; inicio: number }> = [
+    { x: 38, queda: 132, ciclo: 3.4, inicio: 1.9 },
+    { x: 78, queda: 48, ciclo: 2.8, inicio: 2.3 },
+    { x: 55, queda: 132, ciclo: 3.6, inicio: 2.7 },
+    { x: 30, queda: 90, ciclo: 3.1, inicio: 3.1 },
+    { x: 18, queda: 48, ciclo: 2.9, inicio: 3.5 },
+    { x: 64, queda: 132, ciclo: 3.3, inicio: 3.9 },
+    { x: 70, queda: 90, ciclo: 3.0, inicio: 4.3 },
+  ];
+  const chuva = gotas.map((g) => ({
+    ...g,
+    desvio: Math.round((50 - g.x) * (g.queda / quedaTotal) * 0.9),
+  }));
+
+  // Linha do tempo calculada aqui, na renderização do servidor. O CSS só
+  // recebe o instante de cada evento em custom properties: nada roda no
+  // navegador. A ordem conta a história: o formulário se preenche, o botão
+  // é apertado, a chuva começa, o funil acende de cima pra baixo e o CRM
+  // recebe os qualificados um a um.
+  let t = 0.3;
+  const iniciaForm = t;
+  t += 0.35;
+  const eventosCampos = campos.map((rotulo) => {
+    const inicia = t;
+    t += 0.22;
+    return { rotulo, inicia };
+  });
+  const iniciaBotao = t;
+  // O clique é a largada da chuva: a primeira gota nasce logo depois dele.
+  const iniciaClique = iniciaBotao + 0.35;
+  t = iniciaClique + 0.55;
+  const eventosEstagios = estagios.map((e) => {
+    const inicia = t;
+    t += 0.5;
+    return { ...e, inicia };
+  });
+  const iniciaCrm = t;
+  t += 0.5;
+  const eventosLeads = leads.map((l) => {
+    const inicia = t;
+    t += 0.55;
+    return { ...l, inicia, seloEm: inicia + 0.28 };
+  });
+
+  return (
+    <div className="funil" aria-hidden="true">
+      <div className="funil-topo">
+        <strong className="funil-nome">Qualificação de leads</strong>
+        <span className="funil-vivo">
+          <i />
+          ao vivo
+        </span>
+      </div>
+
+      <div className="funil-cena">
+        {/* O topo do fluxo: um formulário curto de captação. */}
+        <div className="funil-form" style={{ "--inicio": iniciaForm } as React.CSSProperties}>
+          <span className="funil-form-titulo">Diagnóstico gratuito</span>
+          {eventosCampos.map((c) => (
+            <span
+              key={c.rotulo}
+              className="funil-campo"
+              style={{ "--inicio": c.inicia } as React.CSSProperties}
+            >
+              {c.rotulo}
+            </span>
+          ))}
+          <span
+            className="funil-botao"
+            style={{ "--inicio": iniciaBotao, "--clique": iniciaClique } as React.CSSProperties}
+          >
+            Enviar
+          </span>
+        </div>
+
+        {/* O meio: o funil de três estágios e a chuva de leads caindo. */}
+        <div className="funil-afunila">
+          <div className="funil-chuva">
+            {chuva.map((g, i) => (
+              <i
+                key={i}
+                className="funil-gota"
+                style={
+                  {
+                    "--x": `${g.x}%`,
+                    "--queda": g.queda,
+                    "--desvio": g.desvio,
+                    "--ciclo": g.ciclo,
+                    "--inicio": g.inicio,
+                  } as React.CSSProperties
+                }
+              />
+            ))}
+          </div>
+          {eventosEstagios.map((e, i) => (
+            <div
+              key={e.nome}
+              className={`funil-estagio funil-estagio-${i + 1}`}
+              style={{ "--inicio": e.inicia } as React.CSSProperties}
+            >
+              <span className="funil-estagio-nome">{e.nome}</span>
+              <span
+                className="funil-estagio-qtd"
+                style={{ "--inicio": e.inicia + 0.18 } as React.CSSProperties}
+              >
+                {e.qtd}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* A base: o CRM recebendo só quem atravessou. */}
+        <div className="funil-crm" style={{ "--inicio": iniciaCrm } as React.CSSProperties}>
+          <div className="funil-crm-topo">
+            <i className="funil-crm-marca" />
+            <span>CRM · Pipeline</span>
+          </div>
+          {eventosLeads.map((l) => (
+            <div
+              key={l.nome}
+              className="funil-lead"
+              style={{ "--inicio": l.inicia } as React.CSSProperties}
+            >
+              <span className="funil-avatar">{l.iniciais}</span>
+              <span className="funil-lead-nomes">
+                <strong>{l.nome}</strong>
+                <em>{l.nota}</em>
+              </span>
+              <span
+                className="funil-selo"
+                style={{ "--inicio": l.seloEm } as React.CSSProperties}
+              >
+                Qualificado
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Simulação de uma área de membros com os treinamentos da casa.
+ *
+ * ILUSTRAÇÃO encenada, não captura de produto real, e escondida de leitor
+ * de tela (`aria-hidden`) por isso: narrar uma grade de módulos falsa em voz
+ * alta atrapalha quem navega por áudio mais do que ajuda.
+ *
+ * A cena é uma janela tipo Academy: cabeçalho fino com a marca e o aluno,
+ * grade 2x2 de módulos (dois de vendas, dois de Claude) e a linha de
+ * continuar assistindo no rodapé. Os módulos de Claude usam o coral da
+ * marca (#d97757) e um asterisco desenhado em CSS: uso nominativo da
+ * ferramenta que os treinamentos da casa ensinam, por decisão explícita do
+ * founder; nenhum arquivo de logo.
+ *
+ * A mecânica é a mesma das outras simulações: linha do tempo calculada no
+ * servidor, custom properties, animações declaradas só sob a aba marcada
+ * (a cena reinicia a cada seleção), estado base = estado final. Zero
+ * JavaScript no navegador.
+ */
+function SimulacaoMembros() {
+  // A grade da área de membros: dois módulos de vendas, dois de Claude.
+  // `progresso` é onde a barra de cada módulo para; o de 100% ganha o selo.
+  const modulos: Array<{
+    titulo: string;
+    aulas: string;
+    tema: "vendas" | "claude";
+    progresso: number;
+  }> = [
+    { titulo: "Vendas Consultivas", aulas: "12 de 12 aulas", tema: "vendas", progresso: 100 },
+    { titulo: "Fechamento e Objeções", aulas: "8 de 10 aulas", tema: "vendas", progresso: 80 },
+    { titulo: "Claude para Vendas", aulas: "5 de 11 aulas", tema: "claude", progresso: 45 },
+    { titulo: "Automação com Claude", aulas: "2 de 10 aulas", tema: "claude", progresso: 20 },
+  ];
+
+  // Linha do tempo calculada aqui, na renderização do servidor. Os cartões
+  // entram escalonados; a barra de cada um começa depois que ele assenta e
+  // enche num tempo proporcional ao progresso, então terminam em instantes
+  // diferentes, como uma turma de verdade em pontos diferentes da trilha.
+  let t = 0.6;
+  const cartoes = modulos.map((m) => {
+    const entra = t;
+    t += 0.35;
+    const barra = entra + 0.8;
+    const durBarra = 0.4 + (m.progresso / 100) * 0.8;
+    return { ...m, entra, barra, durBarra };
+  });
+  // O selo "Concluído" pinga quando a barra do módulo cheio termina; a linha
+  // de continuar assistindo fecha a cena depois da última barra e do selo.
+  const cheio = cartoes[0];
+  const iniciaSelo = cheio.barra + cheio.durBarra + 0.2;
+  const fimBarras = Math.max(...cartoes.map((c) => c.barra + c.durBarra));
+  const iniciaRodape = Math.max(fimBarras, iniciaSelo + 0.4) + 0.25;
+
+  return (
+    <div className="memb" aria-hidden="true">
+      <div className="memb-topo">
+        <span className="memb-marca">
+          <i className="memb-marca-simbolo" />
+          Academy
+        </span>
+        <span className="memb-aluno">Rafael M.</span>
+        <span className="memb-avatar">RM</span>
+      </div>
+
+      <div className="memb-grade">
+        {cartoes.map((c) => (
+          <div
+            key={c.titulo}
+            className={c.tema === "claude" ? "memb-cartao memb-claude" : "memb-cartao"}
+            style={
+              {
+                "--inicio": c.entra,
+                "--barra": c.barra,
+                "--dur": c.durBarra,
+                "--fim": `${c.progresso}%`,
+              } as React.CSSProperties
+            }
+          >
+            <span className="memb-thumb">
+              {c.tema === "vendas" ? (
+                <i className="memb-play" />
+              ) : (
+                <i className="memb-asterisco" />
+              )}
+              {c.progresso === 100 && (
+                <span
+                  className="memb-selo"
+                  style={{ "--selo": iniciaSelo } as React.CSSProperties}
+                >
+                  Concluído
+                </span>
+              )}
+            </span>
+            <span className="memb-corpo">
+              <strong className="memb-titulo">{c.titulo}</strong>
+              <span className="memb-meta">
+                <span>{c.aulas}</span>
+                <em className="memb-pct">{c.progresso}%</em>
+              </span>
+              <span className="memb-trilho">
+                <i className="memb-barra" />
+              </span>
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div
+        className="memb-rodape"
+        style={{ "--inicio": iniciaRodape } as React.CSSProperties}
+      >
+        <i className="memb-rodape-play" />
+        <span className="memb-rodape-texto">
+          <em>Continuar assistindo</em>
+          <strong>Aula 3 · Automação com Claude</strong>
+        </span>
+        <span className="memb-rodape-seta">›</span>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Simulação do sistema de prospecção: as ferramentas reais da operação em
+ * balões flutuando em volta do núcleo que as amarra.
+ *
+ * ILUSTRAÇÃO encenada, não diagrama técnico, e escondida de leitor de tela
+ * (`aria-hidden`) de propósito: narrar sete balões flutuando confunde quem
+ * usa leitor de tela mais do que ajuda. A identidade REAL de cada ferramenta
+ * é decisão explícita do founder, no precedente do n8n rosa e do HubSpot
+ * laranja das outras abas: uso nominativo do que a operação usa de verdade,
+ * nenhum arquivo de logo, todo ícone é forma desenhada em CSS ou wordmark
+ * em texto.
+ *
+ * A mecânica é a das outras simulações: linha do tempo calculada aqui, na
+ * renderização do servidor, entregue ao CSS em custom properties; animações
+ * declaradas só sob a aba marcada, então a cena reinicia a cada seleção;
+ * estado base = estado FINAL, e quem pede movimento reduzido recebe a cena
+ * montada e parada. Zero JavaScript no navegador.
+ */
+function SimulacaoStack() {
+  // As ferramentas da esteira. Posição (x, y, em % do palco) e tamanho (px)
+  // espalhados a olho para nenhum balão encostar em outro nem no núcleo, já
+  // contando a flutuação de poucos px. `fase` dessincroniza os ciclos (vira
+  // delay negativo no CSS), `dura` é a duração do ciclo, `amp` a amplitude.
+  const ferramentas: Array<{
+    nome: string | null; // null quando o wordmark dentro do balão já é o nome
+    classe: string;
+    tam: number;
+    x: number;
+    y: number;
+    dura: number;
+    fase: number;
+    amp: number;
+  }> = [
+    { nome: null, classe: "n8n", tam: 78, x: 15, y: 46, dura: 5.2, fase: 0, amp: 4 },
+    { nome: "Sales Navigator", classe: "salesnav", tam: 92, x: 24, y: 16, dura: 6.3, fase: 1.1, amp: 5 },
+    { nome: "Instagram", classe: "instagram", tam: 80, x: 74, y: 13, dura: 4.7, fase: 2.3, amp: 4 },
+    { nome: "Python", classe: "python", tam: 84, x: 22, y: 80, dura: 6.9, fase: 0.6, amp: 5 },
+    { nome: null, classe: "tavily", tam: 76, x: 84, y: 42, dura: 5.6, fase: 3.4, amp: 3.5 },
+    { nome: "WhatsApp", classe: "whatsapp", tam: 72, x: 77, y: 82, dura: 4.4, fase: 1.7, amp: 4.5 },
+    { nome: "Claude", classe: "claude", tam: 66, x: 49, y: 10, dura: 6.1, fase: 2.9, amp: 3 },
+  ];
+
+  // Geometria dos raios num palco nominal de 370x404 (o cartão no teto dos
+  // 372px). Ângulo e comprimento vão ao CSS em custom properties. Se o cartão
+  // renderizar mais estreito, a ponta de cada raio continua debaixo do balão
+  // correspondente (conferido nas larguras de 272 a 370) e o degradê do raio
+  // apaga qualquer sobra: por isso dá para fixar a geometria no servidor.
+  const LARGURA = 370;
+  const ALTURA = 404;
+  const centro = { x: 0.5 * LARGURA, y: 0.47 * ALTURA };
+
+  // Linha do tempo no servidor: o núcleo acende primeiro, cada ferramenta
+  // chega em escada (raio primeiro, balão logo atrás) e o selo do rodapé
+  // fecha a cena. Nada disso roda no navegador.
+  let t = 0.7;
+  const baloes = ferramentas.map((f) => {
+    const dx = (f.x / 100) * LARGURA - centro.x;
+    const dy = (f.y / 100) * ALTURA - centro.y;
+    const ang = Math.round(Math.atan2(dy, dx) * (180 / Math.PI) * 10) / 10;
+    const comp = Math.round(Math.hypot(dx, dy));
+    const iniciaRaio = t;
+    const iniciaBalao = t + 0.12;
+    t += 0.28;
+    return { ...f, ang, comp, iniciaRaio, iniciaBalao };
+  });
+  const iniciaNucleo = 0.2;
+  const iniciaSelo = t + 0.05; // o pop do selo fecha a cena perto dos 3,1s
+
+  return (
+    <div className="stack" aria-hidden="true">
+      <div className="stack-topo">
+        <i className="stack-farol" />
+        <strong>Stack de prospecção</strong>
+        <span className="stack-estado">em operação</span>
+      </div>
+
+      <div className="stack-palco">
+        {baloes.map((b) => (
+          <i
+            key={`raio-${b.classe}`}
+            className="stack-raio"
+            style={
+              {
+                "--inicio": b.iniciaRaio,
+                "--ang": b.ang,
+                "--comp": b.comp,
+              } as React.CSSProperties
+            }
+          />
+        ))}
+
+        <div
+          className="stack-nucleo"
+          style={{ "--inicio": iniciaNucleo } as React.CSSProperties}
+        >
+          <strong>Prospecção</strong>
+          <span>Horizon</span>
+        </div>
+
+        {baloes.map((b) => (
+          <div
+            key={b.classe}
+            className={`stack-balao stack-${b.classe}`}
+            style={
+              {
+                "--x": b.x,
+                "--y": b.y,
+                "--tam": b.tam,
+                "--inicio": b.iniciaBalao,
+                "--fase": b.fase,
+                "--dura": b.dura,
+                "--amp": b.amp,
+              } as React.CSSProperties
+            }
+          >
+            {/* Três camadas por balão, um transform por camada: o wrapper
+                posiciona, a boia flutua em loop, a bola faz o pop de entrada.
+                Misturar os três num elemento só faria uma animação atropelar
+                a outra, porque todas escrevem em `transform`. */}
+            <div className="stack-boia">
+              <span className="stack-bola">
+                {b.classe === "n8n" && <b className="stack-marca-n8n">n8n</b>}
+                {b.classe === "salesnav" && <b className="stack-icone-in">in</b>}
+                {b.classe === "instagram" && <b className="stack-icone-insta" />}
+                {b.classe === "python" && (
+                  <b className="stack-icone-py">
+                    <i />
+                    <i />
+                  </b>
+                )}
+                {b.classe === "tavily" && <b className="stack-marca-tavily">tavily</b>}
+                {b.classe === "whatsapp" && (
+                  <b className="stack-icone-zap">
+                    <i />
+                  </b>
+                )}
+                {b.classe === "claude" && (
+                  <b className="stack-icone-claude">
+                    <i />
+                    <i />
+                  </b>
+                )}
+                {b.nome && <span className="stack-nome">{b.nome}</span>}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="stack-pe">
+        <div
+          className="stack-selo"
+          style={{ "--inicio": iniciaSelo } as React.CSSProperties}
+        >
+          <i className="stack-ok">✓</i>
+          <span>Stack conectada</span>
+          <em>{ferramentas.length} ferramentas</em>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Server Component puro. Sem "use client", sem estado, sem efeito.
 export default function ProvaPage() {
   const { blocos, cta } = conteudoProva;
@@ -419,6 +888,9 @@ export default function ProvaPage() {
                         </div>
                         {item.visual === "whatsapp" && <SimulacaoWhatsApp />}
                         {item.visual === "n8n" && <SimulacaoN8N />}
+                        {item.visual === "funil" && <SimulacaoFunil />}
+                        {item.visual === "membros" && <SimulacaoMembros />}
+                        {item.visual === "stack" && <SimulacaoStack />}
                       </article>
                     </div>
                   ))}

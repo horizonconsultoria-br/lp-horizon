@@ -1718,3 +1718,1348 @@ body:has(.theme-v3) .skip-link {
     display: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   SIMULAÇÃO DO SISTEMA DE QUALIFICAÇÃO DE LEADS
+   Três atores empilhados num cartão só: o formulário de captação
+   no topo, o funil de três estágios em trapézio (clip-path) no
+   meio e o CRM na base, recebendo os qualificados com selo verde.
+   O movimento contínuo é a chuva de leads: gotas nascem sob o
+   formulário e caem pelo funil em loop com delays escalonados,
+   como os pontinhos de digitação do WhatsApp; a profundidade da
+   queda de cada gota é a filtragem, umas morrem na borda do
+   estágio, outras atravessam até a saída. Paleta inteira da casa,
+   mais o verde de sucesso que a página já usa; nenhuma marca de
+   terceiro, nenhum arquivo de imagem.
+
+   A mecânica é a mesma das outras simulações: tudo em CSS, zero
+   JavaScript de runtime, e as animações declaradas SÓ sob a aba
+   marcada, então a cena recomeça a cada seleção da aba.
+
+   Os elementos ficam no estado FINAL e os keyframes definem só o
+   `from`: o destino de cada animação é o próprio estado base.
+   Assim, `animation: none` (movimento reduzido) entrega a cena
+   montada; as gotas em trânsito, cujo estado final é "já saiu de
+   cena", somem na mão nesse modo.
+   ═══════════════════════════════════════════════════════════════ */
+
+.funil {
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 18px;
+  background: #070b13;
+  overflow: hidden;
+  max-width: 372px;
+  width: 100%;
+  justify-self: center;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* ─── Topbar: nome do sistema e o pulso de "ao vivo" ─── */
+.funil-topo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+.funil-nome {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.funil-vivo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  font-family: var(--hzn-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2fbf71;
+}
+.funil-vivo i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2fbf71;
+  box-shadow: 0 0 6px rgba(47, 191, 113, 0.8);
+}
+
+/* ─── A cena, com a mesma malha pontilhada dos outros cartões ─── */
+.funil-cena {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px 14px;
+  background-image: radial-gradient(rgba(143, 166, 196, 0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* ─── O formulário de captação ─── */
+.funil-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(22, 32, 58, 0.85);
+  border: 1px solid var(--hzn-border-default);
+}
+.funil-form-titulo {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.funil-campo {
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: #0b111d;
+  border: 1px solid var(--hzn-border-subtle);
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9.5px;
+  color: rgba(143, 166, 196, 0.65);
+}
+.funil-botao {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--sinal);
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--hzn-text-inverse);
+}
+
+/* ─── O funil: três trapézios que continuam um no outro ───
+   As larguras encadeiam de propósito: a boca de cada estágio tem a
+   largura da saída do anterior (100 → 78 → 56 → 38% da coluna), então
+   os três leem como um funil só apesar de serem blocos separados. */
+.funil-afunila {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.funil-estagio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+}
+.funil-estagio-1 {
+  width: 100%;
+  clip-path: polygon(0 0, 100% 0, 89% 100%, 11% 100%);
+  background: linear-gradient(rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.13));
+}
+.funil-estagio-2 {
+  width: 78%;
+  clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%);
+  background: linear-gradient(rgba(59, 130, 246, 0.3), rgba(59, 130, 246, 0.21));
+}
+/* O último estágio vira verde: é onde o lead deixa de ser tráfego e
+   passa a ser venda, o mesmo verde do selo no CRM logo abaixo. */
+.funil-estagio-3 {
+  width: 56%;
+  clip-path: polygon(0 0, 100% 0, 84% 100%, 16% 100%);
+  background: linear-gradient(rgba(47, 191, 113, 0.28), rgba(47, 191, 113, 0.18));
+}
+.funil-estagio-nome {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.funil-estagio-qtd {
+  font-family: var(--hzn-font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--hzn-brand-200);
+}
+.funil-estagio-3 .funil-estagio-qtd {
+  color: #8ce8b8;
+}
+
+/* ─── A chuva de leads ───
+   Camada absoluta sobre o funil. Cada gota nasce um pouco acima da boca
+   (embaixo do formulário) e desce `--queda` px enquanto `--desvio` a puxa
+   pro eixo central, acompanhando o afunilamento. Estado final: fora de
+   cena, por isso a opacidade base é 0. */
+.funil-chuva {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.funil-gota {
+  position: absolute;
+  top: -8px;
+  left: var(--x);
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  border-radius: 50%;
+  background: var(--hzn-brand-300);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.9);
+  opacity: 0;
+}
+
+/* ─── A base: o CRM recebendo só quem atravessou ─── */
+.funil-crm {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px 11px 11px;
+  border-radius: 10px;
+  background: rgba(22, 32, 58, 0.85);
+  border: 1px solid var(--hzn-border-default);
+}
+.funil-crm-topo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--hzn-border-subtle);
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--hzn-brand-300);
+}
+/* Ícone de quadro kanban: quatro quadradinhos pintados por gradiente,
+   sem arquivo de imagem. */
+.funil-crm-marca {
+  width: 10px;
+  height: 10px;
+  background-image:
+    linear-gradient(var(--hzn-brand-300), var(--hzn-brand-300)),
+    linear-gradient(var(--hzn-brand-300), var(--hzn-brand-300)),
+    linear-gradient(var(--hzn-brand-300), var(--hzn-brand-300)),
+    linear-gradient(var(--hzn-brand-300), var(--hzn-brand-300));
+  background-size: 4px 4px;
+  background-position: 0 0, 6px 0, 0 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+.funil-lead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.funil-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sinal), var(--hzn-brand-700));
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  color: var(--gelo);
+  flex-shrink: 0;
+}
+.funil-lead-nomes {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+  min-width: 0;
+}
+.funil-lead-nomes strong {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.funil-lead-nomes em {
+  font-style: normal;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9px;
+  color: var(--hzn-text-muted);
+}
+.funil-selo {
+  margin-left: auto;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #2fbf71;
+  background: rgba(47, 191, 113, 0.12);
+  border: 1px solid rgba(47, 191, 113, 0.38);
+}
+
+/* ─── A encenação: só existe sob a aba marcada, então reinicia ─── */
+.prova-aba input:checked ~ .prova-aba-painel .funil-form {
+  animation: funil-entra 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-campo {
+  animation: funil-entra 0.3s ease-out both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+/* Duas animações sem conflito de propriedade: a entrada só mexe na
+   opacidade e o clique só no transform. Se as duas mexessem no transform,
+   o preenchimento retroativo da segunda apagaria o deslize da primeira. */
+.prova-aba input:checked ~ .prova-aba-painel .funil-botao {
+  animation:
+    funil-surge 0.3s ease-out both,
+    funil-clica 0.4s ease both;
+  animation-delay: calc(var(--inicio) * 1s), calc(var(--clique) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-estagio {
+  animation: funil-acende 0.45s ease-out both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-estagio-qtd {
+  animation: funil-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-crm {
+  animation: funil-entra 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-lead {
+  animation: funil-entra 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-selo {
+  animation: funil-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+/* As infinitas também vivem só aqui, pelo mesmo motivo das one-shot. */
+.prova-aba input:checked ~ .prova-aba-painel .funil-gota {
+  animation: funil-cai calc(var(--ciclo) * 1s) linear infinite;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-vivo i {
+  animation: funil-pulsa 1.6s ease-in-out infinite;
+}
+
+/* Keyframes só com `from`: o destino é o estado base (final) do elemento. */
+@keyframes funil-entra {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+}
+@keyframes funil-surge {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes funil-acende {
+  from {
+    opacity: 0.18;
+  }
+}
+@keyframes funil-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+/* O aperto do botão: afunda e volta, começa e termina no estado base. */
+@keyframes funil-clica {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(0.92);
+  }
+}
+/* A gota é transiente: entra, cai e some onde a filtragem manda. */
+@keyframes funil-cai {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  84% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(var(--desvio) * 1px), calc(var(--queda) * 1px));
+    opacity: 0;
+  }
+}
+@keyframes funil-pulsa {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Movimento reduzido: a cena aparece montada, sem encenação. As gotas
+   somem na mão porque o estado final delas é "já saiu de cena", e quem
+   as tirava era a animação. */
+@media (prefers-reduced-motion: reduce) {
+  .prova-aba input:checked ~ .prova-aba-painel .funil-form,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-campo,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-botao,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-estagio,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-estagio-qtd,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-crm,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-lead,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-selo,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-vivo i {
+    animation: none;
+  }
+  .prova-aba input:checked ~ .prova-aba-painel .funil-gota {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIMULAÇÃO DE ÁREA DE MEMBROS (aba Sistemas de Treinamento)
+   Uma área de membros pequena, tipo Academy: cabeçalho fino com a
+   marca e o aluno, grade 2x2 de módulos (dois de vendas, dois de
+   Claude) e a linha de continuar assistindo no rodapé. Os módulos
+   de Claude usam o coral da marca (#d97757) e um asterisco de seis
+   pontas desenhado em CSS: uso nominativo da ferramenta que os
+   treinamentos da casa ensinam, por decisão explícita do founder;
+   nenhum arquivo de logo. Os de vendas ficam no azul da casa.
+
+   A mecânica é a mesma das simulações de WhatsApp e n8n: tudo em
+   CSS, zero JavaScript de runtime, linha do tempo calculada no
+   servidor e entregue em custom properties, e as animações
+   declaradas SÓ sob a aba marcada, então a cena recomeça a cada
+   seleção da aba.
+
+   Os elementos ficam no estado FINAL e os keyframes definem só o
+   `from`: o destino de cada animação é o próprio estado base.
+   Assim, `animation: none` (movimento reduzido) entrega a cena
+   montada.
+   ═══════════════════════════════════════════════════════════════ */
+
+.memb {
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 18px;
+  background: #070b13;
+  overflow: hidden;
+  max-width: 372px;
+  width: 100%;
+  justify-self: center;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* ─── Cabeçalho: a marca da área e o aluno logado ─── */
+.memb-topo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+.memb-marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--gelo);
+}
+/* O símbolo da plataforma: um quadrado arredondado com um play, o
+   glifo universal de plataforma de aulas. */
+.memb-marca-simbolo {
+  position: relative;
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, var(--sinal), var(--hzn-brand-700));
+  flex-shrink: 0;
+}
+.memb-marca-simbolo::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 7px;
+  background: #fff;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.memb-aluno {
+  margin-left: auto;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 10px;
+  color: rgba(232, 238, 247, 0.6);
+}
+.memb-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sinal), var(--hzn-brand-700));
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* ─── Grade 2x2 de módulos, sobre a mesma malha pontilhada sutil
+   das outras simulações ─── */
+.memb-grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 12px;
+  background-image: radial-gradient(rgba(143, 166, 196, 0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.memb-cartao {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(22, 32, 58, 0.55);
+  border: 1px solid var(--hzn-border-subtle);
+}
+
+/* ─── Thumbnail: bloco de cor com o glifo do tema ─── */
+.memb-thumb {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  background: linear-gradient(135deg, #1e3a6b, #16203a);
+}
+/* Os módulos de Claude ganham o coral da marca sobre um escuro
+   levemente quente, para o cartão contar de longe qual trilha é. */
+.memb-claude .memb-thumb {
+  background:
+    linear-gradient(135deg, rgba(217, 119, 87, 0.3), rgba(217, 119, 87, 0.06)),
+    #1a1412;
+}
+
+/* Glifo de vendas: o botão de play das aulas. */
+.memb-play {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(232, 238, 247, 0.14);
+  border: 1.5px solid rgba(232, 238, 247, 0.55);
+}
+.memb-play::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  width: 9px;
+  height: 11px;
+  background: var(--gelo);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+/* Glifo de Claude: asterisco de seis pontas no coral da marca, três
+   barras rotacionadas, mesma construção do asterisco do HubSpot na
+   simulação de n8n. */
+.memb-asterisco {
+  position: relative;
+  display: block;
+  width: 3.5px;
+  height: 21px;
+  border-radius: 3px;
+  background: #d97757;
+}
+.memb-asterisco::before,
+.memb-asterisco::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  background: #d97757;
+}
+.memb-asterisco::before {
+  transform: rotate(60deg);
+}
+.memb-asterisco::after {
+  transform: rotate(-60deg);
+}
+
+/* O selo do módulo 100%. Estado final: visível; a animação o faz
+   pingar quando a barra dele termina de encher. */
+.memb-selo {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 2.5px 8px;
+  border-radius: 999px;
+  background: #2fbf71;
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* ─── Corpo do cartão: título, contagem de aulas e a barra ───
+   `margin-top: auto` na linha de meta ancora meta e barra no pé do
+   cartão, então título de uma linha e de duas alinham igual. */
+.memb-corpo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px 10px;
+  flex: 1;
+}
+.memb-titulo {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--gelo);
+}
+.memb-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: auto;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 8.5px;
+  color: var(--hzn-text-muted);
+}
+/* O percentual entra junto com a barra, não com o cartão. */
+.memb-pct {
+  font-style: normal;
+  font-family: var(--hzn-font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--hzn-brand-300);
+}
+.memb-claude .memb-pct {
+  color: #e59a7f;
+}
+
+.memb-trilho {
+  display: block;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(143, 166, 196, 0.18);
+  overflow: hidden;
+}
+/* Estado final: a barra já cheia até o progresso do módulo, que
+   chega do servidor em `--fim`; a animação parte do zero. */
+.memb-barra {
+  display: block;
+  height: 100%;
+  width: var(--fim, 100%);
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--sinal), var(--hzn-brand-400));
+}
+.memb-claude .memb-barra {
+  background: linear-gradient(90deg, #d97757, #e59a7f);
+}
+
+/* ─── Rodapé: continuar assistindo, o convite de volta à trilha ─── */
+.memb-rodape {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-top: 1px solid var(--hzn-border-subtle);
+}
+.memb-rodape-play {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--sinal);
+  flex-shrink: 0;
+}
+.memb-rodape-play::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  width: 9px;
+  height: 10px;
+  background: #fff;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.memb-rodape-texto {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+  min-width: 0;
+}
+.memb-rodape-texto em {
+  font-style: normal;
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hzn-brand-300);
+}
+.memb-rodape-texto strong {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gelo);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.memb-rodape-seta {
+  margin-left: auto;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--hzn-brand-300);
+}
+
+/* ─── A encenação: só existe sob a aba marcada, então reinicia ───
+   As custom properties chegam do cartão por herança: `--inicio` é a
+   entrada, `--barra` e `--dur` são o intervalo da barra, `--selo` é
+   o instante do selo. O pulso do play do rodapé herda o `--inicio`
+   do próprio rodapé e só começa depois que ele assenta. */
+.prova-aba input:checked ~ .prova-aba-painel .memb-cartao {
+  animation: memb-surge 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .memb-barra {
+  animation: memb-enche calc(var(--dur) * 1s) cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--barra) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .memb-pct {
+  animation: memb-aparece 0.35s ease-out both;
+  animation-delay: calc(var(--barra) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .memb-selo {
+  animation: memb-pinga 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(var(--selo) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .memb-rodape {
+  animation: memb-chega 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .memb-rodape-play {
+  animation: memb-pulsa 2.4s ease-in-out infinite;
+  animation-delay: calc((var(--inicio) + 0.6) * 1s);
+}
+
+/* Keyframes só com `from`: o destino é o estado base (final). */
+@keyframes memb-surge {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+}
+@keyframes memb-enche {
+  from {
+    width: 0;
+  }
+}
+@keyframes memb-aparece {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes memb-pinga {
+  from {
+    opacity: 0;
+    transform: scale(0.4) translateY(-5px);
+  }
+}
+@keyframes memb-chega {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+/* O único laço da cena: um anel discreto respirando no play do
+   rodapé depois que a sequência termina. */
+@keyframes memb-pulsa {
+  from {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+  }
+  to {
+    box-shadow: 0 0 0 7px rgba(59, 130, 246, 0);
+  }
+}
+
+/* Movimento reduzido: a cena aparece montada. Nada aqui "sai de
+   cena": todo elemento tem estado final visível, então basta
+   desligar as animações, sem esconder nada na mão. */
+@media (prefers-reduced-motion: reduce) {
+  .prova-aba input:checked ~ .prova-aba-painel .memb-cartao,
+  .prova-aba input:checked ~ .prova-aba-painel .memb-barra,
+  .prova-aba input:checked ~ .prova-aba-painel .memb-pct,
+  .prova-aba input:checked ~ .prova-aba-painel .memb-selo,
+  .prova-aba input:checked ~ .prova-aba-painel .memb-rodape,
+  .prova-aba input:checked ~ .prova-aba-painel .memb-rodape-play {
+    animation: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIMULAÇÃO DO SISTEMA DE PROSPECÇÃO (stack de ferramentas)
+   As ferramentas reais da esteira em balões flutuando em volta do
+   núcleo Prospecção, cada uma com a própria identidade por decisão
+   explícita do founder, no precedente do n8n rosa e do HubSpot
+   laranja das outras abas: n8n #ea4b71, Python #3776ab e #ffd43b,
+   Sales Navigator #0a66c2, Instagram no gradiente da marca, Tavily
+   em azul, WhatsApp #25d366, Claude #d97757. Uso nominativo do que
+   a operação usa de verdade; nenhum logo em arquivo, todo ícone é
+   forma desenhada em CSS ou wordmark em texto.
+
+   A mecânica é a mesma das outras simulações: tudo em CSS, zero
+   JavaScript de runtime, e as animações declaradas SÓ sob a aba
+   marcada, então a cena recomeça a cada seleção da aba. Isso vale
+   inclusive para os loops (flutuação, radar, farol).
+
+   Os elementos ficam no estado FINAL e os keyframes de entrada
+   definem só o `from`: o destino de cada animação é o próprio
+   estado base. Assim, `animation: none` (movimento reduzido)
+   entrega a cena montada e parada.
+   ═══════════════════════════════════════════════════════════════ */
+
+.stack {
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 18px;
+  background: var(--noite);
+  overflow: hidden;
+  max-width: 372px;
+  width: 100%;
+  justify-self: center;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* ─── Cabeçalho: nome do painel e o farol de operação ─── */
+.stack-topo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+.stack-farol {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2fbf71;
+  box-shadow: 0 0 8px rgba(47, 191, 113, 0.8);
+  flex-shrink: 0;
+}
+.stack-topo strong {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.stack-estado {
+  margin-left: auto;
+  font-family: var(--hzn-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hzn-brand-300);
+}
+
+/* ─── Palco: altura fixa, malha pontilhada da casa e um halo azul
+   atrás do núcleo para os balões coloridos saltarem do fundo frio ─── */
+.stack-palco {
+  position: relative;
+  height: 404px;
+  overflow: hidden;
+  background-color: var(--noite);
+  background-image: radial-gradient(rgba(143, 166, 196, 0.06) 1px, transparent 1px);
+  background-size: 15px 15px;
+}
+.stack-palco::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 47%, rgba(59, 130, 246, 0.13), rgba(59, 130, 246, 0) 58%);
+}
+
+/* ─── Raios: linhas finas do núcleo até cada balão ───
+   Ancorados no centro do núcleo e girados pelo ângulo calculado no
+   servidor. As duas pontas somem no degradê e terminam DEBAIXO do
+   núcleo e do balão, que têm fundo opaco: é o que permite geometria
+   fixa num cartão de largura fluida sem nenhuma emenda aparecer. */
+.stack-raio {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: calc(var(--comp) * 1px);
+  height: 1px;
+  transform-origin: 0 50%;
+  transform: rotate(calc(var(--ang) * 1deg));
+  background: linear-gradient(
+    90deg,
+    rgba(143, 166, 196, 0) 4%,
+    rgba(143, 166, 196, 0.4) 30%,
+    rgba(143, 166, 196, 0.32) 68%,
+    rgba(143, 166, 196, 0) 96%
+  );
+}
+
+/* ─── Núcleo: o único elemento na cor da casa, de propósito.
+   As marcas de terceiros orbitam; o centro é Horizon. ─── */
+.stack-nucleo {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  z-index: 3;
+  width: 96px;
+  height: 96px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(147, 197, 253, 0.4), rgba(147, 197, 253, 0) 58%),
+    linear-gradient(140deg, var(--sinal), var(--hzn-brand-700));
+  border: 1px solid rgba(147, 197, 253, 0.55);
+  box-shadow: 0 0 36px rgba(59, 130, 246, 0.35), 0 16px 34px -18px rgba(0, 0, 0, 0.9);
+}
+.stack-nucleo strong {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+.stack-nucleo span {
+  font-family: var(--hzn-font-mono);
+  font-size: 6.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+/* O anel do radar de prospecção. Estado final: entre um ping e outro,
+   invisível; quem o acende é a animação, só sob a aba marcada. */
+.stack-nucleo::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(96, 165, 250, 0.55);
+  opacity: 0;
+}
+
+/* ─── Balões: três camadas, um transform por camada ───
+   O wrapper posiciona (translate de centragem), a boia flutua em
+   loop (translateY) e a bola faz o pop de entrada (scale). Num
+   elemento só, cada animação atropelaria o transform da outra. */
+.stack-balao {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  z-index: 2;
+  width: calc(var(--tam) * 1px);
+  height: calc(var(--tam) * 1px);
+  transform: translate(-50%, -50%);
+}
+.stack-boia {
+  width: 100%;
+  height: 100%;
+}
+.stack-bola {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #101a30;
+  border: 1px solid var(--hzn-border-default);
+  box-shadow: 0 14px 30px -16px rgba(0, 0, 0, 0.85), 0 0 26px var(--halo, rgba(59, 130, 246, 0.1));
+}
+.stack-nome {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  max-width: 78%;
+  color: rgba(232, 238, 247, 0.88);
+}
+
+/* Cada balão recebe o halo, a borda e o tingimento interno na cor da
+   própria marca. O fundo continua opaco: é ele que esconde a ponta
+   do raio que chega por baixo. */
+.stack-n8n .stack-bola {
+  --halo: rgba(234, 75, 113, 0.2);
+  border-color: rgba(234, 75, 113, 0.5);
+  background-image: radial-gradient(circle at 32% 26%, rgba(234, 75, 113, 0.16), rgba(234, 75, 113, 0) 62%);
+}
+.stack-salesnav .stack-bola {
+  --halo: rgba(10, 102, 194, 0.28);
+  border-color: rgba(10, 102, 194, 0.6);
+  background-image: radial-gradient(circle at 32% 26%, rgba(10, 102, 194, 0.2), rgba(10, 102, 194, 0) 62%);
+}
+.stack-instagram .stack-bola {
+  --halo: rgba(214, 41, 118, 0.22);
+  border-color: rgba(214, 41, 118, 0.5);
+  background-image: radial-gradient(circle at 32% 26%, rgba(214, 41, 118, 0.16), rgba(214, 41, 118, 0) 62%);
+}
+.stack-python .stack-bola {
+  --halo: rgba(55, 118, 171, 0.28);
+  border-color: rgba(55, 118, 171, 0.6);
+  background-image: radial-gradient(circle at 32% 26%, rgba(55, 118, 171, 0.2), rgba(55, 118, 171, 0) 62%);
+}
+.stack-tavily .stack-bola {
+  --halo: rgba(74, 157, 255, 0.24);
+  border-color: rgba(74, 157, 255, 0.55);
+  background-image: radial-gradient(circle at 32% 26%, rgba(74, 157, 255, 0.16), rgba(74, 157, 255, 0) 62%);
+}
+.stack-whatsapp .stack-bola {
+  --halo: rgba(37, 211, 102, 0.22);
+  border-color: rgba(37, 211, 102, 0.5);
+  background-image: radial-gradient(circle at 32% 26%, rgba(37, 211, 102, 0.14), rgba(37, 211, 102, 0) 62%);
+}
+.stack-claude .stack-bola {
+  --halo: rgba(217, 119, 87, 0.24);
+  border-color: rgba(217, 119, 87, 0.55);
+  background-image: radial-gradient(circle at 32% 26%, rgba(217, 119, 87, 0.16), rgba(217, 119, 87, 0) 62%);
+}
+
+/* ─── Ícones e wordmarks, um por ferramenta ─── */
+
+/* n8n e Tavily se apresentam pelo próprio wordmark; balão sem rótulo. */
+.stack-marca-n8n {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ea4b71;
+}
+.stack-marca-tavily {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #4a9dff;
+}
+
+/* Python: as duas serpentes simplificadas em pílulas contrapostas,
+   azul em cima, amarela embaixo, cada uma com o olho branco. */
+.stack-icone-py {
+  position: relative;
+  width: 22px;
+  height: 22px;
+}
+.stack-icone-py i {
+  position: absolute;
+  width: 18px;
+  height: 9px;
+}
+.stack-icone-py i:first-child {
+  top: 1px;
+  left: 1px;
+  background: #3776ab;
+  border-radius: 8px 8px 3px 3px;
+}
+.stack-icone-py i:last-child {
+  bottom: 1px;
+  left: 3px;
+  background: #ffd43b;
+  border-radius: 3px 3px 8px 8px;
+}
+.stack-icone-py i::after {
+  content: "";
+  position: absolute;
+  width: 2.5px;
+  height: 2.5px;
+  border-radius: 50%;
+  background: #fff;
+}
+.stack-icone-py i:first-child::after {
+  top: 2.5px;
+  left: 3.5px;
+}
+.stack-icone-py i:last-child::after {
+  bottom: 2.5px;
+  right: 3.5px;
+}
+
+/* Sales Navigator: o crachá "in" no azul do LinkedIn. */
+.stack-icone-in {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 5px;
+  background: #0a66c2;
+  padding-bottom: 2px;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+}
+
+/* Instagram: azulejo no gradiente da marca, lente e viseira em branco. */
+.stack-icone-insta {
+  position: relative;
+  width: 23px;
+  height: 23px;
+  border-radius: 7px;
+  background: linear-gradient(45deg, #feda75 0%, #fa7e1e 26%, #d62976 52%, #962fbf 76%, #4f5bd5 100%);
+}
+.stack-icone-insta::before {
+  content: "";
+  position: absolute;
+  inset: 5.5px;
+  border: 1.8px solid #fff;
+  border-radius: 50%;
+}
+.stack-icone-insta::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 2.6px;
+  height: 2.6px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* WhatsApp: bolha verde com cauda e o fone em meia-lua branca. */
+.stack-icone-zap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: #25d366;
+}
+.stack-icone-zap::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0.5px;
+  width: 7px;
+  height: 7px;
+  background: #25d366;
+  clip-path: polygon(0 100%, 12% 0, 100% 55%);
+}
+.stack-icone-zap i {
+  width: 12px;
+  height: 12px;
+  border: 2.4px solid transparent;
+  border-left-color: #fff;
+  border-bottom-color: #fff;
+  border-radius: 50%;
+  transform: rotate(-45deg);
+}
+
+/* Claude: o resplendor coral, quatro barras giradas = oito raios. */
+.stack-icone-claude {
+  position: relative;
+  width: 21px;
+  height: 21px;
+}
+.stack-icone-claude i,
+.stack-icone-claude::before,
+.stack-icone-claude::after {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2.6px;
+  height: 21px;
+  margin-left: -1.3px;
+  border-radius: 2px;
+  background: #d97757;
+}
+.stack-icone-claude::before,
+.stack-icone-claude::after {
+  content: "";
+}
+.stack-icone-claude::after {
+  transform: rotate(90deg);
+}
+.stack-icone-claude i:first-child {
+  transform: rotate(45deg);
+}
+.stack-icone-claude i:last-child {
+  transform: rotate(135deg);
+}
+
+/* ─── Rodapé: a barra é cromo fixo; só o conteúdo entra em cena ─── */
+.stack-pe {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-top: 1px solid var(--hzn-border-subtle);
+}
+.stack-selo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.stack-ok {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #2fbf71;
+  font-style: normal;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.stack-selo span {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.stack-selo em {
+  margin-left: auto;
+  font-style: normal;
+  font-family: var(--hzn-font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hzn-brand-300);
+}
+
+/* ─── A encenação: só existe sob a aba marcada, então reinicia ───
+   Inclusive os loops. Fora da aba a propriedade `animation` some;
+   ao voltar ela é reaplicada e o navegador recomeça do zero. */
+.prova-aba input:checked ~ .prova-aba-painel .stack-nucleo {
+  animation: stack-nasce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .stack-nucleo::after {
+  animation: stack-radar 2.6s ease-out infinite;
+  animation-delay: calc((var(--inicio) + 0.55) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .stack-raio {
+  animation: stack-estende 0.4s ease-out both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .stack-bola {
+  animation: stack-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+/* Delay negativo: cada balão já acorda no meio do próprio ciclo, e a
+   flutuação nunca fica em uníssono. */
+.prova-aba input:checked ~ .prova-aba-painel .stack-boia {
+  animation: stack-flutua calc(var(--dura) * 1s) ease-in-out infinite alternate;
+  animation-delay: calc(var(--fase) * -1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .stack-farol {
+  animation: stack-pulsa 2.2s ease-in-out infinite;
+}
+.prova-aba input:checked ~ .prova-aba-painel .stack-selo {
+  animation: stack-sobe 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+
+/* Keyframes de entrada só com `from`: o destino é o estado base (final). */
+@keyframes stack-nasce {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+}
+@keyframes stack-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.3) translateY(12px);
+  }
+}
+@keyframes stack-estende {
+  from {
+    opacity: 0;
+    transform: rotate(calc(var(--ang) * 1deg)) scaleX(0);
+  }
+}
+@keyframes stack-sobe {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+}
+/* Loops: aqui `from` e `to` existem porque não são entrada, são ciclo. */
+@keyframes stack-flutua {
+  from {
+    transform: translateY(calc(var(--amp) * 1px));
+  }
+  to {
+    transform: translateY(calc(var(--amp) * -1.15px));
+  }
+}
+@keyframes stack-radar {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+@keyframes stack-pulsa {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* Movimento reduzido: a cena aparece montada e parada. O anel do radar
+   some na mão porque o estado base dele é invisível e quem o mostrava
+   era a animação. */
+@media (prefers-reduced-motion: reduce) {
+  .prova-aba input:checked ~ .prova-aba-painel .stack-nucleo,
+  .prova-aba input:checked ~ .prova-aba-painel .stack-raio,
+  .prova-aba input:checked ~ .prova-aba-painel .stack-bola,
+  .prova-aba input:checked ~ .prova-aba-painel .stack-boia,
+  .prova-aba input:checked ~ .prova-aba-painel .stack-farol,
+  .prova-aba input:checked ~ .prova-aba-painel .stack-selo {
+    animation: none;
+  }
+  .prova-aba input:checked ~ .prova-aba-painel .stack-nucleo::after {
+    display: none;
+  }
+}

@@ -64,12 +64,18 @@ describe.skipIf(!disponivel)("HTML pré-renderizado de /prova", () => {
     }
   });
 
-  // As simulações (WhatsApp e n8n) são ilustrações encenadas. Diálogo e
-  // execução falsos lidos em voz alta confundem quem usa leitor de tela,
-  // então as duas nascem aria-hidden. Se alguém remover o atributo ao mexer
-  // no markup, este teste fica vermelho.
+  // As simulações são ilustrações encenadas. Diálogo e execução falsos
+  // lidos em voz alta confundem quem usa leitor de tela, então todas nascem
+  // aria-hidden. Se alguém remover o atributo ao mexer no markup, este
+  // teste fica vermelho.
   it("as simulações existem e ficam escondidas de leitor de tela", () => {
-    for (const classe of ['class="zap"', 'class="n8n"']) {
+    for (const classe of [
+      'class="zap"',
+      'class="n8n"',
+      'class="funil"',
+      'class="memb"',
+      'class="stack"',
+    ]) {
       const tag = html.match(new RegExp(`<div[^>]*${classe}[^>]*>`));
       expect(tag, `faltou a ilustração ${classe}`).not.toBeNull();
       expect(tag![0], `${classe} sem aria-hidden`).toContain('aria-hidden="true"');

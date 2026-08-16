@@ -4,8 +4,11 @@ export type Item = {
   descricao: string;
   /** Ilustração opcional do painel. "whatsapp" simula um atendimento que
    *  termina virando compromisso na agenda; "n8n" encena uma automação de
-   *  lead scoring executando nó a nó até atualizar o CRM. */
-  visual?: "whatsapp" | "n8n";
+   *  lead scoring executando nó a nó até atualizar o CRM; "funil" mostra a
+   *  captação atravessando o funil até virar linha no CRM; "membros" é a
+   *  área de membros com módulos de vendas e de Claude; "stack" são as
+   *  ferramentas de prospecção em balões flutuantes. */
+  visual?: "whatsapp" | "n8n" | "funil" | "membros" | "stack";
 };
 
 export type Bloco = {
@@ -58,16 +61,19 @@ export const conteudoProva: ConteudoProva = {
         },
         {
           nome: "Sistema de qualificação de leads",
+          visual: "funil",
           descricao:
             "Encontra tudo sobre o lead, analisa se é fit, personaliza a primeira mensagem e entrega um dossiê completo já dentro do CRM. Sua equipe falando por mais tempo com quem pode comprar.",
         },
         {
           nome: "Sistema de prospecção",
+          visual: "stack",
           descricao:
             "Aborda automaticamente com mensagens personalizadas 1-pra-1, só que agora no automático para listas ultrasegmentadas. Uma equipe de hunters sistemáticos para encher o pipeline.",
         },
         {
           nome: "Sistemas de treinamento",
+          visual: "membros",
           descricao:
             "Acompanha calls, identifica gaps e recomenda melhorias em tempo real. Cada vendedor recebe coaching personalizado baseado em dados, não em achismo.",
         },
