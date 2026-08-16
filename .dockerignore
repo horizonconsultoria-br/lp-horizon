@@ -4,7 +4,9 @@ node_modules
 .github
 docs
 research
-content
+# content/*.md fica de fora, mas content/prova.ts é código-fonte (import de
+# app/prova/page.tsx) e precisa entrar no contexto de build do Docker.
+content/*.md
 reports
 infra
 .env*
