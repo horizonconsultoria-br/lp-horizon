@@ -36,7 +36,8 @@
 
   /* Glow: nome herdado, valor azul */
   --hzn-glow-amber: 0 20px 40px -20px rgba(59, 130, 246, 0.3);
-  --hzn-glow-amber-strong: 0 0 48px rgba(59, 130, 246, 0.45);
+  /* Derivado: mesma geometria e alfa do original, recolorido para azul */
+  --hzn-glow-amber-strong: 0 0 48px rgba(59, 130, 246, 0.6);
 
   /* Bordas do oficial */
   --hzn-border-subtle: rgba(39, 39, 42, 0.6);

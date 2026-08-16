@@ -31,11 +31,15 @@ const TOKENS_OBRIGATORIOS = [
   "--hzn-border-strong",
 ];
 
-/** Hex da paleta âmbar da v1. Nenhum pode aparecer aqui. */
-const HEX_AMBAR = [
+/** Valores proibidos da paleta âmbar da v1. Hex + rgba com/sem espaço. */
+const AMBAR_PROIBIDO = [
+  // Hex da paleta âmbar
   "#fef3c7", "#fde68a", "#fcd34d", "#fbbf24",
   "#f59e0b", "#d97706", "#b45309", "#92400e",
   "#0b0d12", "#131720", "#1a2030", "#0e1117",
+  // Triplet decimal do glow âmbar (com e sem espaço após vírgulas)
+  "rgba(245, 158, 11",
+  "rgba(245,158,11",
 ];
 
 describe("tema escopado", () => {
@@ -49,9 +53,9 @@ describe("tema escopado", () => {
     }
   });
 
-  it("não contém nenhum hex da paleta âmbar da v1", () => {
-    for (const hex of HEX_AMBAR) {
-      expect(css.toLowerCase().includes(hex), `vazou âmbar: ${hex}`).toBe(false);
+  it("não contém nenhum valor âmbar (hex ou rgba)", () => {
+    for (const valor of AMBAR_PROIBIDO) {
+      expect(css.toLowerCase().includes(valor.toLowerCase()), `vazou âmbar: ${valor}`).toBe(false);
     }
   });
 
@@ -73,5 +77,28 @@ describe("isolamento", () => {
     expect(css).not.toMatch(/^\s*:root\s*\{/m);
     expect(css).not.toMatch(/^\s*html\s*\{/m);
     expect(css).not.toMatch(/^\s*body\s*\{/m);
+  });
+});
+
+describe("regressão: glow âmbar em rgba", () => {
+  /**
+   * Prova que o buraco foi fechado: a checagem de AMBAR_PROIBIDO rejeita
+   * glow âmbar em rgba(). Isso valida que a lista agora cobre a forma que
+   * importa: alguém não pode colar --hzn-glow-amber: 0 20px 40px -20px rgba(245, 158, 11, 0.35)
+   * e passar nos testes.
+   */
+  it("falha se rgba âmbar aparecer no conteúdo", () => {
+    // Simula o que aconteceria se alguém reintroduzisse o glow âmbar
+    const testeComAmbarRgba = "rgba(245, 158, 11, 0.35)";
+
+    // Verifica que a lista detectaria isso
+    let encontrado = false;
+    for (const valor of AMBAR_PROIBIDO) {
+      if (testeComAmbarRgba.toLowerCase().includes(valor.toLowerCase())) {
+        encontrado = true;
+        break;
+      }
+    }
+    expect(encontrado, "lista deveria detectar rgba âmbar").toBe(true);
   });
 });
