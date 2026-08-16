@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { conteudoProva } from "./prova";
+import type { Bloco } from "./prova";
 
 const IDS_ESPERADOS = [
   "abertura",
@@ -12,7 +13,13 @@ const IDS_ESPERADOS = [
   "cta",
 ];
 
-/** Todo texto visível ao leitor, achatado num array. */
+/**
+ * Todo texto visível ao leitor, achatado num array (um item por CAMPO).
+ * Use para proibições absolutas de palavra (travessão, vocabulário de vídeo,
+ * cifra em dólar) e para checar presença de uma palavra num contexto já
+ * filtrado: a regra é "nunca/sempre usar X em algum lugar", não uma
+ * associação entre duas entidades que pode atravessar campos.
+ */
 function textosVisiveis(): string[] {
   const out: string[] = [];
   for (const b of conteudoProva.blocos) {
@@ -22,6 +29,30 @@ function textosVisiveis(): string[] {
   }
   for (const a of conteudoProva.cta.acoes) out.push(a.rotulo);
   return out;
+}
+
+/**
+ * Todo texto visível de cada bloco, concatenado numa string por BLOCO (não
+ * por campo). Use para checar COEXISTÊNCIA de dois termos dentro do mesmo
+ * bloco (ex: "DocsGrowth" e "cliente") — uma violação pode ter uma entidade
+ * no título e o termo proibido num parágrafo separado; achatar por campo
+ * (como `textosVisiveis`) deixaria essa combinação passar sem ser vista.
+ */
+function textoAgrupadoPorBloco(blocos: Bloco[]): string[] {
+  return blocos.map((b) => {
+    const partes: string[] = [b.eyebrow, b.titulo, ...b.paragrafos];
+    if (b.destaque) partes.push(b.destaque.valor, b.destaque.legenda);
+    for (const i of b.itens ?? []) partes.push(i.nome, i.descricao);
+    return partes.join(" ");
+  });
+}
+
+/**
+ * Verdadeiro se `entidade` e `termoProibido` aparecem juntos no texto
+ * agrupado de algum bloco, mesmo que em campos diferentes desse bloco.
+ */
+function algumBlocoAssocia(blocos: Bloco[], entidade: RegExp, termoProibido: RegExp): boolean {
+  return textoAgrupadoPorBloco(blocos).some((t) => entidade.test(t) && termoProibido.test(t));
 }
 
 describe("estrutura", () => {
@@ -38,12 +69,11 @@ describe("estrutura", () => {
 });
 
 describe("regra de veracidade (spec §4)", () => {
-  it("nunca associa a palavra cliente a DocsGrowth", () => {
-    for (const t of textosVisiveis()) {
-      if (/DocsGrowth/i.test(t)) {
-        expect(/cliente/i.test(t), `texto proibido: "${t}"`).toBe(false);
-      }
-    }
+  it("nunca associa a palavra cliente a DocsGrowth no mesmo bloco", () => {
+    expect(
+      algumBlocoAssocia(conteudoProva.blocos, /DocsGrowth/i, /cliente/i),
+      "algum bloco associa DocsGrowth a cliente",
+    ).toBe(false);
   });
 
   it("descreve DocsGrowth como demo onde ele aparece", () => {
@@ -54,12 +84,30 @@ describe("regra de veracidade (spec §4)", () => {
     }
   });
 
-  it("nunca chama PipePro de cliente pagante", () => {
-    for (const t of textosVisiveis()) {
-      if (/PipePro/i.test(t)) {
-        expect(/cliente pagante/i.test(t), `texto proibido: "${t}"`).toBe(false);
-      }
-    }
+  it("nunca chama PipePro de cliente pagante no mesmo bloco", () => {
+    expect(
+      algumBlocoAssocia(conteudoProva.blocos, /PipePro/i, /cliente pagante/i),
+      "algum bloco chama PipePro de cliente pagante",
+    ).toBe(false);
+  });
+
+  it("REGRESSAO: pega DocsGrowth associado a cliente mesmo quando estao em campos diferentes do mesmo bloco", () => {
+    // Cenario do achado do revisor: titulo menciona DocsGrowth, o paragrafo
+    // (campo diferente, mesmo bloco) menciona "cliente". Antes da correcao,
+    // uma guarda achatada por CAMPO (como textosVisiveis) nao pegava essa
+    // combinacao porque nenhum campo isolado continha as duas palavras ao
+    // mesmo tempo. Exercita a MESMA funcao que as guardas reais usam acima,
+    // para travar qualquer regressao de volta a checagem por campo.
+    const blocoRuim: Bloco = {
+      id: "regressao",
+      eyebrow: "regressao",
+      titulo: "Como validamos com a DocsGrowth",
+      paragrafos: ["Fizemos isso pro nosso cliente mais recente."],
+    };
+    expect(
+      algumBlocoAssocia([blocoRuim], /DocsGrowth/i, /cliente/i),
+      "a guarda deveria pegar DocsGrowth associado a cliente no mesmo bloco, mesmo em campos diferentes",
+    ).toBe(true);
   });
 });
 
@@ -72,7 +120,7 @@ describe("regras da casa", () => {
 
   it("não publica cifra de custo em dólar (decisão D8)", () => {
     for (const t of textosVisiveis()) {
-      expect(/US\$\s*0[.,]/.test(t), `cifra de custo em: "${t}"`).toBe(false);
+      expect(/US\$\s*\d/.test(t), `cifra de custo em: "${t}"`).toBe(false);
     }
   });
 
