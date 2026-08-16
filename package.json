@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lighthouse:desktop": "lighthouse https://consultoriahorizon.com.br --preset=desktop --output=json --output-path=./reports/desktop.json --quiet",
     "lighthouse:mobile": "lighthouse https://consultoriahorizon.com.br --output=json --output-path=./reports/mobile.json --quiet",
     "a11y": "axe https://consultoriahorizon.com.br --exit"
@@ -35,7 +37,8 @@
     "lighthouse": "^12.3.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.9"
   },
   "engines": {
     "node": ">=20.0.0"
