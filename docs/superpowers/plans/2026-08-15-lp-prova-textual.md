@@ -104,6 +104,7 @@ Em `package.json`, dentro de `"scripts"`, logo após `"lint"`:
 ```ts
 import { describe, it, expect } from "vitest";
 import { conteudoProva } from "./prova";
+import type { Bloco } from "./prova";
 
 const IDS_ESPERADOS = [
   "abertura",
@@ -116,7 +117,11 @@ const IDS_ESPERADOS = [
   "cta",
 ];
 
-/** Todo texto visível ao leitor, achatado num array. */
+/**
+ * Todo texto visível ao leitor, achatado num array (um item por CAMPO).
+ * Use para proibições absolutas de palavra (travessão, vocabulário de vídeo,
+ * cifra em dólar): a regra é "nunca usar X em lugar nenhum".
+ */
 function textosVisiveis(): string[] {
   const out: string[] = [];
   for (const b of conteudoProva.blocos) {
@@ -126,6 +131,26 @@ function textosVisiveis(): string[] {
   }
   for (const a of conteudoProva.cta.acoes) out.push(a.rotulo);
   return out;
+}
+
+/**
+ * Texto visível de cada bloco concatenado numa string por BLOCO.
+ * Use para checar COEXISTÊNCIA de dois termos: uma violação pode ter a
+ * entidade no título e o termo proibido num parágrafo separado, e achatar
+ * por campo deixaria essa combinação passar sem ser vista.
+ */
+function textoAgrupadoPorBloco(blocos: Bloco[]): string[] {
+  return blocos.map((b) => {
+    const partes: string[] = [b.eyebrow, b.titulo, ...b.paragrafos];
+    if (b.destaque) partes.push(b.destaque.valor, b.destaque.legenda);
+    for (const i of b.itens ?? []) partes.push(i.nome, i.descricao);
+    return partes.join(" ");
+  });
+}
+
+/** Verdadeiro se os dois termos aparecem juntos no texto de algum bloco. */
+function algumBlocoAssocia(blocos: Bloco[], entidade: RegExp, termoProibido: RegExp): boolean {
+  return textoAgrupadoPorBloco(blocos).some((t) => entidade.test(t) && termoProibido.test(t));
 }
 
 describe("estrutura", () => {
@@ -142,12 +167,21 @@ describe("estrutura", () => {
 });
 
 describe("regra de veracidade (spec §4)", () => {
-  it("nunca associa a palavra cliente a DocsGrowth", () => {
-    for (const t of textosVisiveis()) {
-      if (/DocsGrowth/i.test(t)) {
-        expect(/cliente/i.test(t), `texto proibido: "${t}"`).toBe(false);
-      }
-    }
+  it("nunca associa a palavra cliente a DocsGrowth, nem em campos diferentes do mesmo bloco", () => {
+    expect(algumBlocoAssocia(conteudoProva.blocos, /DocsGrowth/i, /cliente/i)).toBe(false);
+  });
+
+  it("a guarda de DocsGrowth pega a associação que atravessa campos", () => {
+    const armadilha: Bloco[] = [
+      {
+        id: "regressao",
+        eyebrow: "regressao",
+        titulo: "Como validamos com a DocsGrowth",
+        paragrafos: ["Fizemos isso pro nosso cliente mais recente."],
+      },
+    ];
+    // Sem agrupar por bloco isto passaria: nenhum campo isolado tem os dois termos.
+    expect(algumBlocoAssocia(armadilha, /DocsGrowth/i, /cliente/i)).toBe(true);
   });
 
   it("descreve DocsGrowth como demo onde ele aparece", () => {
@@ -159,11 +193,7 @@ describe("regra de veracidade (spec §4)", () => {
   });
 
   it("nunca chama PipePro de cliente pagante", () => {
-    for (const t of textosVisiveis()) {
-      if (/PipePro/i.test(t)) {
-        expect(/cliente pagante/i.test(t), `texto proibido: "${t}"`).toBe(false);
-      }
-    }
+    expect(algumBlocoAssocia(conteudoProva.blocos, /PipePro/i, /cliente pagante/i)).toBe(false);
   });
 });
 
@@ -176,7 +206,7 @@ describe("regras da casa", () => {
 
   it("não publica cifra de custo em dólar (decisão D8)", () => {
     for (const t of textosVisiveis()) {
-      expect(/US\$\s*0[.,]/.test(t), `cifra de custo em: "${t}"`).toBe(false);
+      expect(/US\$\s*\d/.test(t), `cifra de custo em: "${t}"`).toBe(false);
     }
   });
 
