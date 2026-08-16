@@ -15,44 +15,119 @@ import { conteudoProva } from "@/content/prova";
  * A animação roda uma vez, sem laço, e é escalonada por `--i`. Zero JavaScript.
  */
 function SimulacaoWhatsApp() {
-  const conversa = [
+  // Roteiro do atendimento. `digitando` é quanto tempo o indicador de "está
+  // digitando" fica no ar antes da resposta chegar, em segundos. Falas do lead
+  // não têm espera: quem digita e faz o outro esperar é o atendimento.
+  const roteiro: Array<{
+    de: "lead" | "bot";
+    texto: string;
+    hora: string;
+    digitando?: number;
+  }> = [
     { de: "lead", texto: "Vocês fazem automação pra time de vendas?", hora: "14:02" },
-    { de: "bot", texto: "Fazemos. Vocês já usam CRM?", hora: "14:02" },
+    { de: "bot", texto: "Fazemos. Vocês já usam CRM?", hora: "14:02", digitando: 1.4 },
     { de: "lead", texto: "Usamos, mas ninguém preenche", hora: "14:03" },
-    { de: "bot", texto: "É o mais comum. Te mostro em 30 min, amanhã às 15h?", hora: "14:03" },
+    {
+      de: "bot",
+      texto: "É o mais comum. Te mostro em 30 min, amanhã às 15h?",
+      hora: "14:03",
+      digitando: 2.1,
+    },
     { de: "lead", texto: "Fecha", hora: "14:04" },
   ];
+
+  // Linha do tempo calculada aqui, na renderização do servidor. O CSS só recebe
+  // o instante de cada evento em custom properties: nada roda no navegador.
+  let t = 0.6;
+  const eventos = roteiro.map((m) => {
+    const espera = m.digitando ?? 0;
+    const iniciaDigitando = t;
+    t += espera;
+    const iniciaBalao = t;
+    t += m.de === "lead" ? 0.7 : 0.95;
+    return { ...m, espera, iniciaDigitando, iniciaBalao };
+  });
+  const iniciaAgenda = t + 0.15;
 
   return (
     <div className="zap" aria-hidden="true">
       <div className="zap-topo">
+        <span className="zap-voltar">‹</span>
         <span className="zap-avatar" />
         <div className="zap-quem">
           <strong>Atendimento Horizon</strong>
-          <span>online</span>
+          <span className="zap-estado">
+            online
+            {/* Um rótulo "digitando" por resposta, sobreposto ao "online" na
+                mesma linha e no mesmo instante em que os pontinhos aparecem
+                no fio. É onde o WhatsApp de verdade mostra esse estado. */}
+            {eventos
+              .filter((m) => m.espera > 0)
+              .map((m, i) => (
+                <em
+                  key={i}
+                  className="zap-digitando-rotulo"
+                  style={
+                    {
+                      "--inicio": m.iniciaDigitando,
+                      "--dur": m.espera,
+                    } as React.CSSProperties
+                  }
+                >
+                  digitando...
+                </em>
+              ))}
+          </span>
         </div>
+        <span className="zap-icones">
+          <i />
+          <i />
+        </span>
       </div>
 
       <div className="zap-fio">
-        {conversa.map((m, i) => (
-          <p
-            key={i}
-            className={m.de === "bot" ? "zap-msg zap-nossa" : "zap-msg"}
-            style={{ "--i": i } as React.CSSProperties}
-          >
-            {m.texto}
-            <span className="zap-hora">
-              {m.hora}
-              {m.de === "bot" && <span className="zap-tiques">✓✓</span>}
-            </span>
-          </p>
+        <span className="zap-dia">hoje</span>
+
+        {eventos.map((m, i) => (
+          <div key={i} className="zap-par">
+            {m.espera > 0 && (
+              <div
+                className="zap-digitando"
+                style={
+                  {
+                    "--inicio": m.iniciaDigitando,
+                    "--dur": m.espera,
+                  } as React.CSSProperties
+                }
+              >
+                <i />
+                <i />
+                <i />
+              </div>
+            )}
+            <p
+              className={m.de === "bot" ? "zap-msg zap-nossa" : "zap-msg"}
+              style={{ "--inicio": m.iniciaBalao } as React.CSSProperties}
+            >
+              {m.texto}
+              <span className="zap-hora">
+                {m.hora}
+                {m.de === "bot" && <span className="zap-tiques">✓✓</span>}
+              </span>
+            </p>
+          </div>
         ))}
 
-        <div className="zap-agenda" style={{ "--i": conversa.length } as React.CSSProperties}>
+        <div className="zap-agenda" style={{ "--inicio": iniciaAgenda } as React.CSSProperties}>
           <span className="zap-agenda-selo">Agenda</span>
           <strong>Quinta, 15h00</strong>
           <span className="zap-agenda-nota">Diagnóstico de 30 minutos, confirmado</span>
         </div>
+      </div>
+
+      <div className="zap-barra">
+        <span className="zap-campo">Mensagem</span>
+        <span className="zap-enviar" />
       </div>
     </div>
   );
