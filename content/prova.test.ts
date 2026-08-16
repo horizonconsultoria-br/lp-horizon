@@ -178,3 +178,27 @@ describe("rastreabilidade dos números", () => {
     }
   });
 });
+
+describe("título da dobra de abas: uma linha", () => {
+  /**
+   * O tamanho do título desta dobra não é um número escolhido no olho: sai de
+   * `clamp(28px, calc((100vw - 96px) / 33), 45px)` em prova.css. O divisor 33
+   * veio de uma medição no navegador — a largura de UMA linha desta frase em
+   * Syne 600 é 32,32× o tamanho da fonte — e só vale para ESTA copy.
+   *
+   * Trocar o título sem remedir quebra a promessa de uma linha só, e o
+   * defeito aparece em produção, não aqui. Então a copy fica presa: mudou,
+   * este teste fica vermelho e a mensagem diz o que fazer.
+   */
+  const TITULO_MEDIDO = "Sua squad técnica para soluções de vendas e vazão no backlog";
+
+  it("a copy do título continua sendo a que foi medida", () => {
+    const dobra = conteudoProva.blocos.find((b) => b.layout === "abas");
+    expect(dobra, "sumiu a dobra com layout de abas").toBeDefined();
+    expect(
+      dobra!.titulo,
+      "o título mudou: remeça a largura de uma linha no navegador e ajuste o " +
+        "divisor de --font-size em .prova-bloco-centro > h2 (prova.css)",
+    ).toBe(TITULO_MEDIDO);
+  });
+});
