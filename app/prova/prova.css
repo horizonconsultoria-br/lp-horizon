@@ -623,7 +623,8 @@ body:has(.theme-v3) .skip-link {
   opacity: 0;
   visibility: hidden;
   min-height: 525px;
-  padding: 40px;
+  /* 20px é o padding real da referência, medido no navegador. */
+  padding: 20px 28px;
   background: var(--hzn-bg-raised);
   border: 1px solid var(--hzn-border-default);
   border-radius: 14px;
@@ -683,4 +684,176 @@ body:has(.theme-v3) .skip-link {
 /* CTA da dobra: contorno, não preenchido, como na referência. */
 .prova-bloco-centro .prova-cta {
   justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIMULAÇÃO DE ATENDIMENTO NO WHATSAPP
+   Preenche a metade direita do painel, que na referência é ocupada
+   por uma ilustração por aba. Forma do WhatsApp (balão com cauda,
+   hora, dois tiques), cores da casa. Zero JavaScript: a conversa se
+   monta com `animation-delay` escalonado por --i.
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-aba-painel-visual {
+  display: grid;
+  grid-template-columns: 395px minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 48px);
+  align-items: start;
+}
+@media (max-width: 1040px) {
+  .prova-aba-painel-visual {
+    grid-template-columns: 1fr;
+  }
+}
+
+.zap {
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 16px;
+  background: rgba(7, 11, 19, 0.72);
+  overflow: hidden;
+  max-width: 384px;
+  justify-self: center;
+  width: 100%;
+}
+
+.zap-topo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(22, 32, 58, 0.9);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+.zap-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sinal), var(--hzn-brand-700));
+  flex-shrink: 0;
+}
+.zap-quem {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.zap-quem strong {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.zap-quem span {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  color: var(--hzn-brand-300);
+}
+
+.zap-fio {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 12px 14px;
+}
+
+.zap-msg {
+  position: relative;
+  align-self: flex-start;
+  max-width: 84%;
+  margin: 0;
+  padding: 7px 11px 6px;
+  border-radius: 10px 10px 10px 2px;
+  background: rgba(22, 32, 58, 0.95);
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--gelo);
+  /* Cada bolha entra 0,85s depois da anterior. Roda uma vez, sem laço:
+     laço infinito numa conversa vira distração, não demonstração. */
+  animation: zap-surge 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(0.5s + var(--i) * 0.85s);
+}
+
+/* A nossa fala vai pra direita, com a cauda do outro lado, como no original. */
+.zap-nossa {
+  align-self: flex-end;
+  border-radius: 10px 10px 2px 10px;
+  background: rgba(59, 130, 246, 0.22);
+  border: 1px solid rgba(59, 130, 246, 0.32);
+}
+
+.zap-hora {
+  float: right;
+  margin: 6px 0 0 10px;
+  font-size: 9.5px;
+  line-height: 1;
+  color: rgba(232, 238, 247, 0.45);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+/* Sem isto o float escapa do balão e a caixa colapsa. */
+.zap-msg::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+/* Os dois tiques de leitura já são azuis no WhatsApp de verdade, então aqui
+   eles caem na paleta sem nenhum ajuste. */
+.zap-tiques {
+  color: var(--hzn-brand-300);
+  font-size: 10px;
+  letter-spacing: -2px;
+}
+
+/* O horário flutua à direita e a ÚLTIMA linha do texto o contorna, que é como
+   o WhatsApp de verdade resolve. Posicionado absoluto, ele passava por cima do
+   texto sempre que o balão tinha uma linha só. */
+.zap-agenda {
+  margin-top: 4px;
+  padding: 11px 13px;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  animation: zap-agenda-surge 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(0.5s + var(--i) * 0.85s);
+}
+.zap-agenda-selo {
+  font-family: var(--hzn-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hzn-brand-300);
+}
+.zap-agenda strong {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.zap-agenda-nota {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  color: rgba(232, 238, 247, 0.6);
+}
+
+@keyframes zap-surge {
+  from { opacity: 0; transform: translateY(9px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes zap-agenda-surge {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Quem pediu menos movimento recebe a conversa inteira montada, sem encenação. */
+@media (prefers-reduced-motion: reduce) {
+  .zap-msg,
+  .zap-agenda {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }

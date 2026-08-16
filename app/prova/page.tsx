@@ -1,6 +1,63 @@
 import Image from "next/image";
 import { conteudoProva } from "@/content/prova";
 
+/**
+ * Simulação de um atendimento que qualifica, responde e agenda sozinho.
+ *
+ * É ILUSTRAÇÃO, não registro: a conversa é encenada para mostrar a forma do
+ * produto. Fica `aria-hidden` de propósito, porque ler um diálogo falso em voz
+ * alta confunde quem usa leitor de tela mais do que ajuda.
+ *
+ * O formato é o do WhatsApp (balões com cauda, hora, dois tiques de leitura),
+ * mas nas cores da casa. Copiar o verde e a marca deles seria uso indevido de
+ * identidade de terceiro, e a forma sozinha já é reconhecível.
+ *
+ * A animação roda uma vez, sem laço, e é escalonada por `--i`. Zero JavaScript.
+ */
+function SimulacaoWhatsApp() {
+  const conversa = [
+    { de: "lead", texto: "Vocês fazem automação pra time de vendas?", hora: "14:02" },
+    { de: "bot", texto: "Fazemos. Vocês já usam CRM?", hora: "14:02" },
+    { de: "lead", texto: "Usamos, mas ninguém preenche", hora: "14:03" },
+    { de: "bot", texto: "É o mais comum. Te mostro em 30 min, amanhã às 15h?", hora: "14:03" },
+    { de: "lead", texto: "Fecha", hora: "14:04" },
+  ];
+
+  return (
+    <div className="zap" aria-hidden="true">
+      <div className="zap-topo">
+        <span className="zap-avatar" />
+        <div className="zap-quem">
+          <strong>Atendimento Horizon</strong>
+          <span>online</span>
+        </div>
+      </div>
+
+      <div className="zap-fio">
+        {conversa.map((m, i) => (
+          <p
+            key={i}
+            className={m.de === "bot" ? "zap-msg zap-nossa" : "zap-msg"}
+            style={{ "--i": i } as React.CSSProperties}
+          >
+            {m.texto}
+            <span className="zap-hora">
+              {m.hora}
+              {m.de === "bot" && <span className="zap-tiques">✓✓</span>}
+            </span>
+          </p>
+        ))}
+
+        <div className="zap-agenda" style={{ "--i": conversa.length } as React.CSSProperties}>
+          <span className="zap-agenda-selo">Agenda</span>
+          <strong>Quinta, 15h00</strong>
+          <span className="zap-agenda-nota">Diagnóstico de 30 minutos, confirmado</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Server Component puro. Sem "use client", sem estado, sem efeito.
 export default function ProvaPage() {
   const { blocos, cta } = conteudoProva;
@@ -154,9 +211,18 @@ export default function ProvaPage() {
                         defaultChecked={i === 0}
                       />
                       <label htmlFor={`aba-${bloco.id}-${i}`}>{item.nome}</label>
-                      <article className="prova-aba-painel">
-                        <h3>{item.nome}</h3>
-                        <p>{item.descricao}</p>
+                      <article
+                        className={
+                          item.visual
+                            ? "prova-aba-painel prova-aba-painel-visual"
+                            : "prova-aba-painel"
+                        }
+                      >
+                        <div className="prova-aba-texto">
+                          <h3>{item.nome}</h3>
+                          <p>{item.descricao}</p>
+                        </div>
+                        {item.visual === "whatsapp" && <SimulacaoWhatsApp />}
                       </article>
                     </div>
                   ))}

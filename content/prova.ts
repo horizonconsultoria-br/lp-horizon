@@ -1,5 +1,11 @@
 export type Destaque = { valor: string; legenda: string; fonte: string };
-export type Item = { nome: string; descricao: string };
+export type Item = {
+  nome: string;
+  descricao: string;
+  /** Ilustração opcional do painel. "whatsapp" simula um atendimento que
+   *  termina virando compromisso na agenda. */
+  visual?: "whatsapp";
+};
 
 export type Bloco = {
   id: string;
@@ -45,6 +51,7 @@ export const conteudoProva: ConteudoProva = {
       itens: [
         {
           nome: "AI Chatbots",
+          visual: "whatsapp",
           descricao:
             "Qualifica, agenda, responde em 3 segundos. Clone do hello seu melhor vendedor online 24/7, sem folga, sem café, sem segunda-feira ruim.",
         },
