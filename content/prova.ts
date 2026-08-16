@@ -7,6 +7,8 @@ export type Bloco = {
   eyebrow?: string;
   /** Opcional: linha de apoio logo abaixo do título da dobra. */
   subtitulo?: string;
+  /** "abas" renderiza os `itens` como painéis selecionáveis em vez de lista. */
+  layout?: "abas";
   titulo: string;
   paragrafos: string[];
   destaque?: Destaque;
@@ -35,11 +37,12 @@ export const conteudoProva: ConteudoProva = {
       eyebrow: "O que usamos todo dia",
       titulo: "Sua squad técnica para soluções de vendas e vazão no backlog",
       subtitulo: "Onde a IA faz diferença para você",
-      paragrafos: [
-        "Ele descobre empresas por varredura de mapa, organiza a fila de prospecção, escaneia uma conta a partir do Instagram e volta com nome real, site, telefone e contatos.",
-        "Do outro lado, gera diagnóstico do negócio do prospect, monta a proposta comercial, publica as duas como páginas próprias e ainda concentra as conversas de WhatsApp e Instagram na mesma tela.",
-        "Nada disso é protótipo. É o que a nossa equipe abre de manhã.",
-      ],
+      layout: "abas",
+      // Sem prosa nesta dobra: a estrutura de abas fala por si, como na
+      // referência. Isso também resolve o pronome órfão que ficou quando a
+      // manchete mudou de "Um CRM inteiro" para "Sua squad técnica" e o
+      // parágrafo seguinte continuou começando com "Ele descobre empresas".
+      paragrafos: [],
       itens: [
         { nome: "Ingestão", descricao: "Varredura de mapa por nicho e cidade, com fila de revisão." },
         { nome: "Prospecção", descricao: "Board de contas, carteira por vendedor e histórico." },

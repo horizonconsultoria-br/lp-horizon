@@ -74,10 +74,16 @@ describe("estrutura", () => {
     expect(conteudoProva.blocos.map((b) => b.id)).toEqual(IDS_ESPERADOS);
   });
 
-  it("nenhum bloco fica sem título ou sem parágrafo", () => {
+  it("nenhum bloco fica sem título, e só a dobra de abas pode ficar sem prosa", () => {
     for (const b of conteudoProva.blocos) {
       expect(b.titulo.trim().length, `bloco ${b.id}`).toBeGreaterThan(0);
-      expect(b.paragrafos.length, `bloco ${b.id}`).toBeGreaterThan(0);
+      if (b.layout === "abas") {
+        // A dobra de abas dispensa prosa de propósito: os painéis carregam o
+        // conteúdo. Em troca, ela precisa ter itens, senão fica vazia.
+        expect(b.itens?.length ?? 0, `bloco ${b.id} sem itens`).toBeGreaterThan(1);
+      } else {
+        expect(b.paragrafos.length, `bloco ${b.id}`).toBeGreaterThan(0);
+      }
     }
   });
 });

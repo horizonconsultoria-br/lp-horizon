@@ -111,18 +111,57 @@ export default function ProvaPage() {
       <div className="prova-corpo">
         <article>
           {demais.map((bloco, indice) => (
-            <section key={bloco.id} id={bloco.id} className="prova-bloco">
+            <section
+              key={bloco.id}
+              id={bloco.id}
+              className={
+                bloco.layout === "abas" ? "prova-bloco prova-bloco-centro" : "prova-bloco"
+              }
+            >
               {bloco.eyebrow && <p className="prova-eyebrow">{bloco.eyebrow}</p>}
               <h2>{bloco.titulo}</h2>
               {bloco.subtitulo && (
                 <p className="prova-subtitulo">{bloco.subtitulo}</p>
               )}
 
-              <div className="prova-prosa">
-                {bloco.paragrafos.map((p, i) => (
-                  <p key={i}>{p}</p>
-                ))}
-              </div>
+              {bloco.paragrafos.length > 0 && (
+                <div className="prova-prosa">
+                  {bloco.paragrafos.map((p, i) => (
+                    <p key={i}>{p}</p>
+                  ))}
+                </div>
+              )}
+
+              {/* Abas em CSS puro: um grupo de radio com labels. Zero JavaScript
+                  de runtime, e a navegação por setas do teclado vem de graça no
+                  grupo de radio, coisa que uma aba feita em JS só tem se alguém
+                  implementar à mão. O painel aparece via :checked ~ . */}
+              {bloco.layout === "abas" && bloco.itens && (
+                <div
+                  className="prova-abas"
+                  style={{ "--abas": bloco.itens.length } as React.CSSProperties}
+                >
+                  {bloco.itens.map((item, i) => (
+                    // `display: contents` faz o input, o rótulo e o painel
+                    // virarem itens do mesmo grid. Eles continuam irmãos no
+                    // DOM, então `input:checked ~ .painel` funciona com UMA
+                    // regra só, para qualquer quantidade de abas.
+                    <div key={item.nome} className="prova-aba">
+                      <input
+                        type="radio"
+                        name={`abas-${bloco.id}`}
+                        id={`aba-${bloco.id}-${i}`}
+                        defaultChecked={i === 0}
+                      />
+                      <label htmlFor={`aba-${bloco.id}-${i}`}>{item.nome}</label>
+                      <article className="prova-aba-painel">
+                        <h3>{item.nome}</h3>
+                        <p>{item.descricao}</p>
+                      </article>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {bloco.destaque && (
                 <dl className="prova-destaque">
@@ -134,7 +173,9 @@ export default function ProvaPage() {
                 </dl>
               )}
 
-              {bloco.itens && (
+              {/* Na dobra de abas os itens já viraram painéis acima; sem esta
+                  guarda eles apareceriam duas vezes na mesma seção. */}
+              {bloco.itens && bloco.layout !== "abas" && (
                 <dl className="prova-itens">
                   {bloco.itens.map((item) => (
                     <div key={item.nome} className="prova-item">

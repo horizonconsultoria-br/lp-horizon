@@ -518,3 +518,154 @@ body:has(.theme-v3) .skip-link {
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DOBRA DE ABAS
+   Estrutura da referência: título centralizado, lista vertical de
+   abas à esquerda, painel à direita, CTA embaixo. Feita em CSS puro
+   com um grupo de radio: zero JavaScript de runtime, e a navegação
+   por setas do teclado vem de graça do próprio grupo de radio.
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-bloco-centro > h2,
+.prova-bloco-centro > .prova-subtitulo,
+.prova-bloco-centro > .prova-eyebrow {
+  text-align: center;
+  margin-inline: auto;
+}
+.prova-bloco-centro > h2 {
+  max-width: 24ch;
+}
+.prova-bloco-centro > .prova-subtitulo {
+  max-width: 40ch;
+}
+
+.prova-abas {
+  display: grid;
+  grid-template-columns: minmax(190px, 240px) 1fr;
+  /* Uma linha por aba, todas do tamanho do próprio rótulo, mais UMA linha
+     final que absorve a sobra. Sem ela, a altura do painel (que ocupa todas
+     as linhas) se distribui entre elas e esparrama os rótulos pela coluna. */
+  grid-template-rows: repeat(var(--abas, 6), min-content) 1fr;
+  gap: clamp(20px, 3vw, 44px);
+  column-gap: clamp(20px, 3vw, 44px);
+  row-gap: 0;
+  align-items: start;
+  margin-top: clamp(32px, 5vw, 56px);
+  min-height: 340px;
+}
+
+/* Faz input, rótulo e painel virarem itens do mesmo grid, mantendo a
+   relação de irmãos no DOM que o seletor ~ precisa. */
+.prova-aba {
+  display: contents;
+}
+
+.prova-aba input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.prova-aba label {
+  grid-column: 1;
+  font-family: var(--hzn-font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  /* Inativa quase apagada, como na referência, mas num azul da casa em vez
+     do branco a 13% dela: sobre o nosso fundo o branco puro esverdeia. */
+  color: rgba(143, 166, 196, 0.42);
+  padding: 14px 0 14px 18px;
+  border-left: 2px solid var(--hzn-border-subtle);
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+.prova-aba label:hover {
+  color: rgba(232, 238, 247, 0.75);
+}
+
+.prova-aba input:checked ~ label {
+  color: var(--hzn-brand-300);
+  border-left-color: var(--sinal);
+}
+
+/* Foco visível pelo teclado: o input está escondido, então o anel precisa
+   aparecer no rótulo, senão quem navega por Tab fica sem saber onde está. */
+.prova-aba input:focus-visible ~ label {
+  outline: 2px solid var(--hzn-brand-400);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Todos os painéis ocupam a MESMA área da coluna 2, empilhados. Só o da
+   aba marcada fica visível. */
+.prova-aba-painel {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  opacity: 0;
+  visibility: hidden;
+  padding: clamp(24px, 3.2vw, 40px);
+  background: var(--hzn-bg-raised);
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 14px;
+  transition: opacity 260ms ease;
+}
+.prova-aba input:checked ~ .prova-aba-painel {
+  opacity: 1;
+  visibility: visible;
+}
+
+.prova-aba-painel h3 {
+  font-family: var(--prova-display);
+  font-variation-settings: "SOFT" 0, "WONK" 1, "opsz" 40;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--gelo);
+  margin: 0 0 var(--hzn-space-4);
+}
+.prova-aba-painel p {
+  font-family: var(--hzn-font-sans);
+  font-size: clamp(1rem, 1.15vw, 1.08rem);
+  line-height: 1.7;
+  color: var(--hzn-text-secondary);
+  max-width: 52ch;
+  margin: 0;
+}
+
+/* Em tela estreita vira empilhado: rótulo, painel, rótulo, painel. O grid de
+   duas colunas não cabe, e forçar rolagem horizontal seria pior. */
+@media (max-width: 720px) {
+  .prova-abas {
+    grid-template-columns: 1fr;
+  }
+  .prova-aba label,
+  .prova-aba-painel {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .prova-aba-painel {
+    display: none;
+  }
+  .prova-aba input:checked ~ .prova-aba-painel {
+    display: block;
+    margin-bottom: var(--hzn-space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova-aba-painel {
+    transition: none;
+  }
+}
+
+/* CTA da dobra: contorno, não preenchido, como na referência. */
+.prova-bloco-centro .prova-cta {
+  justify-content: center;
+}
