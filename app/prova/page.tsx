@@ -114,6 +114,9 @@ export default function ProvaPage() {
             <section key={bloco.id} id={bloco.id} className="prova-bloco">
               {bloco.eyebrow && <p className="prova-eyebrow">{bloco.eyebrow}</p>}
               <h2>{bloco.titulo}</h2>
+              {bloco.subtitulo && (
+                <p className="prova-subtitulo">{bloco.subtitulo}</p>
+              )}
 
               <div className="prova-prosa">
                 {bloco.paragrafos.map((p, i) => (

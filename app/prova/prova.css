@@ -377,6 +377,20 @@
   text-wrap: balance;
 }
 
+/* Linha de apoio da dobra. Em Inter, não na serifa do título: o contraste
+   entre as duas famílias é o que faz ela ler como apoio e não como um segundo
+   título competindo com o primeiro. */
+.prova-subtitulo {
+  font-family: var(--hzn-font-sans);
+  font-size: clamp(1.1rem, 1.7vw, 1.4rem);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--neve);
+  max-width: 34ch;
+  margin: 0 0 clamp(24px, 3.4vw, 38px);
+  text-wrap: balance;
+}
+
 .prova-prosa p {
   font-family: var(--hzn-font-sans);
   font-size: clamp(1rem, 1.15vw, 1.09rem);

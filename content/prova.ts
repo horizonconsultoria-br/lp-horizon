@@ -5,6 +5,8 @@ export type Bloco = {
   id: string;
   /** Opcional: o herói não usa. */
   eyebrow?: string;
+  /** Opcional: linha de apoio logo abaixo do título da dobra. */
+  subtitulo?: string;
   titulo: string;
   paragrafos: string[];
   destaque?: Destaque;
@@ -31,7 +33,8 @@ export const conteudoProva: ConteudoProva = {
     {
       id: "crm-proprio",
       eyebrow: "O que usamos todo dia",
-      titulo: "Um CRM inteiro, construído para uma operação de verdade.",
+      titulo: "Sua squad técnica para soluções de vendas e vazão no backlog",
+      subtitulo: "Onde a IA faz diferença para você",
       paragrafos: [
         "Ele descobre empresas por varredura de mapa, organiza a fila de prospecção, escaneia uma conta a partir do Instagram e volta com nome real, site, telefone e contatos.",
         "Do outro lado, gera diagnóstico do negócio do prospect, monta a proposta comercial, publica as duas como páginas próprias e ainda concentra as conversas de WhatsApp e Instagram na mesma tela.",
