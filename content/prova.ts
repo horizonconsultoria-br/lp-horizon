@@ -46,7 +46,7 @@ export const conteudoProva: ConteudoProva = {
     {
       id: "crm-proprio",
       titulo: "Sua squad técnica para soluções de vendas e vazão no backlog",
-      subtitulo: "Onde a IA faz diferença para você",
+      subtitulo: "Onde a IA faz diferença para seu time Comercial",
       layout: "abas",
       // Sem prosa nesta dobra: a estrutura de abas fala por si, como na
       // referência. Isso também resolve o pronome órfão que ficou quando a
@@ -89,11 +89,6 @@ export const conteudoProva: ConteudoProva = {
           visual: "radar",
           descricao:
             "Monitora seus concorrentes, rastreia mudanças de preço, identifica empresas procurando sua solução. Meio como ter um espião, só que sem infringir leis e que opera no automático.",
-        },
-        {
-          nome: "Dados",
-          descricao:
-            "Converse com seus dados como se fosse o ChatGPT. “Qual vendedor converte melhor?” “Onde perdemos mais deals?” Respostas instantâneas, sem abrir uma planilha sequer.",
         },
       ],
     },
