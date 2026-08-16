@@ -96,6 +96,19 @@
   color: transparent;
 }
 
+/* Sem este fallback, o modo de alto contraste do SO substitui as cores de
+   fundo e o gradiente para de pintar: como o texto é transparente e só
+   existe por causa do gradiente, os sete títulos da página somem por
+   completo. CanvasText garante o texto sempre visível nesse modo. */
+@media (forced-colors: active) {
+  .prova-bloco h1,
+  .prova-bloco h2 {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: CanvasText;
+  }
+}
+
 /* Prosa: onde a medida de linha manda */
 .prova-prosa p {
   font-family: var(--prova-prosa);
