@@ -12,3 +12,6 @@ coverage
 reports/desktop.json
 reports/mobile.json
 .turbo
+
+# SDD workspace (ledger, briefs, review packages) — scratch, nao versionar
+.superpowers/
