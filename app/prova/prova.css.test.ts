@@ -120,6 +120,77 @@ describe("isolamento", () => {
   });
 });
 
+/**
+ * Extrai as regras-folha (seletor + corpo) de um CSS: os blocos cujo corpo não
+ * tem outro bloco dentro. Regra dentro de `@media` entra normalmente, porque o
+ * prelúdio do @media nunca casa (o corpo dele contém `{`). Comentários saem
+ * antes, senão um seletor comentado contaria como regra viva.
+ */
+function regrasFolha(cssTexto: string): Array<{ seletor: string; corpo: string }> {
+  const semComentarios = cssTexto.replace(/\/\*[\s\S]*?\*\//g, "");
+  const regras: Array<{ seletor: string; corpo: string }> = [];
+  const padrao = /([^{}]+)\{([^{}]*)\}/g;
+  let achado: RegExpExecArray | null;
+  while ((achado = padrao.exec(semComentarios)) !== null) {
+    regras.push({ seletor: achado[1].trim().replace(/\s+/g, " "), corpo: achado[2] });
+  }
+  return regras;
+}
+
+/**
+ * Devolve os seletores que mexem no `display` de um painel de aba SEM depender
+ * do `:checked`. Cada um desses é um painel que pode aparecer fora da vez.
+ */
+function paineisQueLigamDisplaySemChecked(cssTexto: string): string[] {
+  return regrasFolha(cssTexto)
+    .filter(
+      (r) =>
+        r.seletor.includes(".prova-aba-painel") &&
+        /(^|[;{\s])display\s*:/.test(r.corpo) &&
+        !r.seletor.includes(":checked"),
+    )
+    .map((r) => r.seletor);
+}
+
+describe("abas: só o painel da aba marcada aparece", () => {
+  /**
+   * O defeito que isso guarda já aconteceu. `.prova-aba-painel-visual` (o
+   * painel com a simulação de WhatsApp) declarava `display: grid` solto. Como
+   * tem a MESMA especificidade do `.prova-aba-painel { display: none }` e vem
+   * depois no arquivo, vencia sempre: a simulação ficava visível por cima de
+   * qualquer outra aba que o visitante escolhesse. Quem liga o display de um
+   * painel é o `:checked`, e só ele.
+   */
+  it("nenhuma regra fora do :checked liga o display de um painel", () => {
+    // A única exceção é a regra base, que é justamente quem ESCONDE. Ela é
+    // conferida no teste seguinte.
+    const infratores = paineisQueLigamDisplaySemChecked(css).filter(
+      (seletor) => seletor !== ".prova-aba-painel",
+    );
+    expect(
+      infratores,
+      `regra declara display de painel sem :checked: ${infratores.join(" | ")}`,
+    ).toEqual([]);
+  });
+
+  it("o esconderijo padrão do painel continua sendo display: none", () => {
+    const base = regrasFolha(css).find((r) => r.seletor === ".prova-aba-painel");
+    expect(base, "regra base .prova-aba-painel sumiu").toBeDefined();
+    expect(base!.corpo).toMatch(/display\s*:\s*none/);
+  });
+
+  it("pega o defeito exato que já foi ao ar", () => {
+    const cssComOBug = `
+      .prova-aba-painel { display: none; }
+      .prova-aba input:checked ~ .prova-aba-painel { display: block; }
+      .prova-aba-painel-visual { display: grid; grid-template-columns: 395px 1fr; }
+    `;
+    expect(paineisQueLigamDisplaySemChecked(cssComOBug)).toContain(
+      ".prova-aba-painel-visual",
+    );
+  });
+});
+
 describe("regressão: glow âmbar em rgba", () => {
   /**
    * Prova que o buraco foi fechado: a checagem de AMBAR_PROIBIDO rejeita

@@ -706,8 +706,13 @@ body:has(.theme-v3) .skip-link {
    entrando e saindo. Tudo em CSS: zero JavaScript de runtime.
    ═══════════════════════════════════════════════════════════════ */
 
+/* Sem `display` aqui, de proposito: quem liga o grid e a regra do painel
+   marcado, la em cima. Declarar `display: grid` neste seletor sobrepunha o
+   `display: none` que esconde painel nao selecionado (mesma especificidade,
+   e este vem depois no arquivo), e a simulacao ficava visivel por cima da
+   aba escolhida. As demais propriedades sao inertes enquanto o painel esta
+   escondido. */
 .prova-aba-painel-visual {
-  display: grid;
   grid-template-columns: 395px minmax(0, 1fr);
   gap: clamp(24px, 3vw, 48px);
   align-items: start;
