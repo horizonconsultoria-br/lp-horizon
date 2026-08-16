@@ -137,103 +137,116 @@ function SimulacaoWhatsApp() {
 /**
  * Simulação da automação de lead scoring executando no n8n.
  *
- * Mesma natureza da simulação de WhatsApp: ILUSTRAÇÃO encenada, não registro
- * de execução real, e escondida de leitor de tela pelo mesmo motivo. O visual
- * usa o vocabulário do n8n (nós, fios, execução em sequência) nas cores da
- * casa, sem logo nem identidade da ferramenta além do nome.
+ * ILUSTRAÇÃO encenada, não registro de execução real, e escondida de leitor
+ * de tela por isso. A fidelidade visual às marcas foi decisão explícita do
+ * founder: o editor com a cara real do n8n (canvas escuro, nós com nome
+ * embaixo, gatilho de borda esquerda arredondada, rosa #ea4b71, check verde,
+ * rótulo "1 item" na saída) e o destino num contato real de HubSpot (cartão
+ * claro, slate, laranja #ff7a59, flash de propriedade atualizada). Uso
+ * nominativo das ferramentas que as automações da casa usam; nenhum arquivo
+ * de logo, os ícones são formas desenhadas em CSS.
  *
- * A linha do tempo é calculada aqui, no servidor, e vira custom properties.
- * Quem toca a cena é o CSS, sob a aba marcada, então ela recomeça a cada
- * seleção da aba, como a conversa de WhatsApp. Zero JavaScript no navegador.
+ * A mecânica é a mesma da conversa de WhatsApp: linha do tempo calculada no
+ * servidor, custom properties, animações só sob a aba marcada (reinicia a
+ * cada seleção), estado base = estado final (movimento reduzido recebe a
+ * cena montada). Zero JavaScript no navegador.
  */
 function SimulacaoN8N() {
-  // Cada passo roda por `dur` segundos; o pulso parte quando o nó termina e
-  // chega um pouco antes do próximo acender.
+  // Um pipeline plausível de verdade no n8n: o Webhook recebe o lead, um nó
+  // de código calcula o score, e o nó do HubSpot grava no contato.
   const passos: Array<{
-    titulo: string;
-    sub: string;
-    icone: "raio" | "mais" | "base";
+    nome: string;
+    tipo: "webhook" | "code" | "hubspot";
     dur: number;
   }> = [
-    { titulo: "Novo lead", sub: "Chegou pelo formulário do site", icone: "raio", dur: 0.7 },
-    { titulo: "Lead score", sub: "Cargo e porte somam +35", icone: "mais", dur: 0.9 },
-    { titulo: "CRM atualizado", sub: "Sobe pro topo da fila", icone: "base", dur: 0.8 },
+    { nome: "Webhook", tipo: "webhook", dur: 0.6 },
+    { nome: "Lead Score", tipo: "code", dur: 0.9 },
+    { nome: "HubSpot", tipo: "hubspot", dur: 0.8 },
   ];
 
-  let t = 0.5;
+  let t = 0.6;
   const nos = passos.map((p, i) => {
     const inicio = t;
     const fim = inicio + p.dur;
+    // O pulso parte quando o nó termina e chega antes do próximo acender;
+    // o rótulo "1 item" aparece no fio no mesmo instante, como no n8n.
     const fio = i < passos.length - 1 ? { inicio: fim + 0.05, dur: 0.5 } : null;
     t = fim + 0.6;
     return { ...p, inicio, fim, fio };
   });
-  // O cartão só muda depois que o último nó grava: primeiro a barra sobe,
-  // depois o número troca, e os selos são o ponto final.
+  // O contato só muda depois que o nó do HubSpot grava: barra, número em
+  // crossfade, flash de propriedade e os selos como ponto final.
   const iniciaCarta = nos[nos.length - 1].fim + 0.25;
 
   return (
     <div className="n8n" aria-hidden="true">
       <div className="n8n-topo">
-        <span className="n8n-pontos">
-          <i />
-          <i />
-          <i />
+        <span className="n8n-volta">‹</span>
+        <strong className="n8n-nome">Lead scoring</strong>
+        <span className="n8n-ativo">
+          Active
+          <i className="n8n-toggle" />
         </span>
-        <span className="n8n-titulo">n8n · lead score</span>
       </div>
 
       <div className="n8n-tela">
-        {nos.map((no) => (
-          <Fragment key={no.titulo}>
-            <div
-              className="n8n-no"
-              style={{ "--inicio": no.inicio, "--dur": no.dur } as React.CSSProperties}
-            >
-              <span className={`n8n-icone n8n-icone-${no.icone}`} />
-              <span className="n8n-info">
-                <strong>{no.titulo}</strong>
-                <em>{no.sub}</em>
-              </span>
-              <span className="n8n-status">
-                <i className="n8n-spinner" />
-                <i className="n8n-check">✓</i>
-              </span>
-            </div>
-            {no.fio && (
+        <div className="n8n-fluxo">
+          {nos.map((no) => (
+            <Fragment key={no.nome}>
               <div
-                className="n8n-fio"
-                style={{ "--inicio": no.fio.inicio, "--dur": no.fio.dur } as React.CSSProperties}
+                className="n8n-passo"
+                style={{ "--inicio": no.inicio, "--dur": no.dur } as React.CSSProperties}
               >
-                <i className="n8n-pulso" />
+                <span className={`n8n-no n8n-no-${no.tipo}`}>
+                  <i className="n8n-icone" />
+                  <i className="n8n-spinner" />
+                  <i className="n8n-check">✓</i>
+                </span>
+                <span className="n8n-rotulo">{no.nome}</span>
               </div>
-            )}
-          </Fragment>
-        ))}
+              {no.fio && (
+                <div
+                  className="n8n-fio"
+                  style={{ "--inicio": no.fio.inicio, "--dur": no.fio.dur } as React.CSSProperties}
+                >
+                  <em className="n8n-itens">1 item</em>
+                  <i className="n8n-pulso" />
+                </div>
+              )}
+            </Fragment>
+          ))}
+        </div>
       </div>
 
       <div className="n8n-card" style={{ "--carta": iniciaCarta } as React.CSSProperties}>
-        <span className="n8n-card-selo">CRM</span>
-        <div className="n8n-card-topo">
-          <span className="n8n-avatar" />
-          <span className="n8n-quem">
-            <strong>M. Ribeiro</strong>
-            <em>Diretora comercial</em>
-          </span>
-          <span className="n8n-score">
-            <span className="n8n-score-rotulo">lead score</span>
-            <span className="n8n-score-valor">
-              <span className="n8n-score-antes">52</span>
-              <span className="n8n-score-depois">87</span>
+        <div className="n8n-hs-topo">
+          <i className="n8n-hs-marca" />
+          <span>HubSpot · Contato</span>
+        </div>
+        <div className="n8n-hs-corpo">
+          <div className="n8n-hs-quem">
+            <span className="n8n-hs-avatar">MR</span>
+            <span className="n8n-hs-nomes">
+              <strong>Mariana Ribeiro</strong>
+              <em>Diretora comercial</em>
             </span>
-          </span>
-        </div>
-        <div className="n8n-barra">
-          <i className="n8n-barra-fill" />
-        </div>
-        <div className="n8n-card-pe">
-          <span className="n8n-chip">+35 pontos</span>
-          <span className="n8n-selo-quente">Lead quente</span>
+          </div>
+          <div className="n8n-hs-prop">
+            <span className="n8n-hs-prop-linha">
+              <span className="n8n-hs-prop-rotulo">HubSpot Score</span>
+              <span className="n8n-score-valor">
+                <span className="n8n-score-antes">52</span>
+                <span className="n8n-score-depois">87</span>
+              </span>
+            </span>
+            <span className="n8n-barra">
+              <i className="n8n-barra-fill" />
+            </span>
+          </div>
+          <div className="n8n-hs-pe">
+            <span className="n8n-chip">+35 pontos</span>
+            <span className="n8n-selo-quente">Lead quente</span>
+          </div>
         </div>
       </div>
     </div>
