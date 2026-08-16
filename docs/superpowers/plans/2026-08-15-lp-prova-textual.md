@@ -533,11 +533,17 @@ const TOKENS_OBRIGATORIOS = [
   "--hzn-border-strong",
 ];
 
-/** Hex da paleta âmbar da v1. Nenhum pode aparecer aqui. */
-const HEX_AMBAR = [
+/**
+ * Cores da v1 âmbar que não podem aparecer aqui.
+ * Inclui as grafias em rgba, e não só hex: os tokens de glow do design
+ * system usam `rgba(245, 158, 11, ...)`, então uma lista só de hex deixaria
+ * passar justamente o vazamento que faz o botão brilhar âmbar na página azul.
+ */
+const AMBAR_PROIBIDO = [
   "#fef3c7", "#fde68a", "#fcd34d", "#fbbf24",
   "#f59e0b", "#d97706", "#b45309", "#92400e",
   "#0b0d12", "#131720", "#1a2030", "#0e1117",
+  "rgba(245, 158, 11", "rgba(245,158,11",
 ];
 
 describe("tema escopado", () => {
@@ -552,7 +558,7 @@ describe("tema escopado", () => {
   });
 
   it("não contém nenhum hex da paleta âmbar da v1", () => {
-    for (const hex of HEX_AMBAR) {
+    for (const hex of AMBAR_PROIBIDO) {
       expect(css.toLowerCase().includes(hex), `vazou âmbar: ${hex}`).toBe(false);
     }
   });
@@ -625,9 +631,13 @@ Expected: FAIL com `ENOENT` em `prova.css`.
   --hzn-brand-600: #1d4ed8;
   --hzn-brand-700: #1e3a8a;
 
-  /* Glow: nome herdado, valor azul */
+  /* Glow: nome herdado do design system, valor azul.
+     O primeiro é cópia literal da sombra de hover do card do oficial.
+     O segundo é DERIVADO: mesma geometria e mesmo alfa do token original
+     em design/tokens.css, recolorido para azul, porque o oficial não tem
+     equivalente. Declarado como derivação, não como cópia. */
   --hzn-glow-amber: 0 20px 40px -20px rgba(59, 130, 246, 0.3);
-  --hzn-glow-amber-strong: 0 0 48px rgba(59, 130, 246, 0.45);
+  --hzn-glow-amber-strong: 0 0 48px rgba(59, 130, 246, 0.6);
 
   /* Bordas do oficial */
   --hzn-border-subtle: rgba(39, 39, 42, 0.6);
