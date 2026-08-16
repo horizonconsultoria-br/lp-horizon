@@ -21,7 +21,7 @@ export const conteudoProva: ConteudoProva = {
   blocos: [
     {
       id: "abertura",
-      eyebrow: "Horizon",
+      eyebrow: "Software e IA para quem já tem produto",
       titulo: "A gente roda a própria operação no software que vende.",
       paragrafos: [
         "Toda software house diz que domina IA. Poucas usam o que constroem para tocar o próprio negócio.",

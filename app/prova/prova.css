@@ -1,89 +1,246 @@
 /*
- * Tema escopado da LP /prova.
+ * LP /prova — tema escopado e linguagem visual.
  *
- * Redefine os MESMOS tokens --hzn-* de design/tokens.css dentro de .theme-v3.
- * Nada global é tocado: a v1 âmbar em /lp2 continua lendo os valores originais.
+ * CONCEITO: perspectiva atmosférica como arquitetura de informação.
+ * Na fotografia do herói, as cordilheiras somem na bruma conforme se afastam.
+ * A página percorre o caminho inverso: começa LONGE (herói amplo, tipografia
+ * solta, atmosfera) e vai CHEGANDO PERTO conforme desce (mais denso, mais
+ * concreto, mais dado). Longe é aspiração; perto é prova.
  *
- * Os valores azuis são cópia literal de public/v2/index.html (o oficial em /),
- * para que o A/B isole a variável certa. Não "aproximar" nenhum tom.
+ * PALETA: amostrada da própria fotografia, não inventada. Uma única nota
+ * quente (--brasa) existe na página, tirada da faixa de brasa que a foto tem
+ * no horizonte, e aparece uma vez só, no mesmo lugar em que a imagem a tem.
  *
- * ATENÇÃO: --hzn-glow-amber é consumido por .btn-primary:hover em globals.css.
- * Sem redefinir, o botão desta página brilharia âmbar. O teste guarda isso.
+ * ISOLAMENTO: tudo vive dentro de .theme-v3, que redefine os mesmos tokens
+ * --hzn-* do design system. A landing v1 âmbar em /lp2 fica intacta.
  */
 
 .theme-v3 {
-  /* Superfícies (fundo do oficial) */
-  --hzn-bg-base: #131316;
-  --hzn-bg-raised: rgba(24, 24, 27, 0.4);
-  --hzn-bg-overlay: rgba(24, 24, 27, 0.7);
-  --hzn-bg-muted: #101418;
+  /* ─── Paleta amostrada da fotografia ─── */
+  --noite: #0a0f1a;   /* o escuro do sopé */
+  --serra: #16203a;   /* o azul das cristas médias */
+  --bruma: #8fa6c4;   /* a névoa entre as camadas */
+  --gelo: #e8eef7;    /* branco frio */
+  --sinal: #3b82f6;   /* a marca */
+  --brasa: #c8794f;   /* a única nota quente, do horizonte da foto */
 
-  /* Texto */
-  --hzn-text-primary: #fafafa;
-  --hzn-text-secondary: #a1a1aa;
-  --hzn-text-muted: #71717a;
-  --hzn-text-inverse: #0a0a0a;
+  /* ─── Ponte para o design system: os mesmos nomes, valores desta paleta ─── */
+  --hzn-bg-base: var(--noite);
+  --hzn-bg-raised: rgba(22, 32, 58, 0.55);
+  --hzn-bg-overlay: rgba(22, 32, 58, 0.8);
+  --hzn-bg-muted: #070b13;
 
-  /* Marca azul do oficial */
+  --hzn-text-primary: var(--gelo);
+  --hzn-text-secondary: #b6c6dc;
+  --hzn-text-muted: var(--bruma);
+  --hzn-text-inverse: #060a12;
+
   --hzn-brand-50: #eff6ff;
   --hzn-brand-100: #dbeafe;
   --hzn-brand-200: #bfdbfe;
   --hzn-brand-300: #93c5fd;
   --hzn-brand-400: #60a5fa;
-  --hzn-brand-500: #3b82f6;
+  --hzn-brand-500: var(--sinal);
   --hzn-brand-600: #1d4ed8;
   --hzn-brand-700: #1e3a8a;
 
-  /* Glow: nome herdado, valor azul */
-  --hzn-glow-amber: 0 20px 40px -20px rgba(59, 130, 246, 0.3);
-  /* Derivado: mesma geometria e alfa do original, recolorido para azul */
+  /* Nome herdado do design system, valor azul. Sem isto o :hover do
+     .btn-primary brilharia âmbar sobre uma página fria. */
+  --hzn-glow-amber: 0 18px 44px -22px rgba(59, 130, 246, 0.55);
   --hzn-glow-amber-strong: 0 0 48px rgba(59, 130, 246, 0.6);
 
-  /* Bordas do oficial */
-  --hzn-border-subtle: rgba(39, 39, 42, 0.6);
-  --hzn-border-default: rgba(39, 39, 42, 0.8);
-  --hzn-border-strong: rgba(59, 130, 246, 0.4);
+  --hzn-border-subtle: rgba(143, 166, 196, 0.14);
+  --hzn-border-default: rgba(143, 166, 196, 0.22);
+  --hzn-border-strong: rgba(59, 130, 246, 0.45);
 
-  /* Tipografia da página */
-  --prova-display: var(--font-instrument-serif), Georgia, serif;
-  --prova-prosa: var(--font-newsreader), Georgia, serif;
-  --prova-medida: 68ch;
-
-  /* Aponta o token de mono do design system para a fonte self-hosted que o
-     layout carrega. Sem isto, `--hzn-font-mono` é só um NOME de fonte e o
-     número em destaque cai em ui-monospace em quem não tem a JetBrains
-     instalada, apesar de a gente estar servindo o arquivo. */
+  /* Fontes self-hosted do next/font. O token do design system é uma lista de
+     NOMES; sem apontar para a variável, a fonte baixada não seria usada. */
+  --hzn-font-sans: var(--font-inter-prova), "Inter", system-ui, sans-serif;
   --hzn-font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --prova-display: var(--font-fraunces), Georgia, serif;
 
-  /* Mesmo defeito, mesma solução: --hzn-font-sans é só uma lista de NOMES
-     ('Inter', system-ui, ...) e o layout raiz serve Inter self-hosted sob
-     --font-inter, mas nenhuma regra consumia essa variável. Sem isto, a
-     camada de interface cai em system-ui pra quem não tem Inter instalada. */
-  --hzn-font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  /* Medida de linha da prosa, travada na faixa legível de 62 a 72 caracteres */
+  --prova-medida: 66ch;
 }
 
-/* O skip-link vive fora do wrapper .theme-v3 (é irmão de <main> no layout
-   raiz), então herdaria o âmbar global e apareceria laranja sobre a página
-   azul no primeiro Tab. Alcançamos ele por :has() sem tocar o layout raiz,
-   que é compartilhado com a landing em produção.
+/* ═══════════════════════════════════════════════════════════════
+   HERÓI
+   A manchete assenta na linha do horizonte da fotografia, onde a
+   terra encontra o céu. Só faz sentido nesta foto e nesta marca.
+   ═══════════════════════════════════════════════════════════════ */
 
-   Dentro desta regra, var(--hzn-brand-500) resolveria no próprio .skip-link,
-   que fica FORA do escopo .theme-v3 — pegaria o âmbar global de novo. Por
-   isso os valores abaixo são literais azuis, a mesma cópia de
-   public/v2/index.html que .theme-v3 já usa, e não var(). */
-body:has(.theme-v3) .skip-link {
-  background: #3b82f6;
-  color: #0a0a0a;
+.prova-heroi {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--noite);
 }
 
-/* Casca: pinta o fundo por cima do body, que é pintado no :root com o grafite da v1 */
-.prova-shell {
-  min-height: 100vh;
+.prova-heroi img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 38%;
+  z-index: -2;
+}
+
+/* Véu: escurece o pé e a esquerda para o texto respirar, e preserva o céu
+   e as estrelas no alto à direita. Sem ele a faixa de brasa do horizonte
+   competiria com a manchete. */
+.prova-heroi::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(91, 141, 190, 0.12), transparent 60%),
-    linear-gradient(180deg, #131316 0%, #101418 50%, #131316 100%);
-  color: var(--hzn-text-primary);
-  padding-block: clamp(64px, 10vw, 128px);
+    linear-gradient(to top, var(--noite) 1%, rgba(10, 15, 26, 0.52) 26%, rgba(10, 15, 26, 0.08) 62%),
+    linear-gradient(to right, rgba(10, 15, 26, 0.8) 0%, rgba(10, 15, 26, 0.3) 54%, transparent 82%);
+}
+
+.prova-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hzn-space-6);
+  width: 100%;
+  max-width: var(--hzn-container-max);
+  margin-inline: auto;
+  padding: var(--hzn-space-6) var(--hzn-container-padding);
+}
+
+.prova-marca {
+  font-family: var(--prova-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--gelo);
+  text-decoration: none;
+}
+.prova-marca span {
+  color: var(--sinal);
+}
+
+.prova-nav a.prova-nav-cta {
+  font-family: var(--hzn-font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--hzn-text-inverse);
+  background: var(--sinal);
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.prova-nav a.prova-nav-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--hzn-glow-amber);
+}
+
+/* A manchete assenta perto do sopé da imagem, logo acima das cristas, que é
+   onde a fotografia tem a linha do horizonte. Deixa o céu e as estrelas
+   respirando por cima e ainda ganha contraste, porque ali a foto é escura. */
+.prova-heroi-corpo {
+  align-self: end;
+  width: 100%;
+  max-width: var(--hzn-container-max);
+  margin-inline: auto;
+  padding-inline: var(--hzn-container-padding);
+  padding-block: 0 clamp(28px, 5vh, 56px);
+}
+
+/* O eyebrow é a única nota quente da página, no mesmo lugar em que a
+   fotografia tem a faixa de brasa. */
+.prova-eyebrow {
+  font-family: var(--hzn-font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--brasa);
+  margin: 0 0 clamp(20px, 3vh, 34px);
+}
+
+.prova-heroi h1 {
+  font-family: var(--prova-display);
+  font-variation-settings: "SOFT" 0, "WONK" 1, "opsz" 120;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 7.2vw, 5.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.028em;
+  color: var(--gelo);
+  margin: 0;
+  max-width: 15ch;
+  text-wrap: balance;
+}
+
+.prova-heroi-sub {
+  font-family: var(--hzn-font-sans);
+  font-size: clamp(1.02rem, 1.35vw, 1.2rem);
+  line-height: 1.62;
+  color: rgba(232, 238, 247, 0.82);
+  max-width: 46ch;
+  margin: clamp(22px, 3.4vh, 34px) 0 0;
+}
+
+.prova-heroi-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(16px, 2.4vw, 28px);
+  margin-top: clamp(28px, 4vh, 44px);
+}
+
+.prova-acao-forte {
+  font-family: var(--hzn-font-sans);
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--hzn-text-inverse);
+  background: var(--sinal);
+  padding: 0.92rem 1.7rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.prova-acao-forte:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--hzn-glow-amber);
+}
+
+.prova-acao-fraca {
+  font-family: var(--hzn-font-sans);
+  font-size: 0.98rem;
+  color: rgba(232, 238, 247, 0.9);
+  text-decoration: none;
+  border-bottom: 1px solid var(--brasa);
+  padding-bottom: 3px;
+  transition: color 200ms ease;
+}
+.prova-acao-fraca:hover {
+  color: var(--gelo);
+}
+
+/* Marcador de rolagem: fino, discreto, some no primeiro scroll */
+.prova-rolar {
+  justify-self: center;
+  padding-bottom: var(--hzn-space-8);
+  font-family: var(--hzn-font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(143, 166, 196, 0.6);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CORPO — a descida da bruma até o chão
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-corpo {
+  background: linear-gradient(to bottom, var(--noite) 0%, #0b111d 55%, var(--hzn-bg-muted) 100%);
 }
 
 .prova-bloco {
@@ -91,48 +248,33 @@ body:has(.theme-v3) .skip-link {
   max-width: var(--hzn-container-max);
   margin-inline: auto;
   padding-inline: var(--hzn-container-padding);
-  padding-block: clamp(40px, 6vw, 80px);
+  padding-block: clamp(72px, 11vh, 132px);
   border-bottom: 1px solid var(--hzn-border-subtle);
 }
 .prova-bloco:last-of-type {
   border-bottom: 0;
 }
 
-/* h1 e h2 compartilham o estilo: só a abertura é h1, e visualmente
-   os títulos de bloco são o mesmo objeto. */
-.prova-bloco h1,
+.prova-bloco > .prova-eyebrow {
+  color: var(--hzn-text-muted);
+}
+
 .prova-bloco h2 {
   font-family: var(--prova-display);
+  font-variation-settings: "SOFT" 0, "WONK" 1, "opsz" 60;
   font-weight: 400;
-  font-size: clamp(30px, 4.5vw, 56px);
-  line-height: 1.12;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.9rem, 3.6vw, 3.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--gelo);
   max-width: 20ch;
-  margin: var(--hzn-space-4) 0 var(--hzn-space-6);
-  background: linear-gradient(135deg, #5b8dbe 0%, #7da9d3 50%, #bfdbfe 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  margin: 0 0 clamp(20px, 3vw, 32px);
+  text-wrap: balance;
 }
 
-/* Sem este fallback, o modo de alto contraste do SO substitui as cores de
-   fundo e o gradiente para de pintar: como o texto é transparente e só
-   existe por causa do gradiente, os sete títulos da página somem por
-   completo. CanvasText garante o texto sempre visível nesse modo. */
-@media (forced-colors: active) {
-  .prova-bloco h1,
-  .prova-bloco h2 {
-    background: none;
-    -webkit-text-fill-color: currentColor;
-    color: CanvasText;
-  }
-}
-
-/* Prosa: onde a medida de linha manda */
 .prova-prosa p {
-  font-family: var(--prova-prosa);
-  font-size: clamp(17px, 1.15vw, 19px);
+  font-family: var(--hzn-font-sans);
+  font-size: clamp(1rem, 1.15vw, 1.09rem);
   line-height: 1.72;
   max-width: var(--prova-medida);
   color: var(--hzn-text-secondary);
@@ -142,70 +284,112 @@ body:has(.theme-v3) .skip-link {
   margin-bottom: 0;
 }
 
-/* Número em destaque, em mono */
+/* O número: onde a página chega mais perto do chão */
 .prova-destaque {
-  margin: var(--hzn-space-8) 0 0;
-  padding: var(--hzn-space-6);
+  margin: clamp(32px, 5vw, 52px) 0 0;
+  padding: clamp(24px, 3.4vw, 38px);
   background: var(--hzn-bg-raised);
   border: 1px solid var(--hzn-border-default);
-  border-radius: var(--hzn-radius-lg);
+  border-left: 2px solid var(--sinal);
+  border-radius: 4px;
   max-width: var(--prova-medida);
 }
 .prova-destaque dt {
   font-family: var(--hzn-font-mono);
-  font-size: clamp(40px, 6vw, 64px);
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
   font-weight: 500;
   line-height: 1;
   color: var(--hzn-brand-300);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 .prova-destaque dd {
-  margin: var(--hzn-space-3) 0 0;
-  font-family: var(--prova-prosa);
-  font-size: var(--hzn-text-base);
+  margin: var(--hzn-space-4) 0 0;
+  font-family: var(--hzn-font-sans);
+  font-size: 1rem;
   line-height: 1.6;
   color: var(--hzn-text-secondary);
 }
 .prova-destaque .prova-fonte {
   display: block;
   margin-top: var(--hzn-space-3);
-  font-family: var(--hzn-font-sans);
-  font-size: var(--hzn-text-xs);
-  color: var(--hzn-text-secondary);
+  font-family: var(--hzn-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--hzn-text-muted);
 }
 
-/* Itens: lista de definição, não card com hover */
 .prova-itens {
-  margin: var(--hzn-space-8) 0 0;
+  margin: clamp(32px, 5vw, 52px) 0 0;
   display: grid;
-  gap: var(--hzn-space-6);
+  gap: clamp(20px, 3vw, 34px);
   grid-template-columns: 1fr;
 }
-@media (min-width: 768px) {
+@media (min-width: 760px) {
   .prova-itens {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+.prova-item {
+  padding-top: var(--hzn-space-5);
+  border-top: 1px solid var(--hzn-border-subtle);
+}
 .prova-item dt {
   font-family: var(--hzn-font-sans);
-  font-weight: var(--hzn-weight-semibold);
-  font-size: var(--hzn-text-lg);
-  color: var(--hzn-text-primary);
-  margin-bottom: var(--hzn-space-2);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--gelo);
+  margin-bottom: var(--hzn-space-3);
 }
 .prova-item dd {
   margin: 0;
-  font-family: var(--prova-prosa);
-  font-size: var(--hzn-text-base);
-  line-height: 1.65;
+  font-family: var(--hzn-font-sans);
+  font-size: 0.97rem;
+  line-height: 1.66;
   color: var(--hzn-text-secondary);
-  max-width: 56ch;
+  max-width: 54ch;
 }
 
-/* CTA final */
 .prova-cta {
   display: flex;
   flex-wrap: wrap;
   gap: var(--hzn-space-4);
-  margin-top: var(--hzn-space-8);
+  margin-top: clamp(32px, 5vw, 48px);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Acessibilidade e degradação
+   ═══════════════════════════════════════════════════════════════ */
+
+/* O skip-link vive fora do wrapper .theme-v3 (é irmão de <main> no layout
+   raiz), então herdaria o âmbar global e apareceria laranja sobre a página
+   azul no primeiro Tab. Alcançamos ele por :has() sem tocar o layout raiz,
+   que é compartilhado com a landing em produção. Valores literais: dentro
+   desta regra um var() resolveria no elemento, que está fora do escopo. */
+body:has(.theme-v3) .skip-link {
+  background: #3b82f6;
+  color: #060a12;
+}
+
+/* Sem este bloco, em modo de alto contraste o gradiente não pinta e os
+   títulos desapareceriam por completo. */
+@media (forced-colors: active) {
+  .prova-heroi::before {
+    display: none;
+  }
+  .prova-heroi h1,
+  .prova-bloco h2 {
+    color: CanvasText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova-nav a.prova-nav-cta,
+  .prova-acao-forte {
+    transition: none;
+  }
+  .prova-nav a.prova-nav-cta:hover,
+  .prova-acao-forte:hover {
+    transform: none;
+  }
 }

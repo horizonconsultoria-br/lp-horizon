@@ -1,20 +1,24 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Newsreader, JetBrains_Mono } from "next/font/google";
+import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import "./prova.css";
 
 // next/font baixa e serve local no build. Zero requisição a host de terceiro,
 // que é o que a CSP estrita desta rota exige (font-src 'self').
-const instrumentSerif = Instrument_Serif({
+//
+// Fraunces é variável e tem eixos próprios além do peso. Usamos WONK (que
+// solta as terminações e dá o caráter levemente excêntrico que separa esta
+// página de qualquer serif editorial padrão) e opsz (tamanho óptico, para o
+// display gigante do herói não ficar com o mesmo desenho do corpo).
+const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-instrument-serif",
+  variable: "--font-fraunces",
   display: "swap",
+  axes: ["SOFT", "WONK", "opsz"],
 });
 
-const newsreader = Newsreader({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-newsreader",
+  variable: "--font-inter-prova",
   display: "swap",
 });
 
@@ -58,9 +62,9 @@ export const metadata: Metadata = {
 export default function ProvaLayout({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className={`theme-v3 ${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable}`}
+      className={`theme-v3 ${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable}`}
     >
-      <div className="prova-shell">{children}</div>
+      {children}
     </div>
   );
 }
