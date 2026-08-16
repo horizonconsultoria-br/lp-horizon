@@ -153,8 +153,11 @@ export const conteudoProva: ConteudoProva = {
   ],
   cta: {
     acoes: [
-      { rotulo: "Agendar conversa", href: "https://consultoriahorizon.com.br/#contato", primaria: true },
-      { rotulo: "Falar no WhatsApp", href: "https://consultoriahorizon.com.br/#contato", primaria: false },
+      {
+        rotulo: "Agendar conversa",
+        href: "mailto:suporte@consultoriahorizon.com.br?subject=Conversa%20com%20a%20Horizon",
+        primaria: true,
+      },
     ],
   },
 };
