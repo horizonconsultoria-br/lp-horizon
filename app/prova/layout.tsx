@@ -35,6 +35,14 @@ export const metadata: Metadata = {
     description:
       "O CRM que a Horizon usa para prospectar, diagnosticar e propor foi construído pela Horizon e roda em produção.",
     url: "https://consultoriahorizon.com.br/prova",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "A Horizon rodando o próprio CRM, o software que ela usa para vender aos clientes.",
+      },
+    ],
   },
 };
 
