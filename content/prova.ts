@@ -45,7 +45,7 @@ export const conteudoProva: ConteudoProva = {
     },
     {
       id: "crm-proprio",
-      titulo: "Seu time técnico para soluções de vendas, automações e desenvolvimento de software",
+      titulo: "Seu time técnico para soluções de vendas e desenvolvimento de software",
       subtitulo: "Onde a IA faz diferença para seu time Comercial",
       layout: "abas",
       // Sem prosa nesta dobra: a estrutura de abas fala por si, como na
