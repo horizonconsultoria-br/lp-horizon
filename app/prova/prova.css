@@ -4108,15 +4108,23 @@ body:has(.theme-v3) .skip-link {
    margin = gap, pontas dissolvendo em máscara, ~38px/s.
    ═══════════════════════════════════════════════════════════════ */
 
+/* Sem o risco de 1px embaixo do letreiro, pedido do founder. */
+.prova-bloco-techs {
+  border-bottom: 0;
+}
+
+/* Fraunces, não Syne, por decisão de tipografia: o "g" do Syne tem
+   descendente curto POR DESENHO da fonte (verificado a 120px, sem nenhum
+   ancestral recortando) e lia como defeito. Esta dobra é nossa, não
+   espelhada da referência, então usa a display da casa, a mesma dos
+   títulos nativos, cujo "g" é redondo e completo. */
 .prova-bloco-techs > h2 {
-  font-family: var(--font-syne), sans-serif;
-  font-variation-settings: normal;
-  font-size: clamp(30px, 3.4vw, 42px);
-  font-weight: 600;
-  /* 1.15, não 1: o descendente do "g" do Syne estoura a caixa de linha
-     em line-height 1 e aparecia cortado */
-  line-height: 1.15;
-  letter-spacing: normal;
+  font-family: var(--prova-display);
+  font-variation-settings: "SOFT" 0, "WONK" 1, "opsz" 60;
+  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   max-width: none;
 }
 
