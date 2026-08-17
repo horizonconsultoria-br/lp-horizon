@@ -4113,7 +4113,9 @@ body:has(.theme-v3) .skip-link {
   font-variation-settings: normal;
   font-size: clamp(30px, 3.4vw, 42px);
   font-weight: 600;
-  line-height: 1;
+  /* 1.15, não 1: o descendente do "g" do Syne estoura a caixa de linha
+     em line-height 1 e aparecia cortado */
+  line-height: 1.15;
   letter-spacing: normal;
   max-width: none;
 }
@@ -4128,9 +4130,9 @@ body:has(.theme-v3) .skip-link {
 .techs-trilho {
   display: flex;
   width: max-content;
-  /* fila medida em ~2136px + 56 de respiro = 2192 de ciclo; a 58s dá os
-     mesmos ~38px/s do letreiro de clientes, medidos lá */
-  animation: techs-anda 58s linear infinite;
+  /* fila medida em ~2406px + 56 de respiro = 2462 de ciclo (cresceu com
+     os ícones); a 65s dá os mesmos ~38px/s do letreiro de clientes */
+  animation: techs-anda 65s linear infinite;
 }
 
 .techs-fila {
@@ -4155,11 +4157,9 @@ body:has(.theme-v3) .skip-link {
   color: var(--gelo);
   opacity: 0.9;
 }
-.techs-fila li i {
-  display: block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.techs-fila li img {
+  height: 28px;
+  width: auto;
   flex-shrink: 0;
 }
 

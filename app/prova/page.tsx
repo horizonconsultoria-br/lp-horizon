@@ -1167,7 +1167,14 @@ export default function ProvaPage() {
                       >
                         {bloco.techs!.map((t) => (
                           <li key={t.nome}>
-                            <i style={{ background: t.cor }} aria-hidden="true" />
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={`/prova/techs/${t.arquivo}`}
+                              alt=""
+                              width={28}
+                              height={28}
+                              loading="lazy"
+                            />
                             {t.nome}
                           </li>
                         ))}
