@@ -3935,7 +3935,8 @@ body:has(.theme-v3) .skip-link {
 .prova-chamada {
   position: relative;
   height: clamp(560px, 74vh, 780px);
-  background: #071a30;
+  /* o tom da primeira dobra: a noite da casa, pedido do founder */
+  background: var(--noite);
   overflow: hidden;
 }
 
@@ -3948,12 +3949,15 @@ body:has(.theme-v3) .skip-link {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  /* Campo geral na noite da casa (o tom da primeira dobra); o brilho azul
+     amostrado da foto fica CONCENTRADO no halo atrás do retrato, que é o
+     que segura a foto fundida na cena com o fundo mais escuro. */
   background:
-    repeating-linear-gradient(90deg, rgba(120, 180, 255, 0.05) 0 1px, transparent 1px 56px),
-    repeating-linear-gradient(0deg, rgba(120, 180, 255, 0.05) 0 1px, transparent 1px 56px),
-    radial-gradient(ellipse 62% 60% at 52% 44%, rgba(47, 113, 176, 0.5), transparent 70%),
-    radial-gradient(ellipse 44% 60% at 10% 82%, rgba(33, 97, 161, 0.32), transparent 65%),
-    linear-gradient(180deg, #0a1e38 0%, #0d2547 38%, #123058 54%, #071a30 100%);
+    repeating-linear-gradient(90deg, rgba(120, 180, 255, 0.045) 0 1px, transparent 1px 56px),
+    repeating-linear-gradient(0deg, rgba(120, 180, 255, 0.045) 0 1px, transparent 1px 56px),
+    radial-gradient(ellipse 48% 58% at 52% 42%, rgba(47, 113, 176, 0.55), rgba(47, 113, 176, 0.12) 55%, transparent 72%),
+    radial-gradient(ellipse 40% 55% at 10% 84%, rgba(33, 97, 161, 0.2), transparent 62%),
+    linear-gradient(180deg, #0a0f1a 0%, #0d1626 45%, #0a0f1a 100%);
 }
 
 /* Traços de circuito na metade esquerda, continuando os da própria mão. */
@@ -4029,7 +4033,7 @@ body:has(.theme-v3) .skip-link {
   align-items: flex-start;
   gap: 27px;
   padding: 48px clamp(44px, 7vw, 120px) 48px 44px;
-  background: linear-gradient(90deg, rgba(7, 26, 48, 0) 0, rgba(7, 26, 48, 0.82) 26%, rgba(7, 26, 48, 0.92) 100%);
+  background: linear-gradient(90deg, rgba(10, 15, 26, 0) 0, rgba(10, 15, 26, 0.82) 26%, rgba(10, 15, 26, 0.92) 100%);
 }
 .prova-chamada-texto h2 {
   font-family: var(--font-syne), sans-serif;
