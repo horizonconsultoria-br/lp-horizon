@@ -4098,3 +4098,79 @@ body:has(.theme-v3) .skip-link {
     background: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DOBRA "TECNOLOGIAS PARCEIRAS" (letreiro infinito)
+   Título centrado no padrão das dobras espelhadas e o letreiro da
+   stack em texto, cada item com o ponto na cor da própria marca.
+   Mesma mecânica do letreiro de clientes: duas cópias da fila no
+   trilho, translada -50% em loop linear, emenda fechada pela conta
+   margin = gap, pontas dissolvendo em máscara, ~38px/s.
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-bloco-techs > h2 {
+  font-family: var(--font-syne), sans-serif;
+  font-variation-settings: normal;
+  font-size: clamp(30px, 3.4vw, 42px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: normal;
+  max-width: none;
+}
+
+.techs-faixa {
+  overflow: hidden;
+  margin-top: clamp(28px, 4vw, 48px);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+.techs-trilho {
+  display: flex;
+  width: max-content;
+  /* fila medida em ~2136px + 56 de respiro = 2192 de ciclo; a 58s dá os
+     mesmos ~38px/s do letreiro de clientes, medidos lá */
+  animation: techs-anda 58s linear infinite;
+}
+
+.techs-fila {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+  /* o respiro entre as cópias é o MESMO gap da fila: o -50% fecha exato */
+  margin: 0 56px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.techs-fila li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--gelo);
+  opacity: 0.9;
+}
+.techs-fila li i {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@keyframes techs-anda {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .techs-trilho {
+    animation: none;
+  }
+}

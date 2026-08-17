@@ -43,7 +43,7 @@ describe.skipIf(!disponivel)("HTML pré-renderizado de /prova", () => {
   it("renderiza as 8 seções da spec", () => {
     for (const id of [
       "abertura", "crm-proprio", "playbook", "mesmo-time",
-      "como-entramos", "antes-de-assinar", "objecoes", "cta",
+      "tecnologias", "antes-de-assinar", "objecoes", "cta",
     ]) {
       expect(html.includes(`id="${id}"`), `faltou a seção ${id}`).toBe(true);
     }
@@ -95,6 +95,17 @@ describe.skipIf(!disponivel)("HTML pré-renderizado de /prova", () => {
       "exatamente uma fila deve ser decorativa",
     ).toBe(1);
     expect(html).toContain('/prova/clientes/');
+  });
+
+  // O letreiro de tecnologias segue a mesma regra do de clientes: duas
+  // filas para o loop fechar, só a primeira é conteúdo.
+  it("o letreiro de tecnologias tem as duas filas e a cópia é decorativa", () => {
+    const filas = html.match(/<ul[^>]*class="techs-fila"[^>]*>/g) ?? [];
+    expect(filas.length, "esperadas exatamente 2 filas no letreiro de techs").toBe(2);
+    expect(
+      filas.filter((f) => f.includes('aria-hidden="true"')).length,
+      "exatamente uma fila de techs deve ser decorativa",
+    ).toBe(1);
   });
 
   it("declara o canonical próprio, não o da home", () => {

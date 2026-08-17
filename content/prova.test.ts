@@ -7,7 +7,7 @@ const IDS_ESPERADOS = [
   "crm-proprio",
   "playbook",
   "mesmo-time",
-  "como-entramos",
+  "tecnologias",
   "antes-de-assinar",
   "objecoes",
   "cta",
@@ -87,6 +87,14 @@ describe("estrutura", () => {
         // título solto numa moldura.
         expect(b.acao?.rotulo.trim().length ?? 0, `bloco ${b.id} sem ação`).toBeGreaterThan(0);
         expect(b.acao?.href.trim().length ?? 0, `bloco ${b.id} com ação sem destino`).toBeGreaterThan(0);
+      } else if (b.layout === "techs") {
+        // O letreiro de tecnologias precisa de itens com nome e cor; um
+        // letreiro vazio é um título girando nada.
+        expect(b.techs?.length ?? 0, `bloco ${b.id} sem techs`).toBeGreaterThan(1);
+        for (const t of b.techs ?? []) {
+          expect(t.nome.trim().length, `tech sem nome no bloco ${b.id}`).toBeGreaterThan(0);
+          expect(/^#[0-9a-f]{6}$/i.test(t.cor), `cor inválida em ${t.nome}`).toBe(true);
+        }
       } else {
         expect(b.paragrafos.length, `bloco ${b.id}`).toBeGreaterThan(0);
       }

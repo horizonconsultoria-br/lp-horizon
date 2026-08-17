@@ -973,7 +973,7 @@ export default function ProvaPage() {
           {/* Cada item aponta para uma seção que EXISTE nesta página. Item de
               menu sem destino é o defeito que a landing oficial tem hoje. */}
           <div className="prova-nav-links">
-            <a href="#como-entramos">O que fazemos</a>
+            <a href="#playbook">O que fazemos</a>
             <a href="#antes-de-assinar">Como funciona</a>
             <a href="#objecoes">Perguntas</a>
           </div>
@@ -1021,7 +1021,9 @@ export default function ProvaPage() {
                     ? "prova-bloco prova-bloco-centro prova-bloco-cartoes"
                     : bloco.layout === "chamada"
                       ? "prova-bloco prova-bloco-chamada"
-                      : "prova-bloco"
+                      : bloco.layout === "techs"
+                        ? "prova-bloco prova-bloco-centro prova-bloco-techs"
+                        : "prova-bloco"
               }
             >
               {bloco.eyebrow && <p className="prova-eyebrow">{bloco.eyebrow}</p>}
@@ -1147,6 +1149,30 @@ export default function ProvaPage() {
                         {bloco.acao.rotulo}
                       </a>
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Letreiro infinito de tecnologias: mesma mecânica do de
+                  clientes (duas filas, translada -50%, segunda decorativa),
+                  itens em texto com o ponto na cor da marca. */}
+              {bloco.layout === "techs" && bloco.techs && (
+                <div className="techs-faixa">
+                  <div className="techs-trilho">
+                    {[0, 1].map((copia) => (
+                      <ul
+                        key={copia}
+                        className="techs-fila"
+                        aria-hidden={copia === 1 || undefined}
+                      >
+                        {bloco.techs!.map((t) => (
+                          <li key={t.nome}>
+                            <i style={{ background: t.cor }} aria-hidden="true" />
+                            {t.nome}
+                          </li>
+                        ))}
+                      </ul>
+                    ))}
                   </div>
                 </div>
               )}

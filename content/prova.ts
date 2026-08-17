@@ -22,15 +22,19 @@ export type Bloco = {
   subtitulo?: string;
   /** "abas" renderiza os `itens` como painéis selecionáveis em vez de lista;
    *  "cartoes" renderiza como grade de cartões com glifo, título e texto;
-   *  "chamada" é a banda de conversão em moldura de janela, com o título
-   *  dentro da moldura e um botão próprio. */
-  layout?: "abas" | "cartoes" | "chamada";
+   *  "chamada" é a banda de conversão full-bleed com botão próprio;
+   *  "techs" é o título centrado com o letreiro infinito de tecnologias. */
+  layout?: "abas" | "cartoes" | "chamada" | "techs";
   titulo: string;
   paragrafos: string[];
   destaque?: Destaque;
   itens?: Item[];
   /** Botão da dobra de layout "chamada". */
   acao?: Acao;
+  /** Letreiro da dobra de layout "techs": nome como o founder escreveu e a
+   *  cor da marca no ponto do item (as sem marca pública ficam no azul da
+   *  casa; "Microserviços" é conceito e fica na bruma). */
+  techs?: Array<{ nome: string; cor: string }>;
 };
 
 /** Um cliente da faixa de logos. `largura`/`altura` são as dimensões reais
@@ -170,21 +174,28 @@ export const conteudoProva: ConteudoProva = {
       },
     },
     {
-      id: "como-entramos",
-      eyebrow: "Como entramos",
-      titulo: "Quatro formatos, e um deles nos coloca no mesmo barco.",
-      paragrafos: [
-        "O formato certo depende de quanto do risco faz sentido dividir. Em todos, o que entregamos é software em produção, não relatório.",
-      ],
-      itens: [
-        { nome: "Squad alocado", descricao: "Time dedicado ao seu produto por alguns meses, com custo previsível." },
-        { nome: "Projeto fechado", descricao: "Escopo e prazo definidos, pagos por entrega." },
-        { nome: "IA vertical", descricao: "Um agente construído para o seu domínio, com avaliação própria de qualidade." },
-        {
-          nome: "Tech for Equity",
-          descricao:
-            "Mensalidade reduzida somada a participação no negócio. É o formato que preferimos quando dá, porque alinha o nosso ganho ao seu crescimento em vez de à nossa hora.",
-        },
+      id: "tecnologias",
+      titulo: "Tecnologias Parceiras",
+      layout: "techs",
+      paragrafos: [],
+      // Lista dada pelo founder, nomes como ele escreveu. A cor é o ponto de
+      // marca de cada item no letreiro.
+      techs: [
+        { nome: "C#", cor: "#68217a" },
+        { nome: ".NET", cor: "#512bd4" },
+        { nome: "Python", cor: "#3776ab" },
+        { nome: "Node JS", cor: "#339933" },
+        { nome: "React JS", cor: "#61dafb" },
+        { nome: "Angular", cor: "#dd0031" },
+        { nome: "Vue JS", cor: "#42b883" },
+        { nome: "Supabase", cor: "#3ecf8e" },
+        { nome: "N8N", cor: "#ea4b71" },
+        { nome: "Openclaw", cor: "#60a5fa" },
+        { nome: "Hermes Agent", cor: "#3b82f6" },
+        { nome: "AWS", cor: "#ff9900" },
+        { nome: "Azure", cor: "#0078d4" },
+        { nome: "Docker", cor: "#2496ed" },
+        { nome: "Microserviços", cor: "#8fa6c4" },
       ],
     },
     {
