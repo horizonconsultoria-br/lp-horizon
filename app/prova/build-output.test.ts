@@ -83,6 +83,20 @@ describe.skipIf(!disponivel)("HTML pré-renderizado de /prova", () => {
     }
   });
 
+  // A faixa de clientes: o letreiro precisa das DUAS cópias da fila para o
+  // loop fechar sem emenda, mas só a primeira é conteúdo; a segunda é
+  // decorativa e nasce aria-hidden, senão o leitor de tela lê cada cliente
+  // duas vezes.
+  it("a faixa de clientes tem as duas filas e a cópia é decorativa", () => {
+    const filas = html.match(/<ul[^>]*class="clientes-fila"[^>]*>/g) ?? [];
+    expect(filas.length, "esperadas exatamente 2 filas no letreiro").toBe(2);
+    expect(
+      filas.filter((f) => f.includes('aria-hidden="true"')).length,
+      "exatamente uma fila deve ser decorativa",
+    ).toBe(1);
+    expect(html).toContain('/prova/clientes/');
+  });
+
   it("declara o canonical próprio, não o da home", () => {
     expect(html).toMatch(/rel="canonical"[^>]*\/prova/);
   });

@@ -29,12 +29,24 @@ export type Bloco = {
   itens?: Item[];
 };
 
+/** Um cliente da faixa de logos. `largura`/`altura` são as dimensões reais
+ *  do arquivo em public/prova/clientes/, para o navegador reservar o espaço;
+ *  `rotulo: true` quando a marca é só símbolo ou monograma e o nome precisa
+ *  aparecer escrito ao lado. */
+export type Cliente = {
+  nome: string;
+  arquivo: string;
+  largura: number;
+  altura: number;
+  rotulo?: boolean;
+};
+
 export type Acao = { rotulo: string; href: string; primaria: boolean };
 // Só as ações. O bloco "cta" já carrega título e parágrafos como qualquer outro
 // bloco; um segundo par título/subtítulo aqui seria dado que ninguém renderiza.
 export type CTA = { acoes: Acao[] };
 
-export type ConteudoProva = { blocos: Bloco[]; cta: CTA };
+export type ConteudoProva = { blocos: Bloco[]; cta: CTA; clientes: Cliente[] };
 
 export const conteudoProva: ConteudoProva = {
   blocos: [
@@ -238,4 +250,15 @@ export const conteudoProva: ConteudoProva = {
       },
     ],
   },
+  // A faixa de logos entre o Playbook e a dobra de produtos. Lista dada pelo
+  // founder; as artes vivem em public/prova/clientes/, todas convertidas ao
+  // mesmo tratamento gelo-sobre-transparente (a da Umind é a versão branca
+  // que o próprio site deles publica).
+  clientes: [
+    { nome: "Umind", arquivo: "umind.svg", largura: 589, altura: 165 },
+    { nome: "Ferreira & Sá Advocacia", arquivo: "ferreira.png", largura: 634, altura: 112 },
+    { nome: "Wikialphabet", arquivo: "wikialphabet.png", largura: 234, altura: 112 },
+    { nome: "Family Protect", arquivo: "familyprotect.png", largura: 112, altura: 112, rotulo: true },
+    { nome: "Nádia Contabilidade", arquivo: "nadia.png", largura: 140, altura: 112, rotulo: true },
+  ],
 };

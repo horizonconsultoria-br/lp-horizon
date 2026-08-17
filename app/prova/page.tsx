@@ -1,7 +1,43 @@
 import Image from "next/image";
 import { Fragment } from "react";
-import { conteudoProva } from "@/content/prova";
+import { conteudoProva, type Cliente } from "@/content/prova";
 import { RotacaoAbas } from "./RotacaoAbas";
+
+/**
+ * Letreiro infinito com as logos dos clientes, no jeito da referência
+ * playbooklab (98px entre logos, deriva contínua e lenta). Duas cópias da
+ * fila no trilho; o CSS translada o trilho em -50% e o laço fecha sem
+ * emenda. A segunda cópia é decorativa e fica aria-hidden; a primeira
+ * carrega os alts de verdade, porque cliente é informação, não enfeite.
+ *
+ * As artes são servidas como <img> puro: já chegam no tamanho final e no
+ * tratamento monocromático, não há o que o otimizador de imagem melhorar.
+ */
+function FaixaClientes({ clientes }: { clientes: Cliente[] }) {
+  return (
+    <aside className="clientes" aria-label="Clientes da Horizon">
+      <div className="clientes-trilho">
+        {[0, 1].map((copia) => (
+          <ul key={copia} className="clientes-fila" aria-hidden={copia === 1 || undefined}>
+            {clientes.map((c) => (
+              <li key={c.nome} className="clientes-item">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/prova/clientes/${c.arquivo}`}
+                  alt={copia === 0 ? c.nome : ""}
+                  width={c.largura}
+                  height={c.altura}
+                  loading="lazy"
+                />
+                {c.rotulo && <span>{c.nome}</span>}
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </aside>
+  );
+}
 
 /**
  * Simulação de um atendimento que qualifica, responde e agenda sozinho.
@@ -976,8 +1012,8 @@ export default function ProvaPage() {
       <div className="prova-corpo">
         <article>
           {demais.map((bloco, indice) => (
+            <Fragment key={bloco.id}>
             <section
-              key={bloco.id}
               id={bloco.id}
               className={
                 bloco.layout === "abas"
@@ -1108,6 +1144,11 @@ export default function ProvaPage() {
                 </div>
               )}
             </section>
+            {/* A faixa de clientes vive ENTRE as dobras, como na referência:
+                nao e um bloco de conteudo com titulo, e um respiro de prova
+                social entre o Playbook e a dobra de produtos. */}
+            {bloco.id === "playbook" && <FaixaClientes clientes={conteudoProva.clientes} />}
+            </Fragment>
           ))}
         </article>
       </div>
