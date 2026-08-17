@@ -4360,174 +4360,32 @@ body:has(.theme-v3) .skip-link {
   transform: translateY(-1px);
 }
 
-/* ─── Glifos de fundo do painel aberto, em traço da casa ─── */
-.prova-recurso-arte {
+/* ─── A fotografia do painel aberto ───
+   Realista, no duotone azul da casa (tratada no arquivo, não em CSS),
+   ocupando a metade direita do painel em altura cheia. A máscara funde
+   a borda esquerda no fundo da dobra e o véu de baixo escurece a área
+   onde o glifo do numerão do painel vizinho encosta. */
+.prova-recurso-foto {
   position: absolute;
-  right: clamp(24px, 4vw, 72px);
-  bottom: 36px;
-  width: 200px;
-  height: 150px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 52%;
   opacity: 0;
   transition: opacity 400ms ease;
   pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 30%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 30%);
 }
-.prova-recurso:has(input:checked) .prova-recurso-arte {
-  opacity: 0.5;
-  transition: opacity 500ms ease 300ms;
+.prova-recurso:has(input:checked) .prova-recurso-foto {
+  opacity: 0.88;
+  transition: opacity 550ms ease 250ms;
 }
-.prova-recurso-arte i {
-  position: absolute;
-  display: block;
-}
-
-/* projeto: a ficha de escopo que vira entrega (linhas e check) */
-.prova-rec-projeto i:nth-child(1) {
-  left: 40px;
-  top: 14px;
-  width: 96px;
-  height: 118px;
-  border: 1.5px solid var(--bruma);
-  border-radius: 10px;
-}
-.prova-rec-projeto i:nth-child(2) {
-  left: 58px;
-  top: 38px;
-  width: 60px;
-  height: 26px;
-  border-top: 1.5px solid rgba(143, 166, 196, 0.6);
-  border-bottom: 1.5px solid rgba(143, 166, 196, 0.6);
-}
-.prova-rec-projeto i:nth-child(3) {
-  left: 112px;
-  top: 104px;
-  width: 30px;
-  height: 30px;
-  border: 1.5px solid var(--sinal);
-  border-radius: 50%;
-}
-
-/* vazão: o funil escoando */
-.prova-rec-vazao i:nth-child(1) {
-  left: 40px;
-  top: 16px;
-  width: 120px;
-  height: 44px;
-  border: 1.5px solid var(--bruma);
-  border-bottom: 0;
-  clip-path: polygon(0 0, 100% 0, 78% 100%, 22% 100%);
-}
-.prova-rec-vazao i:nth-child(2) {
-  left: 76px;
-  top: 66px;
-  width: 48px;
-  height: 34px;
-  border-left: 1.5px solid var(--bruma);
-  border-right: 1.5px solid var(--bruma);
-}
-.prova-rec-vazao i:nth-child(3) {
-  left: 92px;
-  top: 110px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 1.5px solid var(--sinal);
-}
-
-/* integrações: duas caixas ligadas por um fio */
-.prova-rec-integracoes i:nth-child(1) {
-  left: 30px;
-  top: 24px;
-  width: 54px;
-  height: 54px;
-  border: 1.5px solid var(--bruma);
-  border-radius: 10px;
-}
-.prova-rec-integracoes i:nth-child(2) {
-  left: 116px;
-  top: 70px;
-  width: 54px;
-  height: 54px;
-  border: 1.5px solid var(--sinal);
-  border-radius: 10px;
-}
-.prova-rec-integracoes i:nth-child(3) {
-  left: 82px;
-  top: 52px;
-  width: 42px;
-  height: 1.5px;
-  background: var(--sinal);
-  transform: rotate(42deg);
-  transform-origin: 0 0;
-}
-.prova-rec-integracoes i:nth-child(3)::after {
-  content: "";
-  position: absolute;
-  right: -4px;
-  top: -3px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--sinal);
-}
-
-/* diagnóstico: o radar de varredura */
-.prova-rec-diagnostico i:nth-child(1) {
-  inset: 10px 30px;
-  border: 1.5px solid var(--bruma);
-  border-radius: 50%;
-}
-.prova-rec-diagnostico i:nth-child(2) {
-  inset: 42px 62px;
-  border: 1.5px solid rgba(143, 166, 196, 0.5);
-  border-radius: 50%;
-}
-.prova-rec-diagnostico i:nth-child(3) {
-  left: 50%;
-  top: 50%;
-  width: 62px;
-  height: 1.5px;
-  background: var(--sinal);
-  transform-origin: 0 50%;
-  transform: rotate(-40deg);
-}
-
-/* desalocar: o contrato com a tranca aberta */
-.prova-rec-desalocar i:nth-child(1) {
-  left: 44px;
-  top: 16px;
-  width: 88px;
-  height: 112px;
-  border: 1.5px solid var(--bruma);
-  border-radius: 10px;
-}
-.prova-rec-desalocar i:nth-child(2) {
-  left: 60px;
-  top: 40px;
-  width: 56px;
-  height: 24px;
-  border-top: 1.5px solid rgba(143, 166, 196, 0.6);
-  border-bottom: 1.5px solid rgba(143, 166, 196, 0.6);
-}
-.prova-rec-desalocar i:nth-child(3) {
-  left: 108px;
-  top: 96px;
-  width: 34px;
-  height: 26px;
-  border: 1.5px solid var(--sinal);
-  border-radius: 6px;
-}
-.prova-rec-desalocar i:nth-child(3)::before {
-  content: "";
-  position: absolute;
-  left: 2px;
-  top: -17px;
-  width: 20px;
-  height: 18px;
-  border: 1.5px solid var(--sinal);
-  border-bottom: 0;
-  border-radius: 10px 10px 0 0;
-  transform: rotate(-16deg);
-  transform-origin: 0 100%;
+.prova-recurso-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* ─── Em tela estreita o acordeão vira vertical ─── */
@@ -4559,7 +4417,7 @@ body:has(.theme-v3) .skip-link {
   .prova-recurso-tagline {
     white-space: normal;
   }
-  .prova-recurso-arte {
+  .prova-recurso-foto {
     display: none;
   }
 }
@@ -4567,7 +4425,7 @@ body:has(.theme-v3) .skip-link {
 @media (prefers-reduced-motion: reduce) {
   .prova-recurso,
   .prova-recurso-conteudo,
-  .prova-recurso-arte {
+  .prova-recurso-foto {
     transition: none;
   }
 }

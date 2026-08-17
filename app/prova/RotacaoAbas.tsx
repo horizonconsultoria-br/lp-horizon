@@ -24,14 +24,24 @@ import { useEffect } from "react";
  *   vem de graça, porque `change` não dispara no `checked = true`
  *   programático, só em interação.
  */
-export function RotacaoAbas({ grupo, segundos = 12 }: { grupo: string; segundos?: number }) {
+export function RotacaoAbas({
+  grupo,
+  segundos = 12,
+  cerca: seletorCerca = ".prova-abas",
+}: {
+  grupo: string;
+  segundos?: number;
+  /** Seletor do container que delimita visibilidade, hover e interação
+   *  (a "cerca"). O acordeão de recursos passa o dele. */
+  cerca?: string;
+}) {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const radios = Array.from(
       document.querySelectorAll<HTMLInputElement>(`input[name="${CSS.escape(grupo)}"]`),
     );
-    const cerca = radios[0]?.closest(".prova-abas");
+    const cerca = radios[0]?.closest(seletorCerca);
     if (!cerca || radios.length < 2) return;
 
     let usuarioAssumiu = false;
@@ -89,7 +99,7 @@ export function RotacaoAbas({ grupo, segundos = 12 }: { grupo: string; segundos?
       cerca.removeEventListener("pointerenter", entra);
       cerca.removeEventListener("pointerleave", sai);
     };
-  }, [grupo, segundos]);
+  }, [grupo, segundos, seletorCerca]);
 
   return null;
 }

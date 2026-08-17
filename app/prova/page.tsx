@@ -1192,6 +1192,13 @@ export default function ProvaPage() {
                   inteiro quando colapsado; o conteúdo só aparece no aberto. */}
               {bloco.layout === "recursos" && bloco.itens && (
                 <div className="prova-recursos">
+                  {/* Rotação automática 1>2>3>4>5, 10s por painel, mesma
+                      ilha educada das abas: para na primeira interação. */}
+                  <RotacaoAbas
+                    grupo={`recursos-${bloco.id}`}
+                    segundos={10}
+                    cerca=".prova-recursos"
+                  />
                   {bloco.itens.map((item, i) => (
                     <div key={item.nome} className="prova-recurso">
                       <input
@@ -1214,13 +1221,15 @@ export default function ProvaPage() {
                         </a>
                       </div>
                       {item.arte && (
-                        <div
-                          className={`prova-recurso-arte prova-rec-${item.arte}`}
-                          aria-hidden="true"
-                        >
-                          <i />
-                          <i />
-                          <i />
+                        <div className="prova-recurso-foto" aria-hidden="true">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={`/prova/recursos/${item.arte}.jpg`}
+                            alt=""
+                            width={1100}
+                            height={730}
+                            loading="lazy"
+                          />
                         </div>
                       )}
                     </div>
