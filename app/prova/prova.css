@@ -3949,51 +3949,105 @@ body:has(.theme-v3) .skip-link {
   border: 1px solid rgba(59, 130, 246, 0.7);
 }
 
+/* A cena ocupa a moldura INTEIRA: fundo tech (grade fina, traços de
+   circuito ecoando os da mão, neons diagonais ecoando os do retrato),
+   a mão entrando pela esquerda, o retrato no centro-direita em altura
+   cheia, e a coluna de texto SOBREPOSTA à direita com um véu de
+   legibilidade. Pedido do founder: as imagens na dobra inteira, fundo
+   mais tech. */
 .prova-chamada-corpo {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 390px;
+  position: relative;
+  display: block;
   min-height: 480px;
 }
 
-/* O palco cinematográfico: noite da casa com halos azuis discretos. O
-   retrato ancora à direita com as bordas fundidas por máscara (o jpg tem
-   fundo próprio); a mão robótica entra por fora da moldura, à esquerda,
-   apontando pra ela. */
 .prova-chamada-arte {
-  position: relative;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
+  /* o palco: noite + halos azuis + grade fina de engenharia */
   background:
-    radial-gradient(ellipse at 18% 82%, rgba(59, 130, 246, 0.16), transparent 55%),
-    radial-gradient(ellipse at 78% 20%, rgba(59, 130, 246, 0.1), transparent 50%),
+    repeating-linear-gradient(90deg, rgba(143, 166, 196, 0.045) 0 1px, transparent 1px 48px),
+    repeating-linear-gradient(0deg, rgba(143, 166, 196, 0.045) 0 1px, transparent 1px 48px),
+    radial-gradient(ellipse at 16% 84%, rgba(59, 130, 246, 0.18), transparent 55%),
+    radial-gradient(ellipse at 70% 12%, rgba(59, 130, 246, 0.12), transparent 50%),
     var(--noite);
 }
+
+/* Traços de circuito na metade esquerda, continuando os da própria mão:
+   segmentos finos de linha com nós acesos nas pontas. */
+.prova-chamada-arte::before {
+  content: "";
+  position: absolute;
+  inset: 0 45% 0 0;
+  background-image:
+    radial-gradient(circle 2px at 26% 24%, rgba(96, 165, 250, 0.9), transparent 3px),
+    radial-gradient(circle 2px at 44% 38%, rgba(56, 189, 248, 0.8), transparent 3px),
+    radial-gradient(circle 2px at 18% 56%, rgba(96, 165, 250, 0.8), transparent 3px),
+    radial-gradient(circle 2px at 52% 74%, rgba(56, 189, 248, 0.9), transparent 3px),
+    linear-gradient(90deg, transparent 6%, rgba(96, 165, 250, 0.4) 6%, rgba(96, 165, 250, 0.4) 26%, transparent 26%),
+    linear-gradient(90deg, transparent 22%, rgba(56, 189, 248, 0.35) 22%, rgba(56, 189, 248, 0.35) 44%, transparent 44%),
+    linear-gradient(90deg, transparent 10%, rgba(96, 165, 250, 0.3) 10%, rgba(96, 165, 250, 0.3) 18%, transparent 18%),
+    linear-gradient(90deg, transparent 34%, rgba(56, 189, 248, 0.35) 34%, rgba(56, 189, 248, 0.35) 52%, transparent 52%);
+  background-repeat: no-repeat;
+  background-size:
+    100% 100%, 100% 100%, 100% 100%, 100% 100%,
+    100% 1px, 100% 1px, 100% 1px, 100% 1px;
+  background-position:
+    0 0, 0 0, 0 0, 0 0,
+    0 24%, 0 38%, 0 56%, 0 74%;
+}
+
+/* Os neons diagonais do retrato, ecoados de leve pela cena inteira. */
+.prova-chamada-arte::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(56deg, transparent 42%, rgba(169, 198, 232, 0.22) 47.6%, rgba(169, 198, 232, 0.04) 48.6%, transparent 54%),
+    linear-gradient(124deg, transparent 58%, rgba(96, 165, 250, 0.16) 63.6%, rgba(96, 165, 250, 0.03) 64.4%, transparent 70%);
+  pointer-events: none;
+}
+
 .prova-chamada-rosto {
   position: absolute;
-  right: 0;
+  /* termina ANTES da coluna de texto: com 400px de coluna numa moldura de
+     ~1178, o texto começa aos 66%; o retrato (~24% de largura) precisa
+     morrer antes disso, senão o título cai no rosto dela. */
+  left: 39%;
   top: 0;
   height: 100%;
   width: auto;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 20%, #000 86%, transparent);
-  mask-image: linear-gradient(90deg, transparent 0, #000 20%, #000 86%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18%, #000 84%, transparent);
+  mask-image: linear-gradient(90deg, transparent 0, #000 18%, #000 84%, transparent);
 }
+
 .prova-chamada-mao {
   position: absolute;
-  left: -56px;
-  bottom: 34px;
-  width: 60%;
-  max-width: 470px;
+  left: -48px;
+  bottom: 38px;
+  width: 46%;
+  max-width: 480px;
   height: auto;
   filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.55));
 }
 
+/* O texto flutua SOBRE a cena, com um véu que garante a leitura sem
+   apagar o palco atrás. */
 .prova-chamada-texto {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 400px;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  /* 27px é a distância título-botão medida na referência */
   gap: 27px;
   padding: 48px 44px;
+  background: linear-gradient(90deg, rgba(10, 15, 26, 0) 0, rgba(10, 15, 26, 0.8) 26%, rgba(10, 15, 26, 0.9) 100%);
 }
 .prova-chamada-texto h2 {
   font-family: var(--font-syne), sans-serif;
@@ -4003,7 +4057,6 @@ body:has(.theme-v3) .skip-link {
   font-weight: 600;
   letter-spacing: normal;
   color: var(--sinal);
-  /* a caixa estreita quebra o título nas duas linhas da referência */
   max-width: 240px;
   margin: 0;
 }
@@ -4025,21 +4078,30 @@ body:has(.theme-v3) .skip-link {
   box-shadow: var(--hzn-glow-amber);
 }
 
-/* Em tela estreita a janela empilha: a foto vira faixa em cima. */
+/* Em tela estreita a cena vira faixa em cima e o texto desce pra baixo
+   dela, fora da sobreposição: 220px de palco não comportam os dois. */
 @media (max-width: 900px) {
   .prova-chamada-corpo {
-    grid-template-columns: 1fr;
     min-height: 0;
   }
   .prova-chamada-arte {
-    height: 220px;
+    position: relative;
+    inset: auto;
+    height: 240px;
+  }
+  .prova-chamada-rosto {
+    left: auto;
+    right: 4%;
   }
   .prova-chamada-mao {
     left: -30px;
-    bottom: 16px;
-    width: 56%;
+    bottom: 18px;
+    width: 52%;
   }
   .prova-chamada-texto {
-    padding: 32px 26px 36px;
+    position: static;
+    width: auto;
+    padding: 30px 26px 34px;
+    background: none;
   }
 }
