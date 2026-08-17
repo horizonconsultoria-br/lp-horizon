@@ -1171,8 +1171,8 @@ export default function ProvaPage() {
                             <img
                               src={`/prova/techs/${t.arquivo}`}
                               alt=""
-                              width={28}
-                              height={28}
+                              width={44}
+                              height={44}
                               loading="lazy"
                             />
                             {t.nome}

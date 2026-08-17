@@ -4108,9 +4108,14 @@ body:has(.theme-v3) .skip-link {
    margin = gap, pontas dissolvendo em máscara, ~38px/s.
    ═══════════════════════════════════════════════════════════════ */
 
-/* Sem o risco de 1px embaixo do letreiro, pedido do founder. */
+/* Sem o risco de 1px embaixo do letreiro, e a seção FULL-BLEED: o
+   letreiro explora as bordas laterais da tela em vez de morrer no
+   container (o título é centrado, então não perde nada). O padding
+   vertical do .prova-bloco fica. */
 .prova-bloco-techs {
   border-bottom: 0;
+  max-width: none;
+  padding-inline: 0;
 }
 
 /* Fraunces, não Syne, por decisão de tipografia: o "g" do Syne tem
@@ -4138,9 +4143,9 @@ body:has(.theme-v3) .skip-link {
 .techs-trilho {
   display: flex;
   width: max-content;
-  /* fila medida em ~2406px + 56 de respiro = 2462 de ciclo (cresceu com
-     os ícones); a 65s dá os mesmos ~38px/s do letreiro de clientes */
-  animation: techs-anda 65s linear infinite;
+  /* fila medida em ~2646px + 56 de respiro = 2702 de ciclo (ícones a
+     44px); a 71s dá os mesmos ~38px/s do letreiro de clientes */
+  animation: techs-anda 71s linear infinite;
 }
 
 .techs-fila {
@@ -4166,7 +4171,8 @@ body:has(.theme-v3) .skip-link {
   opacity: 0.9;
 }
 .techs-fila li img {
-  height: 28px;
+  /* mesmo tamanho dos logos do letreiro de clientes */
+  height: 44px;
   width: auto;
   flex-shrink: 0;
 }
