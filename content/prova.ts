@@ -21,12 +21,16 @@ export type Bloco = {
   /** Opcional: linha de apoio logo abaixo do título da dobra. */
   subtitulo?: string;
   /** "abas" renderiza os `itens` como painéis selecionáveis em vez de lista;
-   *  "cartoes" renderiza como grade de cartões com glifo, título e texto. */
-  layout?: "abas" | "cartoes";
+   *  "cartoes" renderiza como grade de cartões com glifo, título e texto;
+   *  "chamada" é a banda de conversão em moldura de janela, com o título
+   *  dentro da moldura e um botão próprio. */
+  layout?: "abas" | "cartoes" | "chamada";
   titulo: string;
   paragrafos: string[];
   destaque?: Destaque;
   itens?: Item[];
+  /** Botão da dobra de layout "chamada". */
+  acao?: Acao;
 };
 
 /** Um cliente da faixa de logos. `largura`/`altura` são as dimensões reais
@@ -151,29 +155,19 @@ export const conteudoProva: ConteudoProva = {
       ],
     },
     {
-      id: "para-outros",
-      eyebrow: "O que construímos para outros",
-      titulo: "Produto de gente que já tem produto.",
-      paragrafos: [
-        "A Horizon não vive de slide. Estes são trabalhos com código rodando, cada um descrito pelo que ele é hoje.",
-      ],
-      itens: [
-        {
-          nome: "Umind",
-          descricao:
-            "SaaS de gestão para clínicas, com produto já em produção, que a Horizon assumiu para evoluir e manter. Ambientes de desenvolvimento e produção no ar, com o banco real do negócio.",
-        },
-        {
-          nome: "PipePro",
-          descricao:
-            "Ferramenta de gestão de projetos com WhatsApp integrado, construída pela Horizon e hoje em staging.",
-        },
-        {
-          nome: "DocsGrowth",
-          descricao:
-            "Demo hi-fi de CRM sob medida, construída para a DocsGrowth e publicada com dados coerentes, feita para ser navegada antes de qualquer contrato.",
-        },
-      ],
+      id: "mesmo-time",
+      // Banda de conversão espelhada de playbooklab ("Mesmo time, mais
+      // vendas."), por instrução do founder: moldura de janela com arte à
+      // esquerda e título + botão à direita. A arte deles é uma foto glitch;
+      // a nossa é a fotografia do herói, que o navegador já tem em cache.
+      titulo: "Mesmo time, mais vendas.",
+      layout: "chamada",
+      paragrafos: [],
+      acao: {
+        rotulo: "Quero um diagnóstico",
+        href: "mailto:suporte@consultoriahorizon.com.br?subject=Diagn%C3%B3stico%20Horizon",
+        primaria: true,
+      },
     },
     {
       id: "como-entramos",

@@ -3910,3 +3910,113 @@ body:has(.theme-v3) .skip-link {
     animation: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   BANDA DE CONVERSÃO "MESMO TIME, MAIS VENDAS." (moldura de janela)
+   Espelhada de playbooklab: uma janela de navegador com contorno
+   fino de acento e três pontinhos, arte grande à esquerda e a
+   coluna de texto à direita (390px na referência), com o título
+   Syne 30px/30px 600 na cor de acento quebrando em duas linhas e
+   o botão sólido de cantos 6px (Syne 14, padding 13x22). A arte
+   deles é uma foto glitch; a nossa é a fotografia do herói, que o
+   navegador já baixou, com um véu fundindo a foto no palco da
+   coluna de texto.
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-chamada {
+  max-width: 1180px;
+  margin-inline: auto;
+  border: 1px solid rgba(59, 130, 246, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
+  /* Fundo SÓLIDO de propósito: o véu da foto termina exatamente nesta
+     cor, então a emenda entre a arte e a coluna de texto não existe. Com
+     fundo translúcido, a diferença de tom desenhava uma linha vertical. */
+  background: var(--noite);
+}
+
+/* A barra da janela: só os três pontinhos em contorno, como lá. */
+.prova-chamada-topo {
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.35);
+}
+.prova-chamada-topo i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(59, 130, 246, 0.7);
+}
+
+.prova-chamada-corpo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  min-height: 480px;
+}
+
+/* A fotografia da casa no lugar da arte glitch deles. O véu da direita
+   funde a foto no fundo da coluna de texto, então a emenda não existe. */
+.prova-chamada-arte {
+  background-image:
+    linear-gradient(90deg, rgba(10, 15, 26, 0) 50%, var(--noite) 97%),
+    url("/prova/hero-bruma.jpg");
+  background-size: cover;
+  background-position: 35% 62%;
+}
+
+.prova-chamada-texto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  /* 27px é a distância título-botão medida na referência */
+  gap: 27px;
+  padding: 48px 44px;
+}
+.prova-chamada-texto h2 {
+  font-family: var(--font-syne), sans-serif;
+  font-variation-settings: normal;
+  font-size: 30px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: normal;
+  color: var(--sinal);
+  /* a caixa estreita quebra o título nas duas linhas da referência */
+  max-width: 240px;
+  margin: 0;
+}
+.prova-chamada-botao {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 14px;
+  line-height: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 13px 22px;
+  border-radius: 6px;
+  background: var(--gelo);
+  color: var(--hzn-text-inverse);
+  text-decoration: none;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.prova-chamada-botao:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--hzn-glow-amber);
+}
+
+/* Em tela estreita a janela empilha: a foto vira faixa em cima. */
+@media (max-width: 900px) {
+  .prova-chamada-corpo {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .prova-chamada-arte {
+    height: 220px;
+    background-image:
+      linear-gradient(rgba(10, 15, 26, 0) 50%, var(--noite) 97%),
+      url("/prova/hero-bruma.jpg");
+  }
+  .prova-chamada-texto {
+    padding: 32px 26px 36px;
+  }
+}

@@ -6,7 +6,7 @@ const IDS_ESPERADOS = [
   "abertura",
   "crm-proprio",
   "playbook",
-  "para-outros",
+  "mesmo-time",
   "como-entramos",
   "antes-de-assinar",
   "objecoes",
@@ -74,7 +74,7 @@ describe("estrutura", () => {
     expect(conteudoProva.blocos.map((b) => b.id)).toEqual(IDS_ESPERADOS);
   });
 
-  it("nenhum bloco fica sem título, e só abas/cartões podem ficar sem prosa", () => {
+  it("nenhum bloco fica sem título, e cada layout exige o próprio conteúdo", () => {
     for (const b of conteudoProva.blocos) {
       expect(b.titulo.trim().length, `bloco ${b.id}`).toBeGreaterThan(0);
       if (b.layout === "abas" || b.layout === "cartoes") {
@@ -82,6 +82,11 @@ describe("estrutura", () => {
         // carregam o conteúdo. Em troca, precisam ter itens, senão a dobra
         // fica vazia.
         expect(b.itens?.length ?? 0, `bloco ${b.id} sem itens`).toBeGreaterThan(1);
+      } else if (b.layout === "chamada") {
+        // A banda de conversão vive de título + botão; sem ação ela é um
+        // título solto numa moldura.
+        expect(b.acao?.rotulo.trim().length ?? 0, `bloco ${b.id} sem ação`).toBeGreaterThan(0);
+        expect(b.acao?.href.trim().length ?? 0, `bloco ${b.id} com ação sem destino`).toBeGreaterThan(0);
       } else {
         expect(b.paragrafos.length, `bloco ${b.id}`).toBeGreaterThan(0);
       }

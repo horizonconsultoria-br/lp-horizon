@@ -975,7 +975,6 @@ export default function ProvaPage() {
           <div className="prova-nav-links">
             <a href="#como-entramos">O que fazemos</a>
             <a href="#antes-de-assinar">Como funciona</a>
-            <a href="#para-outros">Nichos</a>
             <a href="#objecoes">Perguntas</a>
           </div>
 
@@ -1024,7 +1023,9 @@ export default function ProvaPage() {
               }
             >
               {bloco.eyebrow && <p className="prova-eyebrow">{bloco.eyebrow}</p>}
-              <h2>{bloco.titulo}</h2>
+              {/* Na banda de chamada o título vive DENTRO da moldura, ao lado
+                  do botão; emitir o h2 padrão aqui o duplicaria. */}
+              {bloco.layout !== "chamada" && <h2>{bloco.titulo}</h2>}
               {bloco.subtitulo && (
                 <p className="prova-subtitulo">{bloco.subtitulo}</p>
               )}
@@ -1104,6 +1105,28 @@ export default function ProvaPage() {
                       <p>{item.descricao}</p>
                     </article>
                   ))}
+                </div>
+              )}
+
+              {/* Banda de conversão espelhada da referência: moldura de
+                  janela (pontinhos no topo), fotografia à esquerda e a
+                  coluna de título + botão à direita. */}
+              {bloco.layout === "chamada" && bloco.acao && (
+                <div className="prova-chamada">
+                  <div className="prova-chamada-topo" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                  </div>
+                  <div className="prova-chamada-corpo">
+                    <div className="prova-chamada-arte" aria-hidden="true" />
+                    <div className="prova-chamada-texto">
+                      <h2>{bloco.titulo}</h2>
+                      <a className="prova-chamada-botao" href={bloco.acao.href}>
+                        {bloco.acao.rotulo}
+                      </a>
+                    </div>
+                  </div>
                 </div>
               )}
 
