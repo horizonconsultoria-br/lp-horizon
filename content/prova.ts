@@ -309,9 +309,9 @@ export const conteudoProva: ConteudoProva = {
         primaria: true,
       },
     ],
-    // PENDENTE founder: colar aqui o link de agendamento (Cal.com).
-    // Enquanto vazio, a dobra final mostra o botão de e-mail.
-    agendaUrl: "",
+    // Conta Cal.com criada pelo founder em 17/08; com a URL preenchida a
+    // dobra final embute o calendário no lugar do botão.
+    agendaUrl: "https://cal.com/rodrigo-de-almeida-gustavo-oaiozs/diagnostico-gratuito",
   },
   // A faixa de logos entre o Playbook e a dobra de produtos. Lista dada pelo
   // founder; as artes vivem em public/prova/clientes/, todas convertidas ao

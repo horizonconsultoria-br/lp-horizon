@@ -1,7 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { conteudoProva } from "@/content/prova";
+// Relativo, não "@/": o alias do tsconfig é resolvido pelo Next, e o Vitest
+// roda sem ele; com "@/" o arquivo nem coleta.
+import { conteudoProva } from "../../content/prova";
 
 const HTML = join(process.cwd(), ".next", "server", "app", "prova.html");
 const disponivel = existsSync(HTML);
