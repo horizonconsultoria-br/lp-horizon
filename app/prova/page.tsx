@@ -1119,7 +1119,31 @@ export default function ProvaPage() {
                     <i />
                   </div>
                   <div className="prova-chamada-corpo">
-                    <div className="prova-chamada-arte" aria-hidden="true" />
+                    {/* Composição cinematográfica pedida pelo founder: o
+                        retrato de visor azul ancora a direita do palco e a
+                        mão robótica entra pela esquerda, apontando pra ela.
+                        As duas imagens vieram dele; a mão foi limpa da
+                        marca d'água e aparada. */}
+                    <div className="prova-chamada-arte" aria-hidden="true">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        className="prova-chamada-rosto"
+                        src="/prova/chamada-rosto.jpg"
+                        alt=""
+                        width={504}
+                        height={825}
+                        loading="lazy"
+                      />
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        className="prova-chamada-mao"
+                        src="/prova/chamada-mao.png"
+                        alt=""
+                        width={761}
+                        height={365}
+                        loading="lazy"
+                      />
+                    </div>
                     <div className="prova-chamada-texto">
                       <h2>{bloco.titulo}</h2>
                       <a className="prova-chamada-botao" href={bloco.acao.href}>

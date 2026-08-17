@@ -3955,14 +3955,35 @@ body:has(.theme-v3) .skip-link {
   min-height: 480px;
 }
 
-/* A fotografia da casa no lugar da arte glitch deles. O véu da direita
-   funde a foto no fundo da coluna de texto, então a emenda não existe. */
+/* O palco cinematográfico: noite da casa com halos azuis discretos. O
+   retrato ancora à direita com as bordas fundidas por máscara (o jpg tem
+   fundo próprio); a mão robótica entra por fora da moldura, à esquerda,
+   apontando pra ela. */
 .prova-chamada-arte {
-  background-image:
-    linear-gradient(90deg, rgba(10, 15, 26, 0) 50%, var(--noite) 97%),
-    url("/prova/hero-bruma.jpg");
-  background-size: cover;
-  background-position: 35% 62%;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 18% 82%, rgba(59, 130, 246, 0.16), transparent 55%),
+    radial-gradient(ellipse at 78% 20%, rgba(59, 130, 246, 0.1), transparent 50%),
+    var(--noite);
+}
+.prova-chamada-rosto {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: auto;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 20%, #000 86%, transparent);
+  mask-image: linear-gradient(90deg, transparent 0, #000 20%, #000 86%, transparent);
+}
+.prova-chamada-mao {
+  position: absolute;
+  left: -56px;
+  bottom: 34px;
+  width: 60%;
+  max-width: 470px;
+  height: auto;
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.55));
 }
 
 .prova-chamada-texto {
@@ -4012,9 +4033,11 @@ body:has(.theme-v3) .skip-link {
   }
   .prova-chamada-arte {
     height: 220px;
-    background-image:
-      linear-gradient(rgba(10, 15, 26, 0) 50%, var(--noite) 97%),
-      url("/prova/hero-bruma.jpg");
+  }
+  .prova-chamada-mao {
+    left: -30px;
+    bottom: 16px;
+    width: 56%;
   }
   .prova-chamada-texto {
     padding: 32px 26px 36px;
