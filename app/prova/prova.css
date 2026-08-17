@@ -3912,83 +3912,60 @@ body:has(.theme-v3) .skip-link {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   BANDA DE CONVERSÃO "MESMO TIME, MAIS VENDAS." (moldura de janela)
-   Espelhada de playbooklab: uma janela de navegador com contorno
-   fino de acento e três pontinhos, arte grande à esquerda e a
-   coluna de texto à direita (390px na referência), com o título
-   Syne 30px/30px 600 na cor de acento quebrando em duas linhas e
-   o botão sólido de cantos 6px (Syne 14, padding 13x22). A arte
-   deles é uma foto glitch; a nossa é a fotografia do herói, que o
-   navegador já baixou, com um véu fundindo a foto no palco da
-   coluna de texto.
+   BANDA DE CONVERSÃO "MESMO TIME, MAIS VENDAS." (full-bleed)
+   A cena ocupa a DOBRA INTEIRA, borda a borda, como o herói:
+   feedback do founder derrubou a moldura de janela que confinava
+   as imagens a um retângulo central. O ambiente é construído com
+   as cores amostradas do fundo do próprio retrato (topo navy
+   #0c223d, faixa de brilho #2161a1/#2f71b0, base #051f36), mais
+   grade fina de engenharia, traços de circuito continuando os da
+   mão e os neons diagonais do retrato ecoados. Título e botão da
+   referência playbooklab (Syne 30/30 e botão 239x40) sobrepostos
+   à cena com véu de legibilidade.
    ═══════════════════════════════════════════════════════════════ */
 
+/* A seção escapa do container: sem teto de largura, sem padding, a cena
+   é a dobra. O border-bottom herdado do .prova-bloco fica, separando da
+   dobra seguinte. */
+.prova-bloco-chamada {
+  max-width: none;
+  padding: 0;
+}
+
 .prova-chamada {
-  max-width: 1180px;
-  margin-inline: auto;
-  border: 1px solid rgba(59, 130, 246, 0.5);
-  border-radius: 12px;
-  overflow: hidden;
-  /* Fundo sólido na cor-base do AMBIENTE da cena, amostrada do fundo do
-     próprio retrato (topo navy #0c223d, base #051f36): o véu do texto
-     termina exatamente nela e a emenda não existe. */
-  background: #071a30;
-}
-
-/* A barra da janela: só os três pontinhos em contorno, como lá. */
-.prova-chamada-topo {
-  display: flex;
-  gap: 6px;
-  padding: 10px 14px;
-  border-bottom: 1px solid rgba(59, 130, 246, 0.35);
-}
-.prova-chamada-topo i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: 1px solid rgba(59, 130, 246, 0.7);
-}
-
-/* A cena ocupa a moldura INTEIRA: fundo tech (grade fina, traços de
-   circuito ecoando os da mão, neons diagonais ecoando os do retrato),
-   a mão entrando pela esquerda, o retrato no centro-direita em altura
-   cheia, e a coluna de texto SOBREPOSTA à direita com um véu de
-   legibilidade. Pedido do founder: as imagens na dobra inteira, fundo
-   mais tech. */
-.prova-chamada-corpo {
   position: relative;
-  display: block;
-  min-height: 520px;
+  height: clamp(560px, 74vh, 780px);
+  background: #071a30;
+  overflow: hidden;
+}
+
+.prova-chamada-corpo {
+  position: absolute;
+  inset: 0;
 }
 
 .prova-chamada-arte {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  /* O AMBIENTE da cena, construído com as cores amostradas do fundo do
-     próprio retrato: navy no topo (#0c223d), a faixa de brilho azul viva
-     no meio (#2161a1/#2f71b0) e a base escura (#051f36). É o que faz a
-     foto derreter no palco em vez de flutuar recortada sobre preto. A
-     grade fina fica por cima, na luz do ambiente. */
   background:
-    repeating-linear-gradient(90deg, rgba(120, 180, 255, 0.055) 0 1px, transparent 1px 48px),
-    repeating-linear-gradient(0deg, rgba(120, 180, 255, 0.055) 0 1px, transparent 1px 48px),
-    radial-gradient(ellipse 70% 55% at 56% 46%, rgba(47, 113, 176, 0.5), transparent 70%),
-    radial-gradient(ellipse 50% 60% at 12% 80%, rgba(33, 97, 161, 0.34), transparent 65%),
+    repeating-linear-gradient(90deg, rgba(120, 180, 255, 0.05) 0 1px, transparent 1px 56px),
+    repeating-linear-gradient(0deg, rgba(120, 180, 255, 0.05) 0 1px, transparent 1px 56px),
+    radial-gradient(ellipse 62% 60% at 52% 44%, rgba(47, 113, 176, 0.5), transparent 70%),
+    radial-gradient(ellipse 44% 60% at 10% 82%, rgba(33, 97, 161, 0.32), transparent 65%),
     linear-gradient(180deg, #0a1e38 0%, #0d2547 38%, #123058 54%, #071a30 100%);
 }
 
-/* Traços de circuito na metade esquerda, continuando os da própria mão:
-   segmentos finos de linha com nós acesos nas pontas. */
+/* Traços de circuito na metade esquerda, continuando os da própria mão. */
 .prova-chamada-arte::before {
   content: "";
   position: absolute;
-  inset: 0 45% 0 0;
+  inset: 0 52% 0 0;
   background-image:
-    radial-gradient(circle 2px at 26% 24%, rgba(96, 165, 250, 0.9), transparent 3px),
-    radial-gradient(circle 2px at 44% 38%, rgba(56, 189, 248, 0.8), transparent 3px),
-    radial-gradient(circle 2px at 18% 56%, rgba(96, 165, 250, 0.8), transparent 3px),
-    radial-gradient(circle 2px at 52% 74%, rgba(56, 189, 248, 0.9), transparent 3px),
+    radial-gradient(circle 2.5px at 26% 22%, rgba(96, 165, 250, 0.9), transparent 3.5px),
+    radial-gradient(circle 2.5px at 44% 36%, rgba(56, 189, 248, 0.8), transparent 3.5px),
+    radial-gradient(circle 2.5px at 18% 54%, rgba(96, 165, 250, 0.8), transparent 3.5px),
+    radial-gradient(circle 2.5px at 52% 72%, rgba(56, 189, 248, 0.9), transparent 3.5px),
     linear-gradient(90deg, transparent 6%, rgba(96, 165, 250, 0.4) 6%, rgba(96, 165, 250, 0.4) 26%, transparent 26%),
     linear-gradient(90deg, transparent 22%, rgba(56, 189, 248, 0.35) 22%, rgba(56, 189, 248, 0.35) 44%, transparent 44%),
     linear-gradient(90deg, transparent 10%, rgba(96, 165, 250, 0.3) 10%, rgba(96, 165, 250, 0.3) 18%, transparent 18%),
@@ -3999,61 +3976,60 @@ body:has(.theme-v3) .skip-link {
     100% 1px, 100% 1px, 100% 1px, 100% 1px;
   background-position:
     0 0, 0 0, 0 0, 0 0,
-    0 24%, 0 38%, 0 56%, 0 74%;
+    0 22%, 0 36%, 0 54%, 0 72%;
 }
 
-/* Os neons diagonais do retrato, ecoados de leve pela cena inteira. */
+/* Os neons diagonais do retrato, ecoados pela cena inteira. */
 .prova-chamada-arte::after {
   content: "";
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(56deg, transparent 42%, rgba(169, 198, 232, 0.22) 47.6%, rgba(169, 198, 232, 0.04) 48.6%, transparent 54%),
-    linear-gradient(124deg, transparent 58%, rgba(96, 165, 250, 0.16) 63.6%, rgba(96, 165, 250, 0.03) 64.4%, transparent 70%);
+    linear-gradient(56deg, transparent 42%, rgba(169, 198, 232, 0.2) 47.6%, rgba(169, 198, 232, 0.04) 48.6%, transparent 54%),
+    linear-gradient(124deg, transparent 58%, rgba(96, 165, 250, 0.15) 63.6%, rgba(96, 165, 250, 0.03) 64.4%, transparent 70%);
   pointer-events: none;
 }
 
+/* O retrato no centro da cena, em altura cheia com o topo cortado pela
+   dobra. Com o ambiente na cor do fundo da foto, as máscaras abrem e o
+   cenário do retrato é parte da dobra. */
 .prova-chamada-rosto {
   position: absolute;
-  /* MAIOR que o palco de propósito (126% da altura, topo cortado): com o
-     ambiente na cor do fundo da foto, as bordas dela podem abrir muito
-     mais, e o próprio cenário do retrato vira parte da dobra. O ROSTO
-     precisa morrer antes da coluna de texto (o texto começa aos 66%),
-     senão o título cai na bochecha dela. */
-  left: 33%;
-  top: -13%;
-  height: 126%;
+  left: 50%;
+  top: -10%;
+  height: 118%;
   width: auto;
+  transform: translateX(-58%);
   -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent);
   mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent);
 }
 
+/* A mão entra por fora da borda esquerda, apontando pro ombro dela. */
 .prova-chamada-mao {
   position: absolute;
-  left: -66px;
-  bottom: 12px;
-  width: 52%;
-  max-width: 600px;
+  left: -4vw;
+  bottom: 6%;
+  width: clamp(380px, 42vw, 760px);
   height: auto;
-  filter: drop-shadow(0 20px 34px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 22px 38px rgba(0, 0, 0, 0.5));
 }
 
-/* O texto flutua SOBRE a cena, com um véu que garante a leitura sem
-   apagar o palco atrás. */
+/* O texto flutua sobre a cena, na terça direita, com véu de legibilidade
+   que termina na cor-base do ambiente. */
 .prova-chamada-texto {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
-  width: 400px;
+  width: min(520px, 38vw);
   z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   gap: 27px;
-  padding: 48px 44px;
-  background: linear-gradient(90deg, rgba(7, 26, 48, 0) 0, rgba(7, 26, 48, 0.82) 20%, rgba(7, 26, 48, 0.92) 100%);
+  padding: 48px clamp(44px, 7vw, 120px) 48px 44px;
+  background: linear-gradient(90deg, rgba(7, 26, 48, 0) 0, rgba(7, 26, 48, 0.82) 26%, rgba(7, 26, 48, 0.92) 100%);
 }
 .prova-chamada-texto h2 {
   font-family: var(--font-syne), sans-serif;
@@ -4077,6 +4053,7 @@ body:has(.theme-v3) .skip-link {
   background: var(--gelo);
   color: var(--hzn-text-inverse);
   text-decoration: none;
+  white-space: nowrap;
   transition: transform 200ms ease, box-shadow 200ms ease;
 }
 .prova-chamada-botao:hover {
@@ -4084,30 +4061,33 @@ body:has(.theme-v3) .skip-link {
   box-shadow: var(--hzn-glow-amber);
 }
 
-/* Em tela estreita a cena vira faixa em cima e o texto desce pra baixo
-   dela, fora da sobreposição: 220px de palco não comportam os dois. */
+/* Em tela estreita a cena vira faixa e o texto desce pra baixo dela. */
 @media (max-width: 900px) {
+  .prova-chamada {
+    height: auto;
+  }
   .prova-chamada-corpo {
-    min-height: 0;
+    position: static;
   }
   .prova-chamada-arte {
     position: relative;
     inset: auto;
-    height: 240px;
+    height: 300px;
   }
   .prova-chamada-rosto {
     left: auto;
-    right: 4%;
+    right: -6%;
+    transform: none;
   }
   .prova-chamada-mao {
     left: -30px;
-    bottom: 18px;
-    width: 52%;
+    bottom: 14px;
+    width: 58%;
   }
   .prova-chamada-texto {
     position: static;
     width: auto;
-    padding: 30px 26px 34px;
+    padding: 30px 26px 36px;
     background: none;
   }
 }

@@ -1019,7 +1019,9 @@ export default function ProvaPage() {
                   ? "prova-bloco prova-bloco-centro"
                   : bloco.layout === "cartoes"
                     ? "prova-bloco prova-bloco-centro prova-bloco-cartoes"
-                    : "prova-bloco"
+                    : bloco.layout === "chamada"
+                      ? "prova-bloco prova-bloco-chamada"
+                      : "prova-bloco"
               }
             >
               {bloco.eyebrow && <p className="prova-eyebrow">{bloco.eyebrow}</p>}
@@ -1113,11 +1115,6 @@ export default function ProvaPage() {
                   coluna de título + botão à direita. */}
               {bloco.layout === "chamada" && bloco.acao && (
                 <div className="prova-chamada">
-                  <div className="prova-chamada-topo" aria-hidden="true">
-                    <i />
-                    <i />
-                    <i />
-                  </div>
                   <div className="prova-chamada-corpo">
                     {/* Composição cinematográfica pedida pelo founder: o
                         retrato de visor azul ancora a direita do palco e a
