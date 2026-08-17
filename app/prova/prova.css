@@ -3929,10 +3929,10 @@ body:has(.theme-v3) .skip-link {
   border: 1px solid rgba(59, 130, 246, 0.5);
   border-radius: 12px;
   overflow: hidden;
-  /* Fundo SÓLIDO de propósito: o véu da foto termina exatamente nesta
-     cor, então a emenda entre a arte e a coluna de texto não existe. Com
-     fundo translúcido, a diferença de tom desenhava uma linha vertical. */
-  background: var(--noite);
+  /* Fundo sólido na cor-base do AMBIENTE da cena, amostrada do fundo do
+     próprio retrato (topo navy #0c223d, base #051f36): o véu do texto
+     termina exatamente nela e a emenda não existe. */
+  background: #071a30;
 }
 
 /* A barra da janela: só os três pontinhos em contorno, como lá. */
@@ -3958,20 +3958,24 @@ body:has(.theme-v3) .skip-link {
 .prova-chamada-corpo {
   position: relative;
   display: block;
-  min-height: 480px;
+  min-height: 520px;
 }
 
 .prova-chamada-arte {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  /* o palco: noite + halos azuis + grade fina de engenharia */
+  /* O AMBIENTE da cena, construído com as cores amostradas do fundo do
+     próprio retrato: navy no topo (#0c223d), a faixa de brilho azul viva
+     no meio (#2161a1/#2f71b0) e a base escura (#051f36). É o que faz a
+     foto derreter no palco em vez de flutuar recortada sobre preto. A
+     grade fina fica por cima, na luz do ambiente. */
   background:
-    repeating-linear-gradient(90deg, rgba(143, 166, 196, 0.045) 0 1px, transparent 1px 48px),
-    repeating-linear-gradient(0deg, rgba(143, 166, 196, 0.045) 0 1px, transparent 1px 48px),
-    radial-gradient(ellipse at 16% 84%, rgba(59, 130, 246, 0.18), transparent 55%),
-    radial-gradient(ellipse at 70% 12%, rgba(59, 130, 246, 0.12), transparent 50%),
-    var(--noite);
+    repeating-linear-gradient(90deg, rgba(120, 180, 255, 0.055) 0 1px, transparent 1px 48px),
+    repeating-linear-gradient(0deg, rgba(120, 180, 255, 0.055) 0 1px, transparent 1px 48px),
+    radial-gradient(ellipse 70% 55% at 56% 46%, rgba(47, 113, 176, 0.5), transparent 70%),
+    radial-gradient(ellipse 50% 60% at 12% 80%, rgba(33, 97, 161, 0.34), transparent 65%),
+    linear-gradient(180deg, #0a1e38 0%, #0d2547 38%, #123058 54%, #071a30 100%);
 }
 
 /* Traços de circuito na metade esquerda, continuando os da própria mão:
@@ -4011,25 +4015,27 @@ body:has(.theme-v3) .skip-link {
 
 .prova-chamada-rosto {
   position: absolute;
-  /* termina ANTES da coluna de texto: com 400px de coluna numa moldura de
-     ~1178, o texto começa aos 66%; o retrato (~24% de largura) precisa
-     morrer antes disso, senão o título cai no rosto dela. */
-  left: 39%;
-  top: 0;
-  height: 100%;
+  /* MAIOR que o palco de propósito (126% da altura, topo cortado): com o
+     ambiente na cor do fundo da foto, as bordas dela podem abrir muito
+     mais, e o próprio cenário do retrato vira parte da dobra. O ROSTO
+     precisa morrer antes da coluna de texto (o texto começa aos 66%),
+     senão o título cai na bochecha dela. */
+  left: 33%;
+  top: -13%;
+  height: 126%;
   width: auto;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18%, #000 84%, transparent);
-  mask-image: linear-gradient(90deg, transparent 0, #000 18%, #000 84%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent);
 }
 
 .prova-chamada-mao {
   position: absolute;
-  left: -48px;
-  bottom: 38px;
-  width: 46%;
-  max-width: 480px;
+  left: -66px;
+  bottom: 12px;
+  width: 52%;
+  max-width: 600px;
   height: auto;
-  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.55));
+  filter: drop-shadow(0 20px 34px rgba(0, 0, 0, 0.5));
 }
 
 /* O texto flutua SOBRE a cena, com um véu que garante a leitura sem
@@ -4047,7 +4053,7 @@ body:has(.theme-v3) .skip-link {
   align-items: flex-start;
   gap: 27px;
   padding: 48px 44px;
-  background: linear-gradient(90deg, rgba(10, 15, 26, 0) 0, rgba(10, 15, 26, 0.8) 26%, rgba(10, 15, 26, 0.9) 100%);
+  background: linear-gradient(90deg, rgba(7, 26, 48, 0) 0, rgba(7, 26, 48, 0.82) 20%, rgba(7, 26, 48, 0.92) 100%);
 }
 .prova-chamada-texto h2 {
   font-family: var(--font-syne), sans-serif;
