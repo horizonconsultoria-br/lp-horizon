@@ -4545,3 +4545,58 @@ body:has(.theme-v3) .skip-link {
     transition: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DOBRA DE AGENDAMENTO (fecho da página)
+   Desenho da referência: título grande centrado, linha de apoio na
+   cor de acento e o calendário embutido num cartão de cantos
+   redondos. Sem agendaUrl no conteúdo, a dobra mostra o botão de
+   sempre no lugar do cartão.
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-bloco-agenda > h2 {
+  font-family: var(--font-syne), sans-serif;
+  font-variation-settings: normal;
+  font-size: clamp(30px, 3.4vw, 44px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: normal;
+  max-width: none;
+}
+/* A linha de apoio vira o subtítulo de acento da referência. */
+.prova-bloco-agenda .prova-prosa {
+  margin-inline: auto;
+  text-align: center;
+}
+.prova-bloco-agenda .prova-prosa p {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 15px;
+  color: var(--hzn-brand-300);
+  max-width: none;
+}
+
+.prova-agenda {
+  max-width: 1040px;
+  margin: clamp(28px, 4vw, 48px) auto 0;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--hzn-border-default);
+  background: var(--hzn-bg-raised);
+}
+.prova-agenda iframe {
+  display: block;
+  width: 100%;
+  height: 700px;
+  border: 0;
+}
+
+.prova-bloco-agenda .prova-cta {
+  justify-content: center;
+  margin-top: clamp(24px, 3vw, 40px);
+}
+
+@media (max-width: 720px) {
+  .prova-agenda iframe {
+    height: 820px;
+  }
+}

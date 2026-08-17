@@ -31,8 +31,9 @@ export type Bloco = {
    *  "techs" é o título centrado com o letreiro infinito de tecnologias;
    *  "recursos" é o acordeão horizontal de painéis numerados;
    *  "faq" é o duas-colunas com o título à esquerda e as perguntas
-   *  expansíveis à direita. */
-  layout?: "abas" | "cartoes" | "chamada" | "techs" | "recursos" | "faq";
+   *  expansíveis à direita; "agenda" é o título centrado com o calendário
+   *  de agendamento embutido (ou o botão, enquanto não há URL). */
+  layout?: "abas" | "cartoes" | "chamada" | "techs" | "recursos" | "faq" | "agenda";
   titulo: string;
   paragrafos: string[];
   destaque?: Destaque;
@@ -61,7 +62,11 @@ export type Cliente = {
 export type Acao = { rotulo: string; href: string; primaria: boolean };
 // Só as ações. O bloco "cta" já carrega título e parágrafos como qualquer outro
 // bloco; um segundo par título/subtítulo aqui seria dado que ninguém renderiza.
-export type CTA = { acoes: Acao[] };
+// `agendaUrl` é o link de agendamento do founder (Cal.com): VAZIO enquanto ele
+// não passar o link. Com a URL preenchida, a dobra final troca o botão pelo
+// calendário embutido; vazia, o botão fica, porque calendário morto em página
+// de conversão é o defeito que esta página existe pra não ter.
+export type CTA = { acoes: Acao[]; agendaUrl?: string };
 
 export type ConteudoProva = { blocos: Bloco[]; cta: CTA; clientes: Cliente[] };
 
@@ -286,11 +291,13 @@ export const conteudoProva: ConteudoProva = {
     },
     {
       id: "cta",
-      eyebrow: "Próxima ação",
-      titulo: "Uma conversa de uma hora, e você sai com um diagnóstico.",
+      // Dobra de agendamento no desenho da referência: título centrado,
+      // linha de apoio e o calendário embutido logo abaixo (quando houver
+      // agendaUrl; sem ela, o botão de sempre).
+      titulo: "Agende uma conversa",
+      layout: "agenda",
       paragrafos: [
-        "Mapeamos a sua maior dor operacional, damos uma estimativa honesta de prazo e falamos o que faríamos primeiro.",
-        "Se não fizer sentido fechar, você fica com a análise mesmo assim.",
+        "Escolha um horário para falar com a nossa equipe. Você sai com um diagnóstico, mesmo que a resposta seja não.",
       ],
     },
   ],
@@ -302,6 +309,9 @@ export const conteudoProva: ConteudoProva = {
         primaria: true,
       },
     ],
+    // PENDENTE founder: colar aqui o link de agendamento (Cal.com).
+    // Enquanto vazio, a dobra final mostra o botão de e-mail.
+    agendaUrl: "",
   },
   // A faixa de logos entre o Playbook e a dobra de produtos. Lista dada pelo
   // founder; as artes vivem em public/prova/clientes/, todas convertidas ao

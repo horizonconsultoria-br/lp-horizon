@@ -65,6 +65,9 @@ const nextConfig: NextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https://www.google-analytics.com",
               "connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net",
+              // O calendário de agendamento da /prova é embutido do Cal.com;
+              // sem esta diretiva o navegador bloqueia o iframe.
+              "frame-src 'self' https://cal.com https://*.cal.com",
               "frame-ancestors 'none'",
             ].join("; "),
           },

@@ -1025,7 +1025,9 @@ export default function ProvaPage() {
                         ? "prova-bloco prova-bloco-centro prova-bloco-techs"
                         : bloco.layout === "recursos"
                           ? "prova-bloco prova-bloco-centro prova-bloco-recursos"
-                          : "prova-bloco"
+                          : bloco.layout === "agenda"
+                            ? "prova-bloco prova-bloco-centro prova-bloco-agenda"
+                            : "prova-bloco"
               }
             >
               {/* Na banda de chamada e no FAQ o cabeçalho vive dentro do
@@ -1288,19 +1290,32 @@ export default function ProvaPage() {
                 </dl>
               )}
 
-              {indice === demais.length - 1 && (
-                <div className="prova-cta">
-                  {cta.acoes.map((acao) => (
-                    <a
-                      key={acao.rotulo}
-                      href={acao.href}
-                      className={acao.primaria ? "btn-primary" : "btn-secondary"}
-                    >
-                      {acao.rotulo}
-                    </a>
-                  ))}
-                </div>
-              )}
+              {/* Fecho da página: com agendaUrl, o calendário embutido no
+                  desenho da referência; sem ela, o botão de sempre, porque
+                  calendário morto em página de conversão é o defeito que
+                  esta página existe pra não ter. */}
+              {indice === demais.length - 1 &&
+                (cta.agendaUrl ? (
+                  <div className="prova-agenda">
+                    <iframe
+                      src={`${cta.agendaUrl}${cta.agendaUrl.includes("?") ? "&" : "?"}embed=true&theme=dark`}
+                      title="Agendar conversa com a Horizon"
+                      loading="lazy"
+                    />
+                  </div>
+                ) : (
+                  <div className="prova-cta">
+                    {cta.acoes.map((acao) => (
+                      <a
+                        key={acao.rotulo}
+                        href={acao.href}
+                        className={acao.primaria ? "btn-primary" : "btn-secondary"}
+                      >
+                        {acao.rotulo}
+                      </a>
+                    ))}
+                  </div>
+                ))}
             </section>
             {/* A faixa de clientes vive ENTRE as dobras, como na referência:
                 nao e um bloco de conteudo com titulo, e um respiro de prova

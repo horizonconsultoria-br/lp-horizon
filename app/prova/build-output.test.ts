@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { conteudoProva } from "@/content/prova";
 
 const HTML = join(process.cwd(), ".next", "server", "app", "prova.html");
 const disponivel = existsSync(HTML);
@@ -16,8 +17,18 @@ describe.skipIf(!disponivel)("HTML pré-renderizado de /prova", () => {
   // desenvolvedor. Então a guarda mudou de forma e continua guardando a mesma
   // coisa: nada de player, nada de iframe, e o único vídeo permitido é o de
   // fundo, decorativo, escondido de leitor de tela.
-  it("não tem player de marketing nem iframe", () => {
-    expect(html).not.toMatch(/<iframe[\s>]/i);
+  it("não tem player de marketing, e iframe só o do agendamento sancionado", () => {
+    // A regra continua sendo "nenhum player, nenhum iframe de marketing".
+    // A única exceção é o calendário de agendamento da dobra final, que só
+    // existe quando o conteúdo declara a agendaUrl, e precisa apontar para
+    // ela. Qualquer outro iframe é defeito.
+    const iframes = html.match(/<iframe[^>]*>/gi) ?? [];
+    if (conteudoProva.cta.agendaUrl) {
+      expect(iframes.length, "esperado só o iframe do agendamento").toBe(1);
+      expect(iframes[0]).toContain(conteudoProva.cta.agendaUrl);
+    } else {
+      expect(iframes.length, "sem agendaUrl não pode haver iframe").toBe(0);
+    }
     expect(html).not.toContain("vsl-frame");
     expect(html).not.toContain("vsl-play");
     expect(html).not.toMatch(/\bcontrols\b/i);
