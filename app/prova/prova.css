@@ -3849,7 +3849,8 @@ body:has(.theme-v3) .skip-link {
 .clientes {
   overflow: hidden;
   padding-block: clamp(40px, 7vh, 72px);
-  border-bottom: 1px solid var(--hzn-border-subtle);
+  /* sem border-bottom: a faixa encosta na banda de conversao, e o risco
+     de 1px desenhava uma linha no topo da cena */
   /* as pontas do letreiro somem num degradê, para as logos nascerem e
      morrerem no ar em vez de cortarem na borda da tela */
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
@@ -3930,6 +3931,8 @@ body:has(.theme-v3) .skip-link {
 .prova-bloco-chamada {
   max-width: none;
   padding: 0;
+  /* sem risco de 1px embaixo: a cena termina direto na dobra seguinte */
+  border-bottom: 0;
 }
 
 .prova-chamada {
