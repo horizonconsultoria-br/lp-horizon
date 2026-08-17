@@ -77,7 +77,12 @@ describe("estrutura", () => {
   it("nenhum bloco fica sem título, e cada layout exige o próprio conteúdo", () => {
     for (const b of conteudoProva.blocos) {
       expect(b.titulo.trim().length, `bloco ${b.id}`).toBeGreaterThan(0);
-      if (b.layout === "abas" || b.layout === "cartoes" || b.layout === "recursos") {
+      if (
+        b.layout === "abas" ||
+        b.layout === "cartoes" ||
+        b.layout === "recursos" ||
+        b.layout === "faq"
+      ) {
         // Abas, cartões e o acordeão dispensam prosa de propósito: os
         // painéis carregam o conteúdo. Em troca, precisam ter itens, senão
         // a dobra fica vazia.

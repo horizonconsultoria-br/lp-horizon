@@ -1028,10 +1028,14 @@ export default function ProvaPage() {
                           : "prova-bloco"
               }
             >
-              {bloco.eyebrow && <p className="prova-eyebrow">{bloco.eyebrow}</p>}
-              {/* Na banda de chamada o título vive DENTRO da moldura, ao lado
-                  do botão; emitir o h2 padrão aqui o duplicaria. */}
-              {bloco.layout !== "chamada" && <h2>{bloco.titulo}</h2>}
+              {/* Na banda de chamada e no FAQ o cabeçalho vive dentro do
+                  próprio layout; emitir o padrão aqui o duplicaria. */}
+              {bloco.eyebrow && bloco.layout !== "faq" && (
+                <p className="prova-eyebrow">{bloco.eyebrow}</p>
+              )}
+              {bloco.layout !== "chamada" && bloco.layout !== "faq" && (
+                <h2>{bloco.titulo}</h2>
+              )}
               {bloco.subtitulo && (
                 <p className="prova-subtitulo">{bloco.subtitulo}</p>
               )}
@@ -1234,6 +1238,30 @@ export default function ProvaPage() {
                       )}
                     </div>
                   ))}
+                </div>
+              )}
+
+              {/* FAQ em duas colunas na estrutura da referência: cabeçalho à
+                  esquerda, perguntas expansíveis à direita em details/summary
+                  nativo (zero JS, teclado e leitor de tela de graça), com o
+                  "+" girando para "×" ao abrir. */}
+              {bloco.layout === "faq" && bloco.itens && (
+                <div className="prova-faq">
+                  <div className="prova-faq-cabeca">
+                    {bloco.eyebrow && <p className="prova-eyebrow">{bloco.eyebrow}</p>}
+                    <h2>{bloco.titulo}</h2>
+                  </div>
+                  <div className="prova-faq-lista">
+                    {bloco.itens.map((item) => (
+                      <details key={item.nome} className="prova-faq-item">
+                        <summary>
+                          {item.nome}
+                          <i aria-hidden="true" />
+                        </summary>
+                        <p>{item.descricao}</p>
+                      </details>
+                    ))}
+                  </div>
                 </div>
               )}
 

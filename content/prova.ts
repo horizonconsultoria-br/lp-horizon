@@ -29,8 +29,10 @@ export type Bloco = {
    *  "cartoes" renderiza como grade de cartões com glifo, título e texto;
    *  "chamada" é a banda de conversão full-bleed com botão próprio;
    *  "techs" é o título centrado com o letreiro infinito de tecnologias;
-   *  "recursos" é o acordeão horizontal de painéis numerados. */
-  layout?: "abas" | "cartoes" | "chamada" | "techs" | "recursos";
+   *  "recursos" é o acordeão horizontal de painéis numerados;
+   *  "faq" é o duas-colunas com o título à esquerda e as perguntas
+   *  expansíveis à direita. */
+  layout?: "abas" | "cartoes" | "chamada" | "techs" | "recursos" | "faq";
   titulo: string;
   paragrafos: string[];
   destaque?: Destaque;
@@ -254,11 +256,13 @@ export const conteudoProva: ConteudoProva = {
     },
     {
       id: "objecoes",
-      eyebrow: "Perguntas diretas",
-      titulo: "As dúvidas que aparecem antes da primeira conversa.",
-      paragrafos: [
-        "Respostas curtas, do jeito que a gente responderia numa call.",
-      ],
+      // Estrutura do FAQ espelhada do agentyx (duas colunas, perguntas
+      // expansíveis com o "+"); título dado pelo founder. As perguntas e
+      // respostas seguem sendo as nossas.
+      eyebrow: "Perguntas frequentes",
+      titulo: "Ainda com dúvida? A gente responde.",
+      layout: "faq",
+      paragrafos: [],
       itens: [
         {
           nome: "Vocês entregam código ou consultoria?",

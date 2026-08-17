@@ -4429,3 +4429,119 @@ body:has(.theme-v3) .skip-link {
     transition: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DOBRA DE FAQ (duas colunas, perguntas expansíveis)
+   Estrutura espelhada da referência agentyx: eyebrow + título
+   serifado grande na coluna esquerda; na direita, a lista de
+   perguntas com o "+" na ponta e separadores finos, expandindo no
+   clique. Mecânica em details/summary NATIVO: zero JavaScript,
+   teclado e leitor de tela de graça. O "+" gira 45 graus e vira
+   "×" quando o item abre.
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-faq {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: clamp(40px, 6vw, 110px);
+  align-items: start;
+}
+
+/* O cabeçalho herda o estilo padrão da dobra (eyebrow mono + Fraunces). */
+.prova-faq-cabeca h2 {
+  margin-bottom: 0;
+}
+
+.prova-faq-item {
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+
+.prova-faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding-block: 26px;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gelo);
+  transition: color 180ms ease;
+}
+.prova-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.prova-faq-item summary:hover {
+  color: var(--hzn-brand-300);
+}
+.prova-faq-item summary:focus-visible {
+  outline: 2px solid var(--hzn-brand-400);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* O "+": duas barras; aberto, o conjunto gira 45 graus e lê como "×". */
+.prova-faq-item summary i {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transition: transform 260ms ease;
+}
+.prova-faq-item summary i::before,
+.prova-faq-item summary i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  background: var(--sinal);
+  border-radius: 2px;
+}
+.prova-faq-item summary i::before {
+  width: 16px;
+  height: 2px;
+}
+.prova-faq-item summary i::after {
+  width: 2px;
+  height: 16px;
+}
+.prova-faq-item[open] summary i {
+  transform: rotate(45deg);
+}
+
+.prova-faq-item > p {
+  margin: 0;
+  padding: 0 34px 26px 0;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--hzn-text-secondary);
+  max-width: 60ch;
+}
+.prova-faq-item[open] > p {
+  animation: faq-abre 280ms ease both;
+}
+@keyframes faq-abre {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@media (max-width: 900px) {
+  .prova-faq {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova-faq-item[open] > p {
+    animation: none;
+  }
+  .prova-faq-item summary i {
+    transition: none;
+  }
+}

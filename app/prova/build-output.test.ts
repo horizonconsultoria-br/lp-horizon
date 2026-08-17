@@ -108,6 +108,14 @@ describe.skipIf(!disponivel)("HTML pré-renderizado de /prova", () => {
     ).toBe(1);
   });
 
+  // O FAQ usa details/summary nativo: cada pergunta precisa ser expansível
+  // sem JavaScript. Se alguém trocar por divs com onClick, este teste avisa.
+  it("as perguntas do FAQ são details/summary nativos", () => {
+    const detalhes = html.match(/<details[^>]*class="prova-faq-item"/g) ?? [];
+    expect(detalhes.length, "esperadas 4 perguntas expansíveis").toBe(4);
+    expect((html.match(/<summary/g) ?? []).length).toBeGreaterThanOrEqual(4);
+  });
+
   it("declara o canonical próprio, não o da home", () => {
     expect(html).toMatch(/rel="canonical"[^>]*\/prova/);
   });
