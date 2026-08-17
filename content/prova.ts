@@ -16,7 +16,7 @@ export type Item = {
    *  "recursos" (a caixa alta é do CSS; aqui vai texto normal). */
   tagline?: string;
   /** Glifo de fundo do painel expandido na dobra "recursos". */
-  arte?: "radar" | "calls" | "crm" | "research" | "inbound";
+  arte?: "projeto" | "vazao" | "integracoes" | "diagnostico" | "desalocar";
 };
 
 export type Bloco = {
@@ -216,39 +216,39 @@ export const conteudoProva: ConteudoProva = {
       paragrafos: [],
       itens: [
         {
-          nome: "Radar de concorrência",
-          tagline: "Seus concorrentes, vigiados 24 por 7",
-          arte: "radar",
+          nome: "Crie seu projeto ou aplicativo do zero em até 90 dias",
+          tagline: "Do papel à produção em um trimestre",
+          arte: "projeto",
           descricao:
-            "Agentes varrem anúncios, posições de busca, tráfego e backlinks dos concorrentes com Semrush, DataForSEO e SimilarWeb. Os sinais chegam interceptados no seu radar, sem você abrir uma aba.",
+            "Squad da casa desenha, constrói e publica: arquitetura, código, deploy e operação. Você acompanha por entregas semanais, e o primeiro corte útil chega bem antes do prazo final.",
         },
         {
-          nome: "Análise de calls com IA",
-          tagline: "Cada reunião vira diagnóstico do seu time",
-          arte: "calls",
+          nome: "Dê vazão ao seu backlog",
+          tagline: "As demandas paradas viram versão publicada",
+          arte: "vazao",
           descricao:
-            "Transcrição, nota e feedback personalizado por chamada, com a trilha de treinamento apontando onde cada vendedor trava. Monitoria que roda sozinha, todo dia.",
+            "Seu time segue no roadmap; a gente assume a fila que não anda: funcionalidades, correções, integrações e dívidas técnicas, com ritmo e código documentado para o seu time manter.",
         },
         {
-          nome: "CRM que se preenche sozinho",
-          tagline: "Reunião termina, deal atualizado",
-          arte: "crm",
+          nome: "Integre seus sistemas e CRM com APIs e Automações",
+          tagline: "Os dados andando sozinhos entre as pontas",
+          arte: "integracoes",
           descricao:
-            "A automação transcreve, extrai o que importa e grava direto no contato: score, notas, próximo passo. O pipeline fica confiável sem ninguém digitar.",
+            "Webhooks, filas e automações ligando ERP, CRM e planilhas que hoje dependem de gente copiando dado. O que entra num sistema aparece nos outros, com log e reprocesso.",
         },
         {
-          nome: "Lead research no WhatsApp",
-          tagline: "O dossiê do lead antes da primeira mensagem",
-          arte: "research",
+          nome: "Diagnóstico de como usar IA nos seus processos",
+          tagline: "Onde a IA paga o próprio custo no seu fluxo",
+          arte: "diagnostico",
           descricao:
-            "Manda o nome da empresa, recebe porte, decisor, fit e histórico. O enriquecimento roda na stack da casa e devolve tudo onde o seu time já conversa.",
+            "A gente mapeia a operação, mede onde o tempo morre e devolve um plano priorizado: o que automatizar primeiro, com qual ferramenta e qual retorno esperar.",
         },
         {
-          nome: "Máquina de inbound",
-          tagline: "Do formulário ao agendamento sem toque humano",
-          arte: "inbound",
+          nome: "Desaloque o time sem multas contratuais",
+          tagline: "Escala para cima e para baixo, sem letra miúda",
+          arte: "desalocar",
           descricao:
-            "Captura, qualifica, pontua e agenda: o funil filtra quem tem fit e o CRM recebe só quem está pronto. Seu comercial fala com quem pode comprar.",
+            "Contrato mensal sem fidelidade: se a demanda cair, você reduz ou encerra sem multa. O código, a documentação e os acessos ficam com você.",
         },
       ],
     },

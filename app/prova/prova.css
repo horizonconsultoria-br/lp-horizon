@@ -4205,11 +4205,17 @@ body:has(.theme-v3) .skip-link {
    assume a área e o rótulo continua sendo o numerão do canto.
    ═══════════════════════════════════════════════════════════════ */
 
-/* Full-bleed como o letreiro de techs: o acordeão explora as bordas. */
+/* Full-bleed como o letreiro de techs: o acordeão explora as bordas. O
+   fundo é próprio, na paleta da casa (pedido do founder: diferente do
+   preto): a serra no miolo com um halo azul discreto no alto, voltando à
+   noite nas pontas pra fundir com as dobras vizinhas. */
 .prova-bloco-recursos {
   max-width: none;
   padding-inline: 0;
   border-bottom: 0;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 22%, rgba(59, 130, 246, 0.12), transparent 65%),
+    linear-gradient(180deg, var(--noite) 0%, #101b30 18%, var(--serra) 55%, #0d1626 88%, var(--noite) 100%);
 }
 .prova-bloco-recursos > h2 {
   font-family: var(--prova-display);
@@ -4307,13 +4313,15 @@ body:has(.theme-v3) .skip-link {
 .prova-recurso-conteudo h3 {
   font-family: var(--font-syne), sans-serif;
   font-variation-settings: normal;
-  font-size: clamp(26px, 2.2vw, 38px);
+  /* os títulos agora são frases inteiras: corpo um pouco menor e quebra
+     livre em até duas linhas, sem o nowrap da primeira versão */
+  font-size: clamp(24px, 1.9vw, 34px);
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.14;
   letter-spacing: normal;
   color: var(--gelo);
   margin: 0;
-  white-space: nowrap;
+  max-width: 22ch;
 }
 .prova-recurso-tagline {
   font-family: var(--font-syne), sans-serif;
@@ -4323,7 +4331,6 @@ body:has(.theme-v3) .skip-link {
   text-transform: uppercase;
   color: var(--hzn-brand-300);
   margin: 10px 0 0;
-  white-space: nowrap;
 }
 .prova-recurso-texto {
   font-family: var(--font-poppins), sans-serif;
@@ -4373,18 +4380,108 @@ body:has(.theme-v3) .skip-link {
   display: block;
 }
 
-/* radar: dois anéis e o feixe */
-.prova-rec-radar i:nth-child(1) {
+/* projeto: a ficha de escopo que vira entrega (linhas e check) */
+.prova-rec-projeto i:nth-child(1) {
+  left: 40px;
+  top: 14px;
+  width: 96px;
+  height: 118px;
+  border: 1.5px solid var(--bruma);
+  border-radius: 10px;
+}
+.prova-rec-projeto i:nth-child(2) {
+  left: 58px;
+  top: 38px;
+  width: 60px;
+  height: 26px;
+  border-top: 1.5px solid rgba(143, 166, 196, 0.6);
+  border-bottom: 1.5px solid rgba(143, 166, 196, 0.6);
+}
+.prova-rec-projeto i:nth-child(3) {
+  left: 112px;
+  top: 104px;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--sinal);
+  border-radius: 50%;
+}
+
+/* vazão: o funil escoando */
+.prova-rec-vazao i:nth-child(1) {
+  left: 40px;
+  top: 16px;
+  width: 120px;
+  height: 44px;
+  border: 1.5px solid var(--bruma);
+  border-bottom: 0;
+  clip-path: polygon(0 0, 100% 0, 78% 100%, 22% 100%);
+}
+.prova-rec-vazao i:nth-child(2) {
+  left: 76px;
+  top: 66px;
+  width: 48px;
+  height: 34px;
+  border-left: 1.5px solid var(--bruma);
+  border-right: 1.5px solid var(--bruma);
+}
+.prova-rec-vazao i:nth-child(3) {
+  left: 92px;
+  top: 110px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--sinal);
+}
+
+/* integrações: duas caixas ligadas por um fio */
+.prova-rec-integracoes i:nth-child(1) {
+  left: 30px;
+  top: 24px;
+  width: 54px;
+  height: 54px;
+  border: 1.5px solid var(--bruma);
+  border-radius: 10px;
+}
+.prova-rec-integracoes i:nth-child(2) {
+  left: 116px;
+  top: 70px;
+  width: 54px;
+  height: 54px;
+  border: 1.5px solid var(--sinal);
+  border-radius: 10px;
+}
+.prova-rec-integracoes i:nth-child(3) {
+  left: 82px;
+  top: 52px;
+  width: 42px;
+  height: 1.5px;
+  background: var(--sinal);
+  transform: rotate(42deg);
+  transform-origin: 0 0;
+}
+.prova-rec-integracoes i:nth-child(3)::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--sinal);
+}
+
+/* diagnóstico: o radar de varredura */
+.prova-rec-diagnostico i:nth-child(1) {
   inset: 10px 30px;
   border: 1.5px solid var(--bruma);
   border-radius: 50%;
 }
-.prova-rec-radar i:nth-child(2) {
+.prova-rec-diagnostico i:nth-child(2) {
   inset: 42px 62px;
   border: 1.5px solid rgba(143, 166, 196, 0.5);
   border-radius: 50%;
 }
-.prova-rec-radar i:nth-child(3) {
+.prova-rec-diagnostico i:nth-child(3) {
   left: 50%;
   top: 50%;
   width: 62px;
@@ -4394,116 +4491,43 @@ body:has(.theme-v3) .skip-link {
   transform: rotate(-40deg);
 }
 
-/* calls: barras de forma de onda */
-.prova-rec-calls i:nth-child(1),
-.prova-rec-calls i:nth-child(2),
-.prova-rec-calls i:nth-child(3) {
-  bottom: 30px;
-  width: 14px;
-  border-radius: 7px;
-  border: 1.5px solid var(--bruma);
-}
-.prova-rec-calls i:nth-child(1) {
+/* desalocar: o contrato com a tranca aberta */
+.prova-rec-desalocar i:nth-child(1) {
   left: 44px;
-  height: 54px;
-}
-.prova-rec-calls i:nth-child(2) {
-  left: 84px;
-  height: 92px;
-  border-color: var(--sinal);
-}
-.prova-rec-calls i:nth-child(3) {
-  left: 124px;
-  height: 40px;
-}
-
-/* crm: ficha com linhas e check */
-.prova-rec-crm i:nth-child(1) {
-  left: 40px;
-  top: 14px;
-  width: 96px;
-  height: 118px;
+  top: 16px;
+  width: 88px;
+  height: 112px;
   border: 1.5px solid var(--bruma);
   border-radius: 10px;
 }
-.prova-rec-crm i:nth-child(2) {
-  left: 58px;
-  top: 38px;
-  width: 60px;
-  height: 26px;
-  border-top: 1.5px solid rgba(143, 166, 196, 0.6);
-  border-bottom: 1.5px solid rgba(143, 166, 196, 0.6);
-}
-.prova-rec-crm i:nth-child(3) {
-  left: 112px;
-  top: 104px;
-  width: 30px;
-  height: 30px;
-  border: 1.5px solid var(--sinal);
-  border-radius: 50%;
-}
-
-/* research: balão de conversa com lupa */
-.prova-rec-research i:nth-child(1) {
-  left: 36px;
-  top: 20px;
-  width: 104px;
-  height: 74px;
-  border: 1.5px solid var(--bruma);
-  border-radius: 14px 14px 14px 3px;
-}
-.prova-rec-research i:nth-child(2) {
-  left: 54px;
-  top: 42px;
+.prova-rec-desalocar i:nth-child(2) {
+  left: 60px;
+  top: 40px;
   width: 56px;
-  height: 22px;
+  height: 24px;
   border-top: 1.5px solid rgba(143, 166, 196, 0.6);
   border-bottom: 1.5px solid rgba(143, 166, 196, 0.6);
 }
-.prova-rec-research i:nth-child(3) {
-  left: 118px;
-  top: 76px;
+.prova-rec-desalocar i:nth-child(3) {
+  left: 108px;
+  top: 96px;
   width: 34px;
-  height: 34px;
+  height: 26px;
   border: 1.5px solid var(--sinal);
-  border-radius: 50%;
+  border-radius: 6px;
 }
-.prova-rec-research i:nth-child(3)::after {
+.prova-rec-desalocar i:nth-child(3)::before {
   content: "";
   position: absolute;
-  right: -14px;
-  bottom: -10px;
-  width: 18px;
-  height: 1.5px;
-  background: var(--sinal);
-  transform: rotate(45deg);
-}
-
-/* inbound: funil de traço */
-.prova-rec-inbound i:nth-child(1) {
-  left: 40px;
-  top: 16px;
-  width: 120px;
-  height: 44px;
-  border: 1.5px solid var(--bruma);
-  border-bottom: 0;
-  clip-path: polygon(0 0, 100% 0, 78% 100%, 22% 100%);
-}
-.prova-rec-inbound i:nth-child(2) {
-  left: 76px;
-  top: 66px;
-  width: 48px;
-  height: 34px;
-  border-left: 1.5px solid var(--bruma);
-  border-right: 1.5px solid var(--bruma);
-}
-.prova-rec-inbound i:nth-child(3) {
-  left: 92px;
-  top: 110px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
+  left: 2px;
+  top: -17px;
+  width: 20px;
+  height: 18px;
   border: 1.5px solid var(--sinal);
+  border-bottom: 0;
+  border-radius: 10px 10px 0 0;
+  transform: rotate(-16deg);
+  transform-origin: 0 100%;
 }
 
 /* ─── Em tela estreita o acordeão vira vertical ─── */
