@@ -43,7 +43,7 @@ describe.skipIf(!disponivel)("HTML pré-renderizado de /prova", () => {
   it("renderiza as 8 seções da spec", () => {
     for (const id of [
       "abertura", "crm-proprio", "playbook", "mesmo-time",
-      "tecnologias", "antes-de-assinar", "objecoes", "cta",
+      "tecnologias", "recursos", "objecoes", "cta",
     ]) {
       expect(html.includes(`id="${id}"`), `faltou a seção ${id}`).toBe(true);
     }

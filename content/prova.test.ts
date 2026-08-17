@@ -8,7 +8,7 @@ const IDS_ESPERADOS = [
   "playbook",
   "mesmo-time",
   "tecnologias",
-  "antes-de-assinar",
+  "recursos",
   "objecoes",
   "cta",
 ];
@@ -77,10 +77,10 @@ describe("estrutura", () => {
   it("nenhum bloco fica sem título, e cada layout exige o próprio conteúdo", () => {
     for (const b of conteudoProva.blocos) {
       expect(b.titulo.trim().length, `bloco ${b.id}`).toBeGreaterThan(0);
-      if (b.layout === "abas" || b.layout === "cartoes") {
-        // Abas e cartões dispensam prosa de propósito: os painéis/cartões
-        // carregam o conteúdo. Em troca, precisam ter itens, senão a dobra
-        // fica vazia.
+      if (b.layout === "abas" || b.layout === "cartoes" || b.layout === "recursos") {
+        // Abas, cartões e o acordeão dispensam prosa de propósito: os
+        // painéis carregam o conteúdo. Em troca, precisam ter itens, senão
+        // a dobra fica vazia.
         expect(b.itens?.length ?? 0, `bloco ${b.id} sem itens`).toBeGreaterThan(1);
       } else if (b.layout === "chamada") {
         // A banda de conversão vive de título + botão; sem ação ela é um

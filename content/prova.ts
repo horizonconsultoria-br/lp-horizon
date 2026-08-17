@@ -12,6 +12,11 @@ export type Item = {
   visual?: "whatsapp" | "n8n" | "funil" | "membros" | "stack" | "radar";
   /** Glifo do cartão na dobra de layout "cartoes", desenhado em CSS. */
   icone?: "squad" | "diagnostico" | "treinamento" | "projeto" | "saas";
+  /** Linha de impacto em caixa alta do painel, na dobra de layout
+   *  "recursos" (a caixa alta é do CSS; aqui vai texto normal). */
+  tagline?: string;
+  /** Glifo de fundo do painel expandido na dobra "recursos". */
+  arte?: "radar" | "calls" | "crm" | "research" | "inbound";
 };
 
 export type Bloco = {
@@ -23,8 +28,9 @@ export type Bloco = {
   /** "abas" renderiza os `itens` como painéis selecionáveis em vez de lista;
    *  "cartoes" renderiza como grade de cartões com glifo, título e texto;
    *  "chamada" é a banda de conversão full-bleed com botão próprio;
-   *  "techs" é o título centrado com o letreiro infinito de tecnologias. */
-  layout?: "abas" | "cartoes" | "chamada" | "techs";
+   *  "techs" é o título centrado com o letreiro infinito de tecnologias;
+   *  "recursos" é o acordeão horizontal de painéis numerados. */
+  layout?: "abas" | "cartoes" | "chamada" | "techs" | "recursos";
   titulo: string;
   paragrafos: string[];
   destaque?: Destaque;
@@ -199,13 +205,51 @@ export const conteudoProva: ConteudoProva = {
       ],
     },
     {
-      id: "antes-de-assinar",
-      eyebrow: "Antes de assinar",
-      titulo: "Você recebe a análise antes de decidir qualquer coisa.",
-      paragrafos: [
-        "Antes de falar de contrato, a gente estuda o seu negócio e publica o resultado numa página só sua: presença digital, o que os concorrentes estão fazendo, onde você aparece e onde não aparece.",
-        "A regra que seguimos ao escrever essa análise é dura de propósito: assunto que não encontramos aparece como ponto crítico, e não some do relatório. Você recebe o que existe, incluindo o que não existe.",
-        "É o mesmo material que usamos para decidir se vale a nossa conversa. Você fica com ele mesmo que a resposta seja não.",
+      id: "recursos",
+      // Acordeão espelhado do "Recursos" do playbooklab: mesmo efeito e
+      // estrutura, paleta da casa. A COPY dos painéis é nossa: os deles
+      // descrevem os produtos deles, e esta página só afirma o que a
+      // Horizon entrega (os cinco painéis mapeiam os sistemas que as
+      // cenas das abas já mostram).
+      titulo: "Recursos",
+      layout: "recursos",
+      paragrafos: [],
+      itens: [
+        {
+          nome: "Radar de concorrência",
+          tagline: "Seus concorrentes, vigiados 24 por 7",
+          arte: "radar",
+          descricao:
+            "Agentes varrem anúncios, posições de busca, tráfego e backlinks dos concorrentes com Semrush, DataForSEO e SimilarWeb. Os sinais chegam interceptados no seu radar, sem você abrir uma aba.",
+        },
+        {
+          nome: "Análise de calls com IA",
+          tagline: "Cada reunião vira diagnóstico do seu time",
+          arte: "calls",
+          descricao:
+            "Transcrição, nota e feedback personalizado por chamada, com a trilha de treinamento apontando onde cada vendedor trava. Monitoria que roda sozinha, todo dia.",
+        },
+        {
+          nome: "CRM que se preenche sozinho",
+          tagline: "Reunião termina, deal atualizado",
+          arte: "crm",
+          descricao:
+            "A automação transcreve, extrai o que importa e grava direto no contato: score, notas, próximo passo. O pipeline fica confiável sem ninguém digitar.",
+        },
+        {
+          nome: "Lead research no WhatsApp",
+          tagline: "O dossiê do lead antes da primeira mensagem",
+          arte: "research",
+          descricao:
+            "Manda o nome da empresa, recebe porte, decisor, fit e histórico. O enriquecimento roda na stack da casa e devolve tudo onde o seu time já conversa.",
+        },
+        {
+          nome: "Máquina de inbound",
+          tagline: "Do formulário ao agendamento sem toque humano",
+          arte: "inbound",
+          descricao:
+            "Captura, qualifica, pontua e agenda: o funil filtra quem tem fit e o CRM recebe só quem está pronto. Seu comercial fala com quem pode comprar.",
+        },
       ],
     },
     {

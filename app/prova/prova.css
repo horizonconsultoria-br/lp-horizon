@@ -4188,3 +4188,362 @@ body:has(.theme-v3) .skip-link {
     animation: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DOBRA "RECURSOS" (acordeão horizontal de painéis numerados)
+   Mesmo efeito do playbooklab na paleta da casa: cinco painéis em
+   fileira, o marcado cresce (flex-grow com transição) e revela
+   título, tagline em caixa alta, texto e o botão de contorno; os
+   colapsados mostram só o numerão. Separadores de 1px entre os
+   painéis e borda no topo da fileira, como lá. A copy dos painéis
+   é NOSSA (os sistemas que as cenas das abas já mostram); a deles
+   descreve os produtos deles.
+
+   Mecânica da casa: grupo de radio (clique, teclado e touch, coisa
+   que hover puro não dá), painel marcado via :has(). O rótulo com
+   o número cobre o painel colapsado inteiro; no aberto, o conteúdo
+   assume a área e o rótulo continua sendo o numerão do canto.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Full-bleed como o letreiro de techs: o acordeão explora as bordas. */
+.prova-bloco-recursos {
+  max-width: none;
+  padding-inline: 0;
+  border-bottom: 0;
+}
+.prova-bloco-recursos > h2 {
+  font-family: var(--prova-display);
+  font-variation-settings: "SOFT" 0, "WONK" 1, "opsz" 60;
+  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: none;
+}
+
+.prova-recursos {
+  display: flex;
+  margin-top: clamp(28px, 4vw, 48px);
+  border-top: 1px solid var(--hzn-border-subtle);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+  min-height: clamp(480px, 62vh, 620px);
+}
+
+.prova-recurso {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  border-left: 1px solid var(--hzn-border-subtle);
+  transition: flex-grow 550ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.prova-recurso:first-child {
+  border-left: 0;
+}
+.prova-recurso:has(input:checked) {
+  flex-grow: 6.5;
+}
+
+.prova-recurso input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* O rótulo é a área de clique do painel inteiro; o numerão vive nele. */
+.prova-recurso label {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  cursor: pointer;
+  padding: 36px clamp(18px, 2vw, 40px);
+}
+.prova-recurso-num {
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(30px, 2.6vw, 46px);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--gelo);
+  opacity: 0.85;
+  transition: opacity 200ms ease, color 200ms ease;
+}
+.prova-recurso label:hover .prova-recurso-num {
+  opacity: 1;
+  color: var(--hzn-brand-300);
+}
+.prova-recurso:has(input:checked) label {
+  cursor: default;
+}
+.prova-recurso input:focus-visible ~ label .prova-recurso-num {
+  outline: 2px solid var(--hzn-brand-400);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* O conteúdo do painel aberto. Colapsado: invisível e fora do fluxo de
+   interação; aberto: entra com um leve atraso, depois que a largura já
+   respirou. A largura fixa evita o texto refluir durante a transição. */
+.prova-recurso-conteudo {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  width: min(560px, 78%);
+  padding: 42px clamp(24px, 3vw, 48px) 42px clamp(84px, 7vw, 130px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 240ms ease;
+}
+.prova-recurso:has(input:checked) .prova-recurso-conteudo {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 320ms ease 260ms;
+}
+.prova-recurso-conteudo h3 {
+  font-family: var(--font-syne), sans-serif;
+  font-variation-settings: normal;
+  font-size: clamp(26px, 2.2vw, 38px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: normal;
+  color: var(--gelo);
+  margin: 0;
+  white-space: nowrap;
+}
+.prova-recurso-tagline {
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(14px, 1.1vw, 18px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--hzn-brand-300);
+  margin: 10px 0 0;
+  white-space: nowrap;
+}
+.prova-recurso-texto {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 19.6px;
+  color: var(--gelo);
+  max-width: 52ch;
+  margin: 0;
+}
+.prova-recurso-botao {
+  margin-top: 14px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 14px;
+  line-height: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border: 1px solid var(--sinal);
+  border-radius: 6px;
+  color: var(--gelo);
+  text-decoration: none;
+  transition: background 200ms ease, transform 200ms ease;
+}
+.prova-recurso-botao:hover {
+  background: rgba(59, 130, 246, 0.16);
+  transform: translateY(-1px);
+}
+
+/* ─── Glifos de fundo do painel aberto, em traço da casa ─── */
+.prova-recurso-arte {
+  position: absolute;
+  right: clamp(24px, 4vw, 72px);
+  bottom: 36px;
+  width: 200px;
+  height: 150px;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  pointer-events: none;
+}
+.prova-recurso:has(input:checked) .prova-recurso-arte {
+  opacity: 0.5;
+  transition: opacity 500ms ease 300ms;
+}
+.prova-recurso-arte i {
+  position: absolute;
+  display: block;
+}
+
+/* radar: dois anéis e o feixe */
+.prova-rec-radar i:nth-child(1) {
+  inset: 10px 30px;
+  border: 1.5px solid var(--bruma);
+  border-radius: 50%;
+}
+.prova-rec-radar i:nth-child(2) {
+  inset: 42px 62px;
+  border: 1.5px solid rgba(143, 166, 196, 0.5);
+  border-radius: 50%;
+}
+.prova-rec-radar i:nth-child(3) {
+  left: 50%;
+  top: 50%;
+  width: 62px;
+  height: 1.5px;
+  background: var(--sinal);
+  transform-origin: 0 50%;
+  transform: rotate(-40deg);
+}
+
+/* calls: barras de forma de onda */
+.prova-rec-calls i:nth-child(1),
+.prova-rec-calls i:nth-child(2),
+.prova-rec-calls i:nth-child(3) {
+  bottom: 30px;
+  width: 14px;
+  border-radius: 7px;
+  border: 1.5px solid var(--bruma);
+}
+.prova-rec-calls i:nth-child(1) {
+  left: 44px;
+  height: 54px;
+}
+.prova-rec-calls i:nth-child(2) {
+  left: 84px;
+  height: 92px;
+  border-color: var(--sinal);
+}
+.prova-rec-calls i:nth-child(3) {
+  left: 124px;
+  height: 40px;
+}
+
+/* crm: ficha com linhas e check */
+.prova-rec-crm i:nth-child(1) {
+  left: 40px;
+  top: 14px;
+  width: 96px;
+  height: 118px;
+  border: 1.5px solid var(--bruma);
+  border-radius: 10px;
+}
+.prova-rec-crm i:nth-child(2) {
+  left: 58px;
+  top: 38px;
+  width: 60px;
+  height: 26px;
+  border-top: 1.5px solid rgba(143, 166, 196, 0.6);
+  border-bottom: 1.5px solid rgba(143, 166, 196, 0.6);
+}
+.prova-rec-crm i:nth-child(3) {
+  left: 112px;
+  top: 104px;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--sinal);
+  border-radius: 50%;
+}
+
+/* research: balão de conversa com lupa */
+.prova-rec-research i:nth-child(1) {
+  left: 36px;
+  top: 20px;
+  width: 104px;
+  height: 74px;
+  border: 1.5px solid var(--bruma);
+  border-radius: 14px 14px 14px 3px;
+}
+.prova-rec-research i:nth-child(2) {
+  left: 54px;
+  top: 42px;
+  width: 56px;
+  height: 22px;
+  border-top: 1.5px solid rgba(143, 166, 196, 0.6);
+  border-bottom: 1.5px solid rgba(143, 166, 196, 0.6);
+}
+.prova-rec-research i:nth-child(3) {
+  left: 118px;
+  top: 76px;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--sinal);
+  border-radius: 50%;
+}
+.prova-rec-research i:nth-child(3)::after {
+  content: "";
+  position: absolute;
+  right: -14px;
+  bottom: -10px;
+  width: 18px;
+  height: 1.5px;
+  background: var(--sinal);
+  transform: rotate(45deg);
+}
+
+/* inbound: funil de traço */
+.prova-rec-inbound i:nth-child(1) {
+  left: 40px;
+  top: 16px;
+  width: 120px;
+  height: 44px;
+  border: 1.5px solid var(--bruma);
+  border-bottom: 0;
+  clip-path: polygon(0 0, 100% 0, 78% 100%, 22% 100%);
+}
+.prova-rec-inbound i:nth-child(2) {
+  left: 76px;
+  top: 66px;
+  width: 48px;
+  height: 34px;
+  border-left: 1.5px solid var(--bruma);
+  border-right: 1.5px solid var(--bruma);
+}
+.prova-rec-inbound i:nth-child(3) {
+  left: 92px;
+  top: 110px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--sinal);
+}
+
+/* ─── Em tela estreita o acordeão vira vertical ─── */
+@media (max-width: 900px) {
+  .prova-recursos {
+    flex-direction: column;
+    min-height: 0;
+  }
+  .prova-recurso {
+    border-left: 0;
+    border-top: 1px solid var(--hzn-border-subtle);
+    min-height: 84px;
+    transition: min-height 450ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .prova-recurso:first-child {
+    border-top: 0;
+  }
+  .prova-recurso:has(input:checked) {
+    min-height: 430px;
+  }
+  .prova-recurso label {
+    padding: 26px 22px;
+  }
+  .prova-recurso-conteudo {
+    width: auto;
+    padding: 84px 22px 30px;
+  }
+  .prova-recurso-conteudo h3,
+  .prova-recurso-tagline {
+    white-space: normal;
+  }
+  .prova-recurso-arte {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova-recurso,
+  .prova-recurso-conteudo,
+  .prova-recurso-arte {
+    transition: none;
+  }
+}

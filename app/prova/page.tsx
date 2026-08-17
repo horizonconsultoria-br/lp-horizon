@@ -974,7 +974,7 @@ export default function ProvaPage() {
               menu sem destino é o defeito que a landing oficial tem hoje. */}
           <div className="prova-nav-links">
             <a href="#playbook">O que fazemos</a>
-            <a href="#antes-de-assinar">Como funciona</a>
+            <a href="#recursos">Recursos</a>
             <a href="#objecoes">Perguntas</a>
           </div>
 
@@ -1023,7 +1023,9 @@ export default function ProvaPage() {
                       ? "prova-bloco prova-bloco-chamada"
                       : bloco.layout === "techs"
                         ? "prova-bloco prova-bloco-centro prova-bloco-techs"
-                        : "prova-bloco"
+                        : bloco.layout === "recursos"
+                          ? "prova-bloco prova-bloco-centro prova-bloco-recursos"
+                          : "prova-bloco"
               }
             >
               {bloco.eyebrow && <p className="prova-eyebrow">{bloco.eyebrow}</p>}
@@ -1181,6 +1183,48 @@ export default function ProvaPage() {
                       </ul>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Acordeão horizontal de painéis numerados: mesmo mecanismo
+                  de radio das abas (clique, teclado e touch), painel marcado
+                  cresce via flex-grow com transição. O rótulo cobre o painel
+                  inteiro quando colapsado; o conteúdo só aparece no aberto. */}
+              {bloco.layout === "recursos" && bloco.itens && (
+                <div className="prova-recursos">
+                  {bloco.itens.map((item, i) => (
+                    <div key={item.nome} className="prova-recurso">
+                      <input
+                        type="radio"
+                        name={`recursos-${bloco.id}`}
+                        id={`recurso-${bloco.id}-${i}`}
+                        defaultChecked={i === 0}
+                      />
+                      <label htmlFor={`recurso-${bloco.id}-${i}`}>
+                        <span className="prova-recurso-num">{i + 1}.</span>
+                      </label>
+                      <div className="prova-recurso-conteudo">
+                        <h3>{item.nome}</h3>
+                        {item.tagline && (
+                          <p className="prova-recurso-tagline">{item.tagline}</p>
+                        )}
+                        <p className="prova-recurso-texto">{item.descricao}</p>
+                        <a className="prova-recurso-botao" href="#cta">
+                          Saiba mais
+                        </a>
+                      </div>
+                      {item.arte && (
+                        <div
+                          className={`prova-recurso-arte prova-rec-${item.arte}`}
+                          aria-hidden="true"
+                        >
+                          <i />
+                          <i />
+                          <i />
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               )}
 
