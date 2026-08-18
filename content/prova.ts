@@ -306,6 +306,26 @@ export const conteudoProva: ConteudoProva = {
           descricao:
             "Depende do formato. O modelo com participação tem mensalidade menor porque parte do nosso ganho fica atrelada ao seu resultado.",
         },
+        {
+          nome: "Vocês usam Vibecode?",
+          descricao:
+            "Não, nosso time é composto por desenvolvedores sênior que usam desenvolvimento assistido por inteligência artificial. Nosso uso de IA é para aumentar produtividade, não para construir código sem fundação.",
+        },
+        {
+          nome: "Quanto tempo pra colocar no ar?",
+          descricao:
+            "Depende do tamanho do projeto, porém todas as semanas temos entregas que geram valor ao negócio.",
+        },
+        {
+          nome: "Como funcionam os planos de squad?",
+          descricao:
+            "Temos um plano com um desenvolvedor parcial de 80 horas e um plano mais completo de 200 horas, divididas entre Product Owner, Tech Lead e desenvolvedor.",
+        },
+        {
+          nome: "Funciona pro meu segmento?",
+          descricao:
+            "Atuamos nos ramos de clínicas, escritórios de advocacia, contabilidade, indústrias, startups e vários outros segmentos.",
+        },
       ],
     },
     {
