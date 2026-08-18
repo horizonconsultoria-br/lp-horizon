@@ -196,6 +196,27 @@ describe("regras da casa", () => {
   });
 });
 
+describe("botões de ação", () => {
+  it("os botões de ação que são âncora apontam para uma dobra que existe", () => {
+    // Os botões fortes deixaram de abrir o cliente de e-mail e passaram a
+    // rolar até o calendário. Âncora com id errado não quebra nada de forma
+    // visível: o clique simplesmente não faz nada, e isso no botão principal
+    // de conversão da página é o defeito mais caro que ela pode ter.
+    const acoes = conteudoProva.blocos
+      .map((b) => b.acao)
+      .concat(conteudoProva.cta.acoes)
+      .filter((a): a is NonNullable<typeof a> => Boolean(a));
+    const ancoras = acoes.filter((a) => a.href.startsWith("#"));
+    expect(ancoras.length, "nenhum botão de ação virou âncora").toBeGreaterThan(0);
+    for (const a of ancoras) {
+      expect(
+        IDS_ESPERADOS.includes(a.href.slice(1)),
+        `botão "${a.rotulo}" aponta para ${a.href}, que não é dobra desta página`,
+      ).toBe(true);
+    }
+  });
+});
+
 describe("rodapé", () => {
   // Mesma regra do menu do topo, que a página já cumpre: item de menu sem
   // destino que existe é o defeito da landing oficial. No rodapé o risco é
