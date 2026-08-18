@@ -60,7 +60,11 @@ export type Cliente = {
 };
 
 export type Acao = { rotulo: string; href: string; primaria: boolean };
-// Só as ações. O bloco "cta" já carrega título e parágrafos como qualquer outro
+// Só as ações. Os botões fortes da página (o do topo, o do herói e o da banda
+// de conversão) apontam para a âncora #cta: com o calendário embutido na
+// última dobra, mandar o visitante pro cliente de e-mail seria tirá-lo da
+// página no exato momento em que ele decidiu agendar.
+// O bloco "cta" já carrega título e parágrafos como qualquer outro
 // bloco; um segundo par título/subtítulo aqui seria dado que ninguém renderiza.
 // `agendaUrl` é o link de agendamento do founder (Calendly): VAZIO enquanto ele
 // não passar o link. Com a URL preenchida, a dobra final troca o botão pelo
@@ -202,7 +206,7 @@ export const conteudoProva: ConteudoProva = {
       paragrafos: [],
       acao: {
         rotulo: "Quero um diagnóstico",
-        href: "mailto:suporte@consultoriahorizon.com.br?subject=Diagn%C3%B3stico%20Horizon",
+        href: "#cta",
         primaria: true,
       },
     },
@@ -344,7 +348,7 @@ export const conteudoProva: ConteudoProva = {
     acoes: [
       {
         rotulo: "Agendar conversa",
-        href: "mailto:suporte@consultoriahorizon.com.br?subject=Conversa%20com%20a%20Horizon",
+        href: "#cta",
         primaria: true,
       },
     ],

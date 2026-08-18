@@ -4793,3 +4793,25 @@ body:has(.theme-v3) .skip-link {
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   ROLAGEM ATÉ AS ÂNCORAS
+   Os botões fortes (topo, herói e banda de conversão) e os do
+   acordeão de recursos levam para #cta, a dobra do calendário.
+   Sem isto o salto é instantâneo e o visitante não percebe que
+   ATRAVESSOU a página: ele só vê a tela trocar, e perde a
+   referência de onde está. `html:has()` porque quem rola é o
+   documento, e o tema desta página vive num div lá dentro.
+   ═══════════════════════════════════════════════════════════════ */
+
+html:has(.theme-v3) {
+  scroll-behavior: smooth;
+}
+
+/* Movimento reduzido: o salto volta a ser instantâneo, que é o que
+   quem pediu menos movimento espera de uma âncora. */
+@media (prefers-reduced-motion: reduce) {
+  html:has(.theme-v3) {
+    scroll-behavior: auto;
+  }
+}
