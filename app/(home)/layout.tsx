@@ -48,12 +48,12 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Tecnologia e Inteligência Artificial aplicada a vendas e otimização operacional",
   description:
-    "Aumente sua receita e diminua seu custo operacional usando tecnologia, automação e inteligência artificial do jeito certo.",
+    "Seu time especializado em desenvolvimento, automações e implementação de projetos de Inteligência Artificial. Aumente sua receita com redução de custo operacional.",
   alternates: { canonical: "/" },
   openGraph: {
     title: "Tecnologia e Inteligência Artificial aplicada a vendas e otimização operacional",
     description:
-      "Aumente sua receita e diminua seu custo operacional usando tecnologia, automação e inteligência artificial do jeito certo.",
+      "Seu time especializado em desenvolvimento, automações e implementação de projetos de Inteligência Artificial. Aumente sua receita com redução de custo operacional.",
     url: "https://consultoriahorizon.com.br/",
     type: "website",
     locale: "pt_BR",
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Tecnologia e Inteligência Artificial aplicada a vendas e otimização operacional",
     description:
-      "Aumente sua receita e diminua seu custo operacional usando tecnologia, automação e inteligência artificial do jeito certo.",
+      "Seu time especializado em desenvolvimento, automações e implementação de projetos de Inteligência Artificial. Aumente sua receita com redução de custo operacional.",
     images: ["/og-image.png"],
   },
 };
