@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 // process.cwd() e não __dirname: o Vitest roda os .ts como ESM, onde __dirname
 // não é garantido. Mesma forma que build-output.test.ts usa.
-const css = readFileSync(join(process.cwd(), "app", "prova", "prova.css"), "utf-8");
+const css = readFileSync(join(process.cwd(), "app", "(home)", "prova.css"), "utf-8");
 
 /** Tokens cujo valor âmbar apareceria visualmente se não fossem redefinidos. */
 const TOKENS_OBRIGATORIOS = [

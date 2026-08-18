@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Fragment } from "react";
-import { conteudoProva, type Cliente } from "@/content/prova";
+import { conteudoProva, type Cliente, type Rodape as RodapeConteudo } from "@/content/prova";
 import { RotacaoAbas } from "./RotacaoAbas";
 
 /**
@@ -901,6 +901,118 @@ function SimulacaoRadar() {
   );
 }
 
+/**
+ * Glifos das redes. SVG inline, não arquivo: a página já tem a regra de não
+ * pedir nada a host de terceiro, e dois ícones não justificam duas
+ * requisições. `currentColor` faz o hover do link tingir o desenho junto.
+ */
+function GlifoRede({ tipo }: { tipo: "instagram" | "linkedin" }) {
+  if (tipo === "linkedin") {
+    return (
+      <svg className="prova-pe-glifo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9.5 9h3.8v1.65h.05c.53-.95 1.83-1.95 3.77-1.95 4.03 0 4.78 2.5 4.78 5.76V21h-4v-5.4c0-1.29-.03-2.95-1.9-2.95-1.9 0-2.2 1.4-2.2 2.85V21h-4z" />
+      </svg>
+    );
+  }
+  return (
+    <svg className="prova-pe-glifo" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5.2" stroke="currentColor" strokeWidth="1.7" />
+      <circle cx="12" cy="12" r="4.1" stroke="currentColor" strokeWidth="1.7" />
+      <circle cx="17.3" cy="6.7" r="1.15" fill="currentColor" />
+    </svg>
+  );
+}
+
+/**
+ * RODAPÉ, a última dobra.
+ *
+ * Estrutura da referência fraktalsoftwares: bloco de marca à esquerda com a
+ * frase da casa, colunas de links à direita ("Links rápidos", "Nossas redes",
+ * "Contato") e a barra legal fechando com assinatura e CNPJ. O que muda é o
+ * conteúdo: toda âncora aponta para uma dobra que EXISTE nesta página, e o
+ * telefone é um link de WhatsApp de verdade, não texto solto.
+ */
+function Rodape({ rodape }: { rodape: RodapeConteudo }) {
+  return (
+    <footer className="prova-pe">
+      <div className="prova-pe-grade">
+        <div className="prova-pe-marca-bloco">
+          {/* Mesmo lockup da barra de navegação, um pouco menor. */}
+          <a className="prova-marca prova-pe-marca" href="#abertura" aria-label="Horizon, ir para o topo">
+            <Image
+              className="prova-marca-simbolo"
+              src="/prova/logo-simbolo.png"
+              alt=""
+              width={39}
+              height={38}
+            />
+            <Image
+              className="prova-marca-palavra"
+              src="/prova/logo-palavra.png"
+              alt=""
+              width={99}
+              height={15}
+            />
+          </a>
+          <p className="prova-pe-descricao">{rodape.descricao}</p>
+          <a
+            className="prova-pe-zap"
+            href={rodape.whatsapp.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Falar no WhatsApp
+          </a>
+        </div>
+
+        <nav className="prova-pe-coluna" aria-label="Links rápidos">
+          <h2 className="prova-pe-titulo">Links rápidos</h2>
+          <ul>
+            {rodape.navegacao.map((item) => (
+              <li key={item.href}>
+                <a href={item.href}>{item.rotulo}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav className="prova-pe-coluna" aria-label="Nossas redes">
+          <h2 className="prova-pe-titulo">Nossas redes</h2>
+          <ul>
+            {rodape.redes.map((rede) => (
+              <li key={rede.nome}>
+                <a href={rede.href} target="_blank" rel="noopener noreferrer">
+                  <GlifoRede tipo={rede.icone} />
+                  {rede.nome}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="prova-pe-coluna">
+          <h2 className="prova-pe-titulo">Contato</h2>
+          <ul>
+            <li>
+              <a href={rodape.whatsapp.href} target="_blank" rel="noopener noreferrer">
+                {rodape.whatsapp.rotulo}
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${rodape.email}`}>{rodape.email}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="prova-pe-legal">
+        <p>{rodape.assinatura}</p>
+        <p>CNPJ {rodape.cnpj}</p>
+      </div>
+    </footer>
+  );
+}
+
 // Server Component puro. O único JS autoral da página vive na ilha
 // RotacaoAbas, dentro da dobra de abas.
 export default function ProvaPage() {
@@ -951,7 +1063,7 @@ export default function ProvaPage() {
               arquivo oficial e um lockup VERTICAL numa tela 3300x3300 com
               metade de margem vazia; aqui ele vem recortado e remontado na
               horizontal, que e o que uma barra de navegacao comporta. */}
-          <a className="prova-marca" href="/prova" aria-label="Horizon, ir para o topo">
+          <a className="prova-marca" href="/" aria-label="Horizon, ir para o topo">
             <Image
               className="prova-marca-simbolo"
               src="/prova/logo-simbolo.png"
@@ -1325,6 +1437,8 @@ export default function ProvaPage() {
           ))}
         </article>
       </div>
+
+      <Rodape rodape={conteudoProva.rodape} />
     </>
   );
 }

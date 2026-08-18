@@ -28,6 +28,13 @@ function textosVisiveis(): string[] {
     for (const i of b.itens ?? []) out.push(i.nome, i.descricao);
   }
   for (const a of conteudoProva.cta.acoes) out.push(a.rotulo);
+  // O rodapé também é copy visível: sem ele aqui, as regras da casa
+  // (travessão, vocabulário de vídeo, cifra em dólar) parariam na última
+  // dobra e a página inteira menos o pé ficaria guardada.
+  const r = conteudoProva.rodape;
+  out.push(r.descricao, r.assinatura, r.whatsapp.rotulo, r.email, r.cnpj);
+  for (const n of r.navegacao) out.push(n.rotulo);
+  for (const s of r.redes) out.push(s.nome);
   return out;
 }
 
@@ -185,6 +192,57 @@ describe("regras da casa", () => {
   it("não usa vocabulário de vídeo", () => {
     for (const t of textosVisiveis()) {
       expect(/\b(v[ií]deo|assista|player|VSL)\b/i.test(t), `vídeo em: "${t}"`).toBe(false);
+    }
+  });
+});
+
+describe("rodapé", () => {
+  // Mesma regra do menu do topo, que a página já cumpre: item de menu sem
+  // destino que existe é o defeito da landing oficial. No rodapé o risco é
+  // maior, porque ninguém rola até lá pra conferir.
+  it("todo link de navegação aponta para uma dobra que existe", () => {
+    for (const item of conteudoProva.rodape.navegacao) {
+      expect(item.href.startsWith("#"), `link de navegação não é âncora: ${item.href}`).toBe(true);
+      expect(
+        IDS_ESPERADOS.includes(item.href.slice(1)),
+        `âncora sem dobra correspondente: ${item.href}`,
+      ).toBe(true);
+    }
+  });
+
+  it("as redes apontam para perfis absolutos", () => {
+    expect(conteudoProva.rodape.redes.length, "rodapé sem nenhuma rede").toBeGreaterThan(0);
+    for (const rede of conteudoProva.rodape.redes) {
+      expect(/^https:\/\/\S+$/.test(rede.href), `rede sem URL absoluta: ${rede.nome}`).toBe(true);
+    }
+  });
+
+  // O telefone do rodapé precisa DISCAR. Número escrito só como texto é o
+  // caso em que o visitante decide falar e não tem onde clicar.
+  it("o WhatsApp é link de wa.me e o rótulo mostra o mesmo número", () => {
+    const { href, rotulo } = conteudoProva.rodape.whatsapp;
+    const digitos = href.replace(/^https:\/\/wa\.me\//, "").split("?")[0];
+    expect(/^https:\/\/wa\.me\/\d{12,13}(\?|$)/.test(href), `href inválido: ${href}`).toBe(true);
+    expect(rotulo.replace(/\D/g, ""), "o rótulo mostra um número diferente do link").toBe(digitos);
+  });
+
+  it("o CNPJ sai formatado, não em dígitos crus", () => {
+    expect(
+      /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/.test(conteudoProva.rodape.cnpj),
+      `CNPJ fora do formato: ${conteudoProva.rodape.cnpj}`,
+    ).toBe(true);
+  });
+
+  it("o e-mail de contato é o mesmo que a página usa nas chamadas", () => {
+    const mailtos = conteudoProva.blocos
+      .map((b) => b.acao?.href ?? "")
+      .concat(conteudoProva.cta.acoes.map((a) => a.href))
+      .filter((h) => h.startsWith("mailto:"))
+      .map((h) => h.slice("mailto:".length).split("?")[0]);
+    for (const endereco of mailtos) {
+      expect(endereco, "a página escreve para um endereço e o rodapé publica outro").toBe(
+        conteudoProva.rodape.email,
+      );
     }
   });
 });

@@ -5,10 +5,10 @@ import { join } from "node:path";
 // roda sem ele; com "@/" o arquivo nem coleta.
 import { conteudoProva } from "../../content/prova";
 
-const HTML = join(process.cwd(), ".next", "server", "app", "prova.html");
+const HTML = join(process.cwd(), ".next", "server", "app", "index.html");
 const disponivel = existsSync(HTML);
 
-describe.skipIf(!disponivel)("HTML pré-renderizado de /prova", () => {
+describe.skipIf(!disponivel)("HTML pré-renderizado da raiz", () => {
   const html = disponivel ? readFileSync(HTML, "utf-8") : "";
 
   // A regra original era "zero vídeo", escrita quando a página seria só texto.
@@ -129,11 +129,11 @@ describe.skipIf(!disponivel)("HTML pré-renderizado de /prova", () => {
     expect((html.match(/<summary/g) ?? []).length).toBeGreaterThanOrEqual(4);
   });
 
-  it("declara o canonical próprio, não o da home", () => {
-    expect(html).toMatch(/rel="canonical"[^>]*\/prova/);
+  it("declara o canonical da raiz do domínio", () => {
+    expect(html).toMatch(/rel="canonical"[^>]*href="https:\/\/consultoriahorizon\.com\.br\/?"/);
   });
 
-  // Adição do controlador (fora do brief original): o layout de /prova declara
+  // Adição do controlador (fora do brief original): o layout da raiz declara
   // openGraph com título, descrição e URL, mas não define `images` — a aposta é
   // que o Next herda a imagem do layout raiz. Isso nunca foi confirmado. Se a
   // herança não acontecer, o link compartilhado em contexto de venda aparece

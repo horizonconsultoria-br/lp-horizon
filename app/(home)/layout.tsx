@@ -49,12 +49,12 @@ export const metadata: Metadata = {
   title: "Tecnologia e Inteligência Artificial aplicada a vendas e otimização operacional",
   description:
     "Aumente sua receita e diminua seu custo operacional usando tecnologia, automação e inteligência artificial do jeito certo.",
-  alternates: { canonical: "/prova" },
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Tecnologia e Inteligência Artificial aplicada a vendas e otimização operacional",
     description:
       "Aumente sua receita e diminua seu custo operacional usando tecnologia, automação e inteligência artificial do jeito certo.",
-    url: "https://consultoriahorizon.com.br/prova",
+    url: "https://consultoriahorizon.com.br/",
     type: "website",
     locale: "pt_BR",
     images: [
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProvaLayout({ children }: { children: React.ReactNode }) {
+export default function HomeLayout({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={`theme-v3 ${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable} ${syne.variable} ${poppins.variable}`}

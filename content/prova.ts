@@ -68,7 +68,26 @@ export type Acao = { rotulo: string; href: string; primaria: boolean };
 // de conversão é o defeito que esta página existe pra não ter.
 export type CTA = { acoes: Acao[]; agendaUrl?: string };
 
-export type ConteudoProva = { blocos: Bloco[]; cta: CTA; clientes: Cliente[] };
+/** O rodapé. Mesma regra do menu do topo: item sem destino que existe é
+ *  defeito, então aqui só entra link que leva a alguma coisa. `navegacao`
+ *  aponta para âncoras desta página; `redes` são os perfis onde a casa
+ *  publica de fato. O ícone é desenhado no componente, não é arquivo. */
+export type Rodape = {
+  descricao: string;
+  navegacao: Array<{ rotulo: string; href: string }>;
+  redes: Array<{ nome: string; href: string; icone: "instagram" | "linkedin" }>;
+  whatsapp: { rotulo: string; href: string };
+  email: string;
+  cnpj: string;
+  assinatura: string;
+};
+
+export type ConteudoProva = {
+  blocos: Bloco[];
+  cta: CTA;
+  clientes: Cliente[];
+  rodape: Rodape;
+};
 
 export const conteudoProva: ConteudoProva = {
   blocos: [
@@ -324,4 +343,35 @@ export const conteudoProva: ConteudoProva = {
     { nome: "Family Protect", arquivo: "familyprotect.png", largura: 112, altura: 112, rotulo: true },
     { nome: "Nádia Contabilidade", arquivo: "nadia.png", largura: 140, altura: 112, rotulo: true },
   ],
+  // Rodapé no desenho da referência fraktalsoftwares: marca e frase à
+  // esquerda, colunas de links à direita, barra legal fechando embaixo com
+  // assinatura e CNPJ. Os dados são os da casa, dados pelo founder.
+  rodape: {
+    descricao:
+      "Tecnologia e inteligência artificial aplicadas a vendas e operação. A gente constrói, publica e opera o software que o seu time não tem braço para tocar.",
+    navegacao: [
+      { rotulo: "O que fazemos", href: "#playbook" },
+      { rotulo: "Recursos", href: "#recursos" },
+      { rotulo: "Tecnologias", href: "#tecnologias" },
+      { rotulo: "Perguntas", href: "#objecoes" },
+      { rotulo: "Agendar conversa", href: "#cta" },
+    ],
+    redes: [
+      { nome: "Instagram", href: "https://instagram.com/consultoria.horizon/", icone: "instagram" },
+      {
+        nome: "LinkedIn",
+        href: "https://www.linkedin.com/company/consultoria-horizon/",
+        icone: "linkedin",
+      },
+    ],
+    // wa.me com texto pronto, pelo mesmo motivo do mailto da dobra de
+    // chamada: quem clica já chega com o assunto escrito.
+    whatsapp: {
+      rotulo: "+55 24 99825-5174",
+      href: "https://wa.me/5524998255174?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Horizon%20e%20quero%20falar%20sobre%20um%20diagn%C3%B3stico.",
+    },
+    email: "suporte@consultoriahorizon.com.br",
+    cnpj: "37.111.839/0001-07",
+    assinatura: "© 2026 Horizon. Todos os direitos reservados.",
+  },
 };

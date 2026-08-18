@@ -3363,6 +3363,18 @@ body:has(.theme-v3) .skip-link {
    da página (nenhum arquivo de imagem novo).
    ═══════════════════════════════════════════════════════════════ */
 
+/* Sem o risco de 1px no fim da dobra: a faixa de logos entra logo abaixo,
+   e o border-bottom herdado do .prova-bloco desenhava uma linha solta no
+   topo do letreiro (a própria .clientes já abre mão do dela pelo mesmo
+   motivo). */
+.prova-bloco-cartoes {
+  border-bottom: 0;
+  /* Rodapé curto: a faixa de logos é o remate desta dobra, então ela sobe
+     e encosta nos cartões em vez de flutuar no meio do caminho até a banda
+     de conversão. O padding-top da dobra segue o do .prova-bloco. */
+  padding-bottom: clamp(24px, 3.5vh, 40px);
+}
+
 /* O h2 desta dobra volta ao 42px fixo da referência (o título é curto e
    cabe em uma linha em qualquer tela razoável); ganha do clamp da dobra
    de abas por vir depois no arquivo, na mesma especificidade. */
@@ -3848,7 +3860,11 @@ body:has(.theme-v3) .skip-link {
 
 .clientes {
   overflow: hidden;
-  padding-block: clamp(40px, 7vh, 72px);
+  /* Respiro ASSIMÉTRICO: quase nada em cima, porque o letreiro é o remate
+     da dobra de cartões e sobe até quase encostar nela; o respiro cheio
+     fica embaixo, separando as logos da banda de conversão. */
+  padding-top: clamp(6px, 1vh, 14px);
+  padding-bottom: clamp(40px, 7vh, 72px);
   /* sem border-bottom: a faixa encosta na banda de conversao, e o risco
      de 1px desenhava uma linha no topo da cena */
   /* as pontas do letreiro somem num degradê, para as logos nascerem e
@@ -4110,12 +4126,17 @@ body:has(.theme-v3) .skip-link {
 
 /* Sem o risco de 1px embaixo do letreiro, e a seção FULL-BLEED: o
    letreiro explora as bordas laterais da tela em vez de morrer no
-   container (o título é centrado, então não perde nada). O padding
-   vertical do .prova-bloco fica. */
+   container (o título é centrado, então não perde nada). */
 .prova-bloco-techs {
   border-bottom: 0;
   max-width: none;
   padding-inline: 0;
+  /* Rodapé zerado: o vão embaixo do letreiro somava ESTE padding ao
+     padding-top da dobra "Recursos" e abria um vazio de ~240px, com o
+     letreiro empilhado no topo da dobra. Zerando aqui, o respiro de baixo
+     passa a ser só o da dobra seguinte, e o letreiro desce (o espaço vai
+     para o margin-top de .techs-faixa). */
+  padding-bottom: 0;
 }
 
 /* Fraunces, não Syne, por decisão de tipografia: o "g" do Syne tem
@@ -4135,7 +4156,11 @@ body:has(.theme-v3) .skip-link {
 
 .techs-faixa {
   overflow: hidden;
-  margin-top: clamp(28px, 4vw, 48px);
+  /* O letreiro desce e ocupa o meio da dobra em vez de ficar colado no
+     título: herda o respiro que era o rodapé da seção (11vh) somado ao
+     antigo clamp(28px, 4vw, 48px). O título fica com ar, e o vão que
+     sobra até "Recursos" é só o padding-top da dobra seguinte. */
+  margin-top: clamp(100px, calc(4vw + 11vh), 180px);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
 }
@@ -4598,5 +4623,165 @@ body:has(.theme-v3) .skip-link {
 @media (max-width: 720px) {
   .prova-agenda iframe {
     height: 820px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RODAPÉ (última dobra)
+   Estrutura da referência fraktalsoftwares: bloco de marca com a
+   frase da casa à esquerda, colunas de links à direita, e a barra
+   legal fechando com assinatura e CNPJ. A paleta é a da página, e
+   o rodapé começa exatamente na cor em que o corpo termina, então
+   a emenda entre os dois não existe: o único sinal de que uma
+   coisa acabou e outra começou é o fio de 1px.
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-pe {
+  background: var(--hzn-bg-muted);
+  border-top: 1px solid var(--hzn-border-subtle);
+}
+
+.prova-pe-grade {
+  width: 100%;
+  max-width: var(--hzn-container-max);
+  margin-inline: auto;
+  padding-inline: var(--hzn-container-padding);
+  padding-block: clamp(48px, 8vh, 88px);
+  display: grid;
+  /* A coluna da marca é mais larga que as de links: ela carrega a frase,
+     as outras carregam listas curtas. */
+  grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+}
+
+/* Em telas médias as três colunas de links viram duas e a marca ocupa a
+   linha inteira em cima; abaixo de 520px tudo empilha. */
+@media (max-width: 900px) {
+  .prova-pe-grade {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .prova-pe-marca-bloco {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 520px) {
+  .prova-pe-grade {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.prova-pe-marca-bloco {
+  max-width: 44ch;
+}
+
+/* O mesmo lockup da barra de navegação. Aqui ele não flutua sobre a foto,
+   então a palavra pode vir com opacidade cheia. */
+.prova-pe-marca {
+  margin-bottom: 18px;
+}
+.prova-pe-marca .prova-marca-palavra {
+  opacity: 1;
+}
+
+.prova-pe-descricao {
+  margin: 0 0 24px;
+  font-family: var(--hzn-font-sans);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--hzn-text-secondary);
+}
+
+/* Mesma pílula do CTA do topo: o rodapé é a última chance de conversão da
+   página, e ela não pode ler como link perdido no meio da lista. */
+.prova-pe-zap {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--hzn-font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--hzn-text-inverse);
+  background: var(--sinal);
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.prova-pe-zap:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--hzn-glow-amber);
+}
+
+.prova-pe-titulo {
+  margin: 0 0 16px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bruma);
+}
+
+.prova-pe-coluna ul {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.prova-pe-coluna a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--hzn-font-sans);
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: rgba(232, 238, 247, 0.78);
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+.prova-pe-coluna a:hover {
+  color: var(--gelo);
+}
+
+/* O glifo herda a cor do link por currentColor, então o hover tinge os
+   dois de uma vez; no repouso ele fica um tom abaixo do texto. */
+.prova-pe-glifo {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  color: var(--bruma);
+  transition: color 180ms ease;
+}
+.prova-pe-coluna a:hover .prova-pe-glifo {
+  color: var(--sinal);
+}
+
+.prova-pe-legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  width: 100%;
+  max-width: var(--hzn-container-max);
+  margin-inline: auto;
+  padding-inline: var(--hzn-container-padding);
+  padding-block: 20px;
+  border-top: 1px solid var(--hzn-border-subtle);
+}
+.prova-pe-legal p {
+  margin: 0;
+  font-family: var(--hzn-font-sans);
+  font-size: 0.82rem;
+  color: var(--hzn-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova-pe-zap:hover {
+    transform: none;
   }
 }
