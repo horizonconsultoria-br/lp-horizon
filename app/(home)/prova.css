@@ -1,0 +1,4787 @@
+/*
+ * LP /prova — tema escopado e linguagem visual.
+ *
+ * CONCEITO: perspectiva atmosférica como arquitetura de informação.
+ * Na fotografia do herói, as cordilheiras somem na bruma conforme se afastam.
+ * A página percorre o caminho inverso: começa LONGE (herói amplo, tipografia
+ * solta, atmosfera) e vai CHEGANDO PERTO conforme desce (mais denso, mais
+ * concreto, mais dado). Longe é aspiração; perto é prova.
+ *
+ * PALETA: amostrada da própria fotografia, não inventada. A foto é uma
+ * cordilheira azul se dissolvendo em bancos de névoa, então a página inteira
+ * é fria por consequência, sem nenhum acento quente para destoar.
+ *
+ * ISOLAMENTO: tudo vive dentro de .theme-v3, que redefine os mesmos tokens
+ * --hzn-* do design system. A landing v1 âmbar em /lp2 fica intacta.
+ */
+
+.theme-v3 {
+  /* ─── Paleta amostrada da fotografia ─── */
+  --noite: #0a0f1a;   /* o escuro do sopé */
+  --serra: #16203a;   /* o azul das cristas médias */
+  --bruma: #8fa6c4;   /* a névoa entre as camadas */
+  --gelo: #e8eef7;    /* branco frio */
+  --sinal: #3b82f6;   /* a marca */
+  --neve: #a9c6e8;    /* o claro da névoa entre as cristas */
+
+  /* ─── Ponte para o design system: os mesmos nomes, valores desta paleta ─── */
+  --hzn-bg-base: var(--noite);
+  --hzn-bg-raised: rgba(22, 32, 58, 0.55);
+  --hzn-bg-overlay: rgba(22, 32, 58, 0.8);
+  --hzn-bg-muted: #070b13;
+
+  --hzn-text-primary: var(--gelo);
+  --hzn-text-secondary: #b6c6dc;
+  --hzn-text-muted: var(--bruma);
+  --hzn-text-inverse: #060a12;
+
+  --hzn-brand-50: #eff6ff;
+  --hzn-brand-100: #dbeafe;
+  --hzn-brand-200: #bfdbfe;
+  --hzn-brand-300: #93c5fd;
+  --hzn-brand-400: #60a5fa;
+  --hzn-brand-500: var(--sinal);
+  --hzn-brand-600: #1d4ed8;
+  --hzn-brand-700: #1e3a8a;
+
+  /* Nome herdado do design system, valor azul. Sem isto o :hover do
+     .btn-primary brilharia âmbar sobre uma página fria. */
+  --hzn-glow-amber: 0 18px 44px -22px rgba(59, 130, 246, 0.55);
+  --hzn-glow-amber-strong: 0 0 48px rgba(59, 130, 246, 0.6);
+
+  --hzn-border-subtle: rgba(143, 166, 196, 0.14);
+  --hzn-border-default: rgba(143, 166, 196, 0.22);
+  --hzn-border-strong: rgba(59, 130, 246, 0.45);
+
+  /* Fontes self-hosted do next/font. O token do design system é uma lista de
+     NOMES; sem apontar para a variável, a fonte baixada não seria usada. */
+  --hzn-font-sans: var(--font-inter-prova), "Inter", system-ui, sans-serif;
+  --hzn-font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --prova-display: var(--font-fraunces), Georgia, serif;
+
+  /* Medida de linha da prosa, travada na faixa legível de 62 a 72 caracteres */
+  --prova-medida: 66ch;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HERÓI
+   A manchete assenta na massa escura do sopé, logo abaixo da faixa
+   de névoa. Uma foto de horizonte, para uma empresa chamada Horizon.
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-heroi {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--noite);
+}
+
+/* ─── A pilha do herói, cada camada com um trabalho só ───
+   -4 foto (base e fallback) · -3 vídeo de bruma · -2 véu horizontal do texto
+   -1 véu do topo (nav) e véu do pé (fusão com a página). Arquitetura em
+   camadas discretas em vez de um gradiente único de altura inteira: cada
+   véu cobre exatamente a faixa que precisa e nada mais. */
+
+.prova-heroi-foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 52%;
+  z-index: -4;
+}
+
+/* `screen` faz o preto do vídeo virar transparente e só a luz da fumaça
+   somar sobre a fotografia. Sem isso o vídeo taparia a cena inteira. */
+.prova-heroi-bruma {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  z-index: -3;
+  mix-blend-mode: screen;
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+/* Véu do texto: horizontal, escuro à esquerda onde a manchete vive, abrindo
+   até transparente à direita para a bruma e as cristas respirarem. */
+.prova-heroi-veu {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(10, 15, 26, 0.92) 0%,
+    rgba(10, 15, 26, 0.66) 38%,
+    rgba(10, 15, 26, 0.2) 68%,
+    rgba(10, 15, 26, 0) 100%
+  );
+}
+
+/* Véu do topo: só a faixa da nav, para os links lerem em creme sem escurecer
+   a cena inteira. */
+.prova-heroi-veu-topo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 160px;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(rgba(10, 15, 26, 0.8), rgba(10, 15, 26, 0));
+}
+
+/* Véu do pé: funde o herói no fundo sólido da página seguinte. */
+.prova-heroi-veu-pe {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(rgba(10, 15, 26, 0), var(--noite));
+}
+
+.prova-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hzn-space-6);
+  width: 100%;
+  max-width: var(--hzn-container-max);
+  margin-inline: auto;
+  padding: var(--hzn-space-6) var(--hzn-container-padding);
+}
+
+/* Lockup horizontal do logo oficial: simbolo + palavra lado a lado. */
+.prova-marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.prova-marca-simbolo {
+  height: 38px;
+  width: auto;
+}
+.prova-marca-palavra {
+  height: 15px;
+  width: auto;
+  /* A palavra vem palida do arquivo original; sobre a foto ela precisa de
+     um pouco mais de presenca sem virar branco puro. */
+  opacity: 0.92;
+}
+@media (max-width: 520px) {
+  .prova-marca-palavra {
+    display: none;
+  }
+}
+
+/* Os links do menu somem abaixo de 900px em vez de virarem hambúrguer: um
+   menu de 5 itens numa LP de rolagem única não justifica JavaScript de
+   runtime, e as seções continuam alcançáveis rolando. */
+.prova-nav-links {
+  display: none;
+  gap: clamp(18px, 2.2vw, 34px);
+  margin-inline: auto;
+}
+@media (min-width: 900px) {
+  .prova-nav-links {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.prova-nav-links a {
+  font-family: var(--hzn-font-sans);
+  font-size: 0.9rem;
+  color: rgba(232, 238, 247, 0.78);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+.prova-nav-links a:hover {
+  color: var(--gelo);
+  border-bottom-color: var(--sinal);
+}
+
+.prova-nav a.prova-nav-cta {
+  font-family: var(--hzn-font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--hzn-text-inverse);
+  background: var(--sinal);
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.prova-nav a.prova-nav-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--hzn-glow-amber);
+}
+
+/* Bloco de texto centralizado na vertical do herói. A nav ocupa a primeira
+   faixa do grid e o marcador de rolagem a última, então centrar aqui é
+   centrar no espaço que sobra entre os dois, que é o que o olho lê como
+   meio da tela. */
+.prova-heroi-corpo {
+  align-self: center;
+  width: 100%;
+  max-width: var(--hzn-container-max);
+  margin-inline: auto;
+  padding-inline: var(--hzn-container-padding);
+  padding-block: clamp(24px, 4vh, 48px);
+}
+
+/* Sem o eyebrow, a manchete é o primeiro elemento do bloco e não precisa
+   mais do espaço que existia acima dela. */
+.prova-heroi-corpo > h1 {
+  margin-top: 0;
+}
+
+/* O eyebrow usa o claro da própria névoa. A versão anterior tinha um acento
+   quente, justificado por uma faixa de brasa que a foto antiga tinha no
+   horizonte; esta fotografia é inteiramente fria, então aquele acento virou
+   enfeite sem âncora e saiu. A paleta continua nascendo da imagem. */
+.prova-eyebrow {
+  font-family: var(--hzn-font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--neve);
+  margin: 0 0 clamp(20px, 3vh, 34px);
+}
+
+.prova-heroi h1 {
+  font-family: var(--prova-display);
+  font-variation-settings: "SOFT" 0, "WONK" 1, "opsz" 120;
+  font-weight: 400;
+  /* Escala recalibrada para a manchete longa (79 caracteres). Na frase curta
+     anterior 5.6rem respirava; aqui ela tomaria o herói inteiro. */
+  font-size: clamp(2.2rem, 5.4vw, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.026em;
+  color: var(--gelo);
+  margin: 0;
+  max-width: 19ch;
+  text-wrap: balance;
+}
+
+.prova-heroi-sub {
+  font-family: var(--hzn-font-sans);
+  font-size: clamp(1.02rem, 1.35vw, 1.2rem);
+  line-height: 1.62;
+  color: rgba(232, 238, 247, 0.82);
+  max-width: 56ch;
+  /* `pretty` evita a última linha órfã, que aqui deixava "certo" sozinho. */
+  text-wrap: pretty;
+  margin: clamp(22px, 3.4vh, 34px) 0 0;
+}
+
+.prova-heroi-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(16px, 2.4vw, 28px);
+  margin-top: clamp(28px, 4vh, 44px);
+}
+
+.prova-acao-forte {
+  font-family: var(--hzn-font-sans);
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--hzn-text-inverse);
+  background: var(--sinal);
+  padding: 0.92rem 1.7rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.prova-acao-forte:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--hzn-glow-amber);
+}
+
+.prova-acao-fraca {
+  font-family: var(--hzn-font-sans);
+  font-size: 0.98rem;
+  color: rgba(232, 238, 247, 0.9);
+  text-decoration: none;
+  border-bottom: 1px solid var(--neve);
+  padding-bottom: 3px;
+  transition: color 200ms ease;
+}
+.prova-acao-fraca:hover {
+  color: var(--gelo);
+}
+
+/* Marcador de rolagem: fino, discreto, some no primeiro scroll */
+.prova-rolar {
+  justify-self: center;
+  padding-bottom: var(--hzn-space-8);
+  font-family: var(--hzn-font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(143, 166, 196, 0.6);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CORPO — a descida da bruma até o chão
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-corpo {
+  background: linear-gradient(to bottom, var(--noite) 0%, #0b111d 55%, var(--hzn-bg-muted) 100%);
+}
+
+.prova-bloco {
+  width: 100%;
+  max-width: var(--hzn-container-max);
+  margin-inline: auto;
+  padding-inline: var(--hzn-container-padding);
+  padding-block: clamp(72px, 11vh, 132px);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+.prova-bloco:last-of-type {
+  border-bottom: 0;
+}
+
+.prova-bloco > .prova-eyebrow {
+  color: var(--hzn-text-muted);
+}
+
+.prova-bloco h2 {
+  font-family: var(--prova-display);
+  font-variation-settings: "SOFT" 0, "WONK" 1, "opsz" 60;
+  font-weight: 400;
+  font-size: clamp(1.9rem, 3.6vw, 3.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--gelo);
+  max-width: 20ch;
+  margin: 0 0 clamp(20px, 3vw, 32px);
+  text-wrap: balance;
+}
+
+/* Linha de apoio da dobra. Em Inter, não na serifa do título: o contraste
+   entre as duas famílias é o que faz ela ler como apoio e não como um segundo
+   título competindo com o primeiro. */
+.prova-subtitulo {
+  font-family: var(--hzn-font-sans);
+  font-size: clamp(1.1rem, 1.7vw, 1.4rem);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--neve);
+  max-width: 34ch;
+  margin: 0 0 clamp(24px, 3.4vw, 38px);
+  text-wrap: balance;
+}
+
+.prova-prosa p {
+  font-family: var(--hzn-font-sans);
+  font-size: clamp(1rem, 1.15vw, 1.09rem);
+  line-height: 1.72;
+  max-width: var(--prova-medida);
+  color: var(--hzn-text-secondary);
+  margin: 0 0 var(--hzn-space-5);
+}
+.prova-prosa p:last-child {
+  margin-bottom: 0;
+}
+
+/* O número: onde a página chega mais perto do chão */
+.prova-destaque {
+  margin: clamp(32px, 5vw, 52px) 0 0;
+  padding: clamp(24px, 3.4vw, 38px);
+  background: var(--hzn-bg-raised);
+  border: 1px solid var(--hzn-border-default);
+  border-left: 2px solid var(--sinal);
+  border-radius: 4px;
+  max-width: var(--prova-medida);
+}
+.prova-destaque dt {
+  font-family: var(--hzn-font-mono);
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+  font-weight: 500;
+  line-height: 1;
+  color: var(--hzn-brand-300);
+  letter-spacing: -0.03em;
+}
+.prova-destaque dd {
+  margin: var(--hzn-space-4) 0 0;
+  font-family: var(--hzn-font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--hzn-text-secondary);
+}
+.prova-destaque .prova-fonte {
+  display: block;
+  margin-top: var(--hzn-space-3);
+  font-family: var(--hzn-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--hzn-text-muted);
+}
+
+.prova-itens {
+  margin: clamp(32px, 5vw, 52px) 0 0;
+  display: grid;
+  gap: clamp(20px, 3vw, 34px);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 760px) {
+  .prova-itens {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.prova-item {
+  padding-top: var(--hzn-space-5);
+  border-top: 1px solid var(--hzn-border-subtle);
+}
+.prova-item dt {
+  font-family: var(--hzn-font-sans);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--gelo);
+  margin-bottom: var(--hzn-space-3);
+}
+.prova-item dd {
+  margin: 0;
+  font-family: var(--hzn-font-sans);
+  font-size: 0.97rem;
+  line-height: 1.66;
+  color: var(--hzn-text-secondary);
+  max-width: 54ch;
+}
+
+.prova-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hzn-space-4);
+  margin-top: clamp(32px, 5vw, 48px);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Acessibilidade e degradação
+   ═══════════════════════════════════════════════════════════════ */
+
+/* O skip-link vive fora do wrapper .theme-v3 (é irmão de <main> no layout
+   raiz), então herdaria o âmbar global e apareceria laranja sobre a página
+   azul no primeiro Tab. Alcançamos ele por :has() sem tocar o layout raiz,
+   que é compartilhado com a landing em produção. Valores literais: dentro
+   desta regra um var() resolveria no elemento, que está fora do escopo. */
+body:has(.theme-v3) .skip-link {
+  background: #3b82f6;
+  color: #060a12;
+}
+
+/* Sem este bloco, em modo de alto contraste o gradiente não pinta e os
+   títulos desapareceriam por completo. */
+@media (forced-colors: active) {
+  .prova-heroi::before {
+    display: none;
+  }
+  .prova-heroi h1,
+  .prova-bloco h2 {
+    color: CanvasText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Quem pediu menos movimento não recebe bruma animada. A fotografia
+     embaixo já sustenta a cena sozinha. */
+  .prova-heroi-bruma {
+    display: none;
+  }
+
+  .prova-nav a.prova-nav-cta,
+  .prova-acao-forte {
+    transition: none;
+  }
+  .prova-nav a.prova-nav-cta:hover,
+  .prova-acao-forte:hover {
+    transform: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOBRA DE ABAS
+   Estrutura da referência: título centralizado, lista vertical de
+   abas à esquerda, painel à direita, CTA embaixo. Feita em CSS puro
+   com um grupo de radio: zero JavaScript de runtime, e a navegação
+   por setas do teclado vem de graça do próprio grupo de radio.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Tipografia e ritmo da referência, com as cores da casa. Os TAMANHOS
+   cresceram por pedido do founder: esta dobra é a mais larga da página e o
+   título dela tem que caber em uma linha. O piso de cada `clamp` é o valor
+   original da referência, então nada aqui encolhe em relação ao que já
+   estava no ar; o que muda é o teto em tela grande. */
+.prova-bloco-centro {
+  /* A dobra escapa do container padrão. As outras dobras continuam nele. */
+  max-width: min(1560px, 100vw - 48px);
+  padding-inline: clamp(16px, 2vw, 28px);
+  /* Largura da coluna de texto dos painéis. Uma propriedade só, consumida
+     pelo parágrafo e pela grade do painel com ilustração, senão as duas
+     saem de sincronia e a simulação de WhatsApp fica espremida. */
+  --prova-coluna-texto: clamp(395px, 34vw, 620px);
+}
+
+.prova-bloco-centro > h2,
+.prova-bloco-centro > .prova-subtitulo,
+.prova-bloco-centro > .prova-eyebrow {
+  text-align: center;
+  margin-inline: auto;
+}
+.prova-bloco-centro > h2 {
+  font-family: var(--font-syne), sans-serif;
+  font-variation-settings: normal;
+  /* UMA linha. Medido no navegador: a largura desta frase em Syne 600 é
+     ~37,4× o tamanho da fonte, e a relação é linear. O divisor 39 deixa o
+     título sempre um pouco mais estreito que a largura útil da dobra, e o
+     teto de 39px é o maior corpo que cabe nos 1504px úteis do container
+     cheio (39 × 37,4 = 1460, com folga).
+     Abaixo de ~1080px o piso de 26px vence e a frase quebra em duas linhas:
+     manter uma linha aí exigiria corpo ilegível. A linha de corte acompanha
+     o tamanho da frase.
+     ATENÇÃO: divisor e teto valem para ESTA copy. Se o título mudar, remeça
+     (o teste em content/prova.test.ts trava a frase medida). */
+  font-size: clamp(26px, calc((100vw - 96px) / 39), 39px);
+  font-weight: 600;
+  /* 1.0, não os 0.9 da referência: lá o título era multilinha e o aperto
+     entre linhas ajudava. Em uma linha só, 0.9 apenas corta a barriga do
+     "q" e da cedilha. */
+  line-height: 1;
+  letter-spacing: normal;
+  max-width: none;
+}
+.prova-bloco-centro > .prova-subtitulo {
+  font-family: var(--font-syne), sans-serif;
+  /* ~0,67 do título, a proporção que a dobra sempre teve; acompanha o
+     teto do título (39px) para a hierarquia não sumir. */
+  font-size: clamp(18px, 1.5vw, 26px);
+  font-weight: 600;
+  line-height: 1.3;
+  max-width: 60ch;
+}
+
+.prova-abas {
+  display: grid;
+  grid-template-columns: clamp(240px, 18vw, 330px) 1fr;
+  /* Uma linha por aba, todas do tamanho do próprio rótulo, mais UMA linha
+     final que absorve a sobra. Sem ela, a altura do painel (que ocupa todas
+     as linhas) se distribui entre elas e esparrama os rótulos pela coluna. */
+  grid-template-rows: repeat(var(--abas, 6), min-content) 1fr;
+  gap: clamp(20px, 3vw, 44px);
+  column-gap: clamp(20px, 3vw, 44px);
+  row-gap: 0;
+  align-items: start;
+  margin-top: clamp(32px, 5vw, 56px);
+  min-height: 525px;
+}
+
+/* Faz input, rótulo e painel virarem itens do mesmo grid, mantendo a
+   relação de irmãos no DOM que o seletor ~ precisa. */
+.prova-aba {
+  display: contents;
+}
+
+.prova-aba input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.prova-aba label {
+  grid-column: 1;
+  font-family: var(--hzn-font-sans);
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(14px, 1.05vw, 18px);
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: uppercase;
+  /* 1.5 é a proporção da referência (21px sobre 14px), agora relativa para
+     acompanhar o corpo que cresce. */
+  line-height: 1.5;
+  /* Inativa quase apagada, como na referência, mas num azul da casa em vez
+     do branco a 13% dela: sobre o nosso fundo o branco puro esverdeia. */
+  color: rgba(143, 166, 196, 0.42);
+  /* padding da referência como piso, com o recuo à esquerda mantido para a
+     barra ativa; cresce junto com o corpo em tela grande */
+  padding: clamp(25px, 2vw, 34px) clamp(25px, 2vw, 34px) clamp(10px, 0.9vw, 15px)
+    clamp(18px, 1.4vw, 26px);
+  border-left: 2px solid var(--hzn-border-subtle);
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+.prova-aba label:hover {
+  color: rgba(232, 238, 247, 0.75);
+}
+
+.prova-aba input:checked ~ label {
+  color: var(--hzn-brand-300);
+  border-left-color: var(--sinal);
+}
+
+/* Foco visível pelo teclado: o input está escondido, então o anel precisa
+   aparecer no rótulo, senão quem navega por Tab fica sem saber onde está. */
+.prova-aba input:focus-visible ~ label {
+  outline: 2px solid var(--hzn-brand-400);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Todos os painéis ocupam a MESMA área da coluna 2, empilhados. Só o da
+   aba marcada fica visível. */
+.prova-aba-painel {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  /* `display: none` em vez de opacidade: sair de `none` RECRIA a caixa e
+     reinicia as animacoes de dentro. E o que faz a encenacao do atendimento
+     tocar de novo toda vez que a aba e selecionada, sem JavaScript. Com
+     opacidade, a animacao rodava uma vez e nunca mais. */
+  display: none;
+  min-height: 525px;
+  /* 20px/28px é o padding real da referência, medido no navegador, e vira o
+     piso; em tela grande o painel respira mais. */
+  padding: clamp(20px, 1.8vw, 34px) clamp(28px, 2.4vw, 44px);
+  background: var(--hzn-bg-raised);
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 14px;
+}
+.prova-aba input:checked ~ .prova-aba-painel {
+  display: block;
+  animation: painel-entra 240ms ease both;
+}
+/* O painel com ilustracao e grid de duas colunas; precisa vir depois para
+   ganhar do `display: block` acima. */
+.prova-aba input:checked ~ .prova-aba-painel-visual {
+  display: grid;
+}
+
+@keyframes painel-entra {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.prova-aba-painel h3 {
+  font-family: var(--font-syne), sans-serif;
+  font-variation-settings: normal;
+  font-weight: 600;
+  font-size: clamp(22px, 1.6vw, 30px);
+  line-height: 1.05;
+  letter-spacing: normal;
+  color: var(--hzn-brand-200);
+  margin: 0 0 clamp(18px, 1.5vw, 26px);
+}
+.prova-aba-painel p {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: clamp(14px, 1.05vw, 18px);
+  font-weight: 400;
+  /* 1.4 é a proporção da referência (19.6px sobre 14px), agora relativa. */
+  line-height: 1.4;
+  color: var(--gelo);
+  max-width: var(--prova-coluna-texto, 395px);
+  margin: 0 0 clamp(14.4px, 1.2vw, 20px);
+}
+
+/* Em tela estreita vira empilhado: rótulo, painel, rótulo, painel. O grid de
+   duas colunas não cabe, e forçar rolagem horizontal seria pior. */
+@media (max-width: 720px) {
+  .prova-abas {
+    grid-template-columns: 1fr;
+  }
+  .prova-aba label,
+  .prova-aba-painel {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .prova-aba-painel {
+    display: none;
+  }
+  .prova-aba input:checked ~ .prova-aba-painel {
+    display: block;
+    margin-bottom: var(--hzn-space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova-aba input:checked ~ .prova-aba-painel {
+    animation: none;
+  }
+}
+
+/* CTA da dobra: contorno, não preenchido, como na referência. */
+.prova-bloco-centro .prova-cta {
+  justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIMULAÇÃO DE ATENDIMENTO NO WHATSAPP
+   Forma do WhatsApp (cauda no balão, hora, dois tiques, barra de
+   mensagem, divisor de dia), cores da casa. A encenação tem pausa
+   real antes de cada resposta, com o indicador de digitando
+   entrando e saindo. Tudo em CSS: zero JavaScript de runtime.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Sem `display` aqui, de proposito: quem liga o grid e a regra do painel
+   marcado, la em cima. Declarar `display: grid` neste seletor sobrepunha o
+   `display: none` que esconde painel nao selecionado (mesma especificidade,
+   e este vem depois no arquivo), e a simulacao ficava visivel por cima da
+   aba escolhida. As demais propriedades sao inertes enquanto o painel esta
+   escondido. */
+.prova-aba-painel-visual {
+  /* Mesma medida do parágrafo: as duas saindo de sincronia é o que espremia
+     a simulação de WhatsApp contra a borda. */
+  grid-template-columns: var(--prova-coluna-texto, 395px) minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 48px);
+  align-items: start;
+}
+@media (max-width: 1040px) {
+  .prova-aba-painel-visual {
+    grid-template-columns: 1fr;
+  }
+}
+
+.zap {
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 18px;
+  background: #070b13;
+  overflow: hidden;
+  max-width: 372px;
+  width: 100%;
+  justify-self: center;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* ─── Cabeçalho ─── */
+.zap-topo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+.zap-voltar {
+  font-size: 19px;
+  line-height: 1;
+  color: var(--hzn-brand-300);
+  margin-right: -2px;
+}
+.zap-avatar {
+  width: 31px;
+  height: 31px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sinal), var(--hzn-brand-700));
+  flex-shrink: 0;
+}
+.zap-quem {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  flex: 1;
+  min-width: 0;
+}
+.zap-quem strong {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.zap-estado {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 10.5px;
+  color: var(--hzn-brand-300);
+}
+/* Cobre o "online" enquanto a resposta esta sendo escrita, no mesmo intervalo
+   dos pontinhos no fio. Fundo solido porque ele tapa o texto de baixo. */
+.zap-digitando-rotulo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-style: normal;
+  white-space: nowrap;
+  background: rgba(22, 32, 58, 0.95);
+  padding-right: 6px;
+  color: var(--hzn-brand-300);
+  opacity: 0;
+}
+@keyframes zap-rotulo {
+  0% { opacity: 0; }
+  9% { opacity: 1; }
+  91% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.zap-icones {
+  display: flex;
+  gap: 12px;
+}
+.zap-icones i {
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid rgba(143, 166, 196, 0.5);
+  border-radius: 3px;
+}
+
+/* ─── Fio da conversa ───
+   Altura fixa com o conteudo ancorado embaixo, como uma tela de celular de
+   verdade: se a conversa crescer, o topo sai de cena em vez de esticar o
+   painel e quebrar a medida de 525px da referencia. */
+.zap-fio {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 336px;
+  overflow: hidden;
+  padding: 10px 11px 12px;
+  background-image: radial-gradient(rgba(143, 166, 196, 0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.zap-dia {
+  align-self: center;
+  margin-bottom: 8px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(22, 32, 58, 0.9);
+  font-family: var(--hzn-font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hzn-text-muted);
+}
+
+.zap-par {
+  display: flex;
+  flex-direction: column;
+}
+
+.zap-msg {
+  position: relative;
+  align-self: flex-start;
+  max-width: 82%;
+  margin: 0 0 6px;
+  padding: 6px 10px 5px;
+  border-radius: 9px 9px 9px 2px;
+  background: #16203a;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--gelo);
+}
+.zap-msg::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+/* A cauda do balao, que e o detalhe que faz a forma ser reconhecida. */
+.zap-msg::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -5px;
+  width: 8px;
+  height: 10px;
+  background: inherit;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.zap-nossa {
+  align-self: flex-end;
+  border-radius: 9px 9px 2px 9px;
+  background: #1e3a6b;
+}
+.zap-nossa::before {
+  left: auto;
+  right: -5px;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+/* O horario flutua a direita e a ultima linha o contorna, como no original.
+   Posicionado absoluto ele passava por cima do texto em balao de uma linha. */
+.zap-hora {
+  float: right;
+  margin: 5px 0 0 9px;
+  font-size: 9px;
+  line-height: 1;
+  color: rgba(232, 238, 247, 0.42);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+/* Os dois tiques de leitura ja sao azuis no WhatsApp de verdade. */
+.zap-tiques {
+  color: var(--hzn-brand-300);
+  font-size: 9.5px;
+  letter-spacing: -2px;
+}
+
+/* ─── Indicador de digitando ─── */
+.zap-digitando {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  width: 40px;
+  padding: 8px 10px;
+  margin: 0 0 6px;
+  border-radius: 9px 9px 9px 2px;
+  background: #16203a;
+}
+.zap-digitando i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(232, 238, 247, 0.55);
+  animation: zap-ponto 1.1s ease-in-out infinite;
+}
+.zap-digitando i:nth-child(2) {
+  animation-delay: 0.16s;
+}
+.zap-digitando i:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+/* Entra, segura pelo tempo da espera, e some quando a resposta chega. Colapsa
+   altura, margem e padding no fim para nao deixar buraco no fio. */
+@keyframes zap-digita {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  10% {
+    opacity: 1;
+    transform: none;
+    max-height: 34px;
+    margin-bottom: 6px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  90% {
+    opacity: 1;
+    transform: none;
+    max-height: 34px;
+    margin-bottom: 6px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-3px);
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+@keyframes zap-ponto {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+
+/* ─── O desfecho: a conversa vira compromisso ─── */
+.zap-agenda {
+  align-self: stretch;
+  margin-top: 3px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.13);
+  border: 1px solid rgba(59, 130, 246, 0.42);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.zap-agenda-selo {
+  font-family: var(--hzn-font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hzn-brand-300);
+}
+.zap-agenda strong {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.zap-agenda-nota {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 10.5px;
+  color: rgba(232, 238, 247, 0.58);
+}
+
+/* ─── Barra de mensagem ─── */
+.zap-barra {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  background: rgba(22, 32, 58, 0.95);
+  border-top: 1px solid var(--hzn-border-subtle);
+}
+.zap-campo {
+  flex: 1;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #0b111d;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11.5px;
+  color: rgba(143, 166, 196, 0.5);
+}
+.zap-enviar {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: var(--sinal);
+  flex-shrink: 0;
+}
+
+/* O balao nao pode ocupar espaco antes de chegar: com `both` e delay, ele
+   ficaria invisivel mas reservando altura, enchendo o fio e empurrando o
+   comeco da conversa para fora do recorte. Por isso colapsa altura e margem
+   ate o instante de entrar. */
+@keyframes zap-surge {
+  0% {
+    opacity: 0;
+    transform: translateY(7px) scale(0.97);
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  1% {
+    max-height: 140px;
+    margin-bottom: 6px;
+    padding-top: 6px;
+    padding-bottom: 5px;
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    max-height: 140px;
+    margin-bottom: 6px;
+    padding-top: 6px;
+    padding-bottom: 5px;
+  }
+}
+@keyframes zap-agenda-surge {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+    max-height: 0;
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+  }
+  1% {
+    max-height: 120px;
+    margin-top: 3px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-width: 1px;
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    max-height: 120px;
+    margin-top: 3px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-width: 1px;
+  }
+}
+
+/* Quem pediu menos movimento recebe a conversa inteira montada, sem encenacao,
+   e sem o indicador de digitando, que so faria sentido em movimento. */
+
+/* ─── O gatilho de reinicio ───
+   As animacoes da encenacao so existem enquanto a aba esta marcada. Ao trocar
+   de aba a propriedade `animation` some, e ao voltar ela e aplicada de novo,
+   o que faz o navegador comecar do zero. Foi o unico caminho sem JavaScript:
+   `display: none` sozinho NAO reinicia animacao ja concluida, porque o
+   `fill: both` segura o estado final e reexibir nao retoca o que terminou.
+   Medido no navegador antes e depois. */
+.prova-aba input:checked ~ .prova-aba-painel .zap-msg {
+  animation: zap-surge 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .zap-digitando {
+  animation: zap-digita calc(var(--dur) * 1s) linear both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .zap-agenda {
+  animation: zap-agenda-surge 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .zap-digitando-rotulo {
+  animation: zap-rotulo calc(var(--dur) * 1s) linear both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova-aba input:checked ~ .prova-aba-painel .zap-msg,
+  .prova-aba input:checked ~ .prova-aba-painel .zap-agenda {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .prova-aba input:checked ~ .prova-aba-painel .zap-digitando,
+  .prova-aba input:checked ~ .prova-aba-painel .zap-digitando-rotulo {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIMULAÇÃO DE AUTOMAÇÃO N8N (aba CRM Automation)
+   Um pipeline plausível executando no editor do n8n, com a cara
+   REAL da ferramenta por instrução explícita do founder: canvas
+   escuro #2d2e3e com malha de pontos, nós quadrados com o nome
+   embaixo, gatilho de borda esquerda arredondada, rosa #ea4b71,
+   check verde de sucesso e o rótulo "1 item" na saída. O destino
+   é um contato do HubSpot, também com a identidade real: cartão
+   claro, slate #33475b, laranja #ff7a59. Uso nominativo das
+   ferramentas que as automações da casa usam; nenhum logo em
+   arquivo, os ícones são formas desenhadas em CSS.
+
+   A mecânica é a mesma da simulação de WhatsApp: tudo em CSS,
+   zero JavaScript de runtime, e as animações declaradas SÓ sob a
+   aba marcada, então a cena recomeça a cada seleção da aba.
+
+   Os elementos ficam no estado FINAL e os keyframes definem só o
+   `from`: o destino de cada animação é o próprio estado base.
+   Assim, `animation: none` (movimento reduzido) entrega a cena
+   montada.
+   ═══════════════════════════════════════════════════════════════ */
+
+.n8n {
+  border: 1px solid rgba(86, 88, 115, 0.55);
+  border-radius: 18px;
+  background: #2d2e3e;
+  overflow: hidden;
+  max-width: 372px;
+  width: 100%;
+  justify-self: center;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* ─── Topbar do editor: nome do workflow e o toggle Active ─── */
+.n8n-topo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: #262838;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.n8n-volta {
+  font-size: 16px;
+  line-height: 1;
+  color: #9a9cb0;
+}
+.n8n-nome {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #e8e9f0;
+}
+.n8n-ativo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  font-family: var(--hzn-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9a9cb0;
+}
+.n8n-toggle {
+  position: relative;
+  width: 20px;
+  height: 11px;
+  border-radius: 999px;
+  background: #2fbf71;
+}
+.n8n-toggle::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* ─── Canvas com a malha pontilhada do n8n ─── */
+.n8n-tela {
+  padding: 24px 14px 16px;
+  background-color: #2d2e3e;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 14px 14px;
+}
+.n8n-fluxo {
+  display: flex;
+  align-items: flex-start;
+}
+.n8n-passo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Nó do n8n: quadrado arredondado com o ícone no centro e o nome embaixo.
+   Estado final: aceso, com o check verde de sucesso no canto. */
+.n8n-no {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: #414258;
+  border: 1.5px solid #565873;
+}
+/* Assinatura do n8n: nó de gatilho tem a borda esquerda arredondada. */
+.n8n-no-webhook {
+  border-radius: 28px 10px 10px 28px;
+}
+.n8n-rotulo {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9.5px;
+  line-height: 1.2;
+  color: #c3c5d9;
+  text-align: center;
+}
+
+/* Ícones desenhados em CSS, um por tipo de nó. */
+.n8n-icone {
+  position: relative;
+  display: block;
+}
+.n8n-no-webhook .n8n-icone {
+  width: 13px;
+  height: 17px;
+  background: #ea4b71;
+  clip-path: polygon(56% 0, 0 60%, 38% 60%, 30% 100%, 100% 36%, 54% 36%);
+}
+.n8n-no-code .n8n-icone::before {
+  content: "{ }";
+  font-family: var(--hzn-font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: #9db4ff;
+}
+/* O jogo da HubSpot: asterisco de seis pontas em laranja. */
+.n8n-no-hubspot .n8n-icone,
+.n8n-no-hubspot .n8n-icone::before,
+.n8n-no-hubspot .n8n-icone::after {
+  width: 3px;
+  height: 16px;
+  border-radius: 2px;
+  background: #ff7a59;
+}
+.n8n-no-hubspot .n8n-icone::before,
+.n8n-no-hubspot .n8n-icone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.n8n-no-hubspot .n8n-icone::before {
+  transform: rotate(60deg);
+}
+.n8n-no-hubspot .n8n-icone::after {
+  transform: rotate(-60deg);
+}
+
+/* Spinner e check dividem o canto superior direito do nó, como no n8n. */
+.n8n-spinner {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #ea4b71;
+  border-radius: 50%;
+  background: #2d2e3e;
+  /* estado final: a execução acabou, o spinner já saiu de cena */
+  opacity: 0;
+}
+.n8n-check {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #2fbf71;
+  border: 2px solid #2d2e3e;
+  font-style: normal;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Fio horizontal entre nós, na altura do centro do quadrado, com o
+   rótulo de itens que o n8n mostra depois da execução. */
+.n8n-fio {
+  position: relative;
+  flex: 1;
+  min-width: 26px;
+  height: 2px;
+  margin-top: 27px;
+  background: #5c5f70;
+}
+.n8n-itens {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-style: normal;
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: #2fbf71;
+}
+.n8n-pulso {
+  position: absolute;
+  left: -3px;
+  top: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ea4b71;
+  box-shadow: 0 0 8px rgba(234, 75, 113, 0.9);
+  /* estado final: nada trafegando */
+  opacity: 0;
+}
+
+/* ─── O desfecho: o contato no HubSpot, na identidade clara deles ─── */
+.n8n-card {
+  margin: 0 12px 12px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #cbd6e2;
+  overflow: hidden;
+}
+.n8n-hs-topo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  background: #f5f8fa;
+  border-bottom: 1px solid #cbd6e2;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #33475b;
+}
+/* O asterisco da marca, em miniatura. */
+.n8n-hs-marca {
+  position: relative;
+  display: block;
+  width: 2.5px;
+  height: 11px;
+  border-radius: 2px;
+  background: #ff7a59;
+}
+.n8n-hs-marca::before,
+.n8n-hs-marca::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: #ff7a59;
+}
+.n8n-hs-marca::before {
+  transform: rotate(60deg);
+}
+.n8n-hs-marca::after {
+  transform: rotate(-60deg);
+}
+.n8n-hs-corpo {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 10px 12px 12px;
+}
+.n8n-hs-quem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.n8n-hs-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ff7a59;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+}
+.n8n-hs-nomes {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  min-width: 0;
+}
+.n8n-hs-nomes strong {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #33475b;
+}
+.n8n-hs-nomes em {
+  font-style: normal;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9.5px;
+  color: #7c98b6;
+}
+
+/* A propriedade que a automação atualiza. O flash de fundo é o jeito que o
+   HubSpot avisa que um valor acabou de mudar. */
+.n8n-hs-prop {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0 -8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+.n8n-hs-prop-linha {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.n8n-hs-prop-rotulo {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7c98b6;
+}
+/* Os dois valores dividem o mesmo lugar; a troca é um crossfade vertical. */
+.n8n-score-valor {
+  position: relative;
+  min-width: 2ch;
+  height: 18px;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 18px;
+  color: #33475b;
+  text-align: right;
+}
+.n8n-score-antes,
+.n8n-score-depois {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+/* O "52" é o único elemento cujo estado BASE é o inicial (visível): a
+   animação dele usa `forwards` pra levá-lo embora e deixá-lo fora. */
+.n8n-score-antes {
+  color: rgba(51, 71, 91, 0.45);
+}
+.n8n-barra {
+  display: block;
+  height: 5px;
+  border-radius: 999px;
+  background: #eaf0f6;
+  overflow: hidden;
+}
+.n8n-barra-fill {
+  display: block;
+  height: 100%;
+  /* estado final; a animação parte dos 52% */
+  width: 87%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ff7a59, #ff9b82);
+}
+
+.n8n-hs-pe {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.n8n-chip,
+.n8n-selo-quente {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+.n8n-chip {
+  color: #506e91;
+  background: #eaf0f6;
+}
+.n8n-selo-quente {
+  color: #d6502c;
+  background: rgba(255, 122, 89, 0.16);
+  border: 1px solid rgba(255, 122, 89, 0.4);
+}
+
+/* ─── A encenação: só existe sob a aba marcada, então reinicia ─── */
+.prova-aba input:checked ~ .prova-aba-painel .n8n-no {
+  animation: n8n-acende 0.35s ease-out both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .n8n-spinner {
+  animation:
+    n8n-janela calc(var(--dur) * 1s) linear both,
+    n8n-gira 0.7s linear infinite;
+  animation-delay: calc(var(--inicio) * 1s), 0s;
+}
+.prova-aba input:checked ~ .prova-aba-painel .n8n-check {
+  animation: n8n-confirma 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc((var(--inicio) + var(--dur)) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .n8n-itens {
+  animation: n8n-pop 0.25s ease-out both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .n8n-pulso {
+  animation: n8n-percorre calc(var(--dur) * 1s) ease-in-out both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .n8n-hs-prop {
+  animation: n8n-flash 1.6s ease-out both;
+  animation-delay: calc((var(--carta) + 0.45) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .n8n-barra-fill {
+  animation: n8n-carrega 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--carta) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .n8n-score-antes {
+  animation: n8n-sai 0.3s ease-in forwards;
+  animation-delay: calc((var(--carta) + 0.7) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .n8n-score-depois {
+  animation: n8n-entra 0.3s ease-out both;
+  animation-delay: calc((var(--carta) + 0.7) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .n8n-chip {
+  animation: n8n-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc((var(--carta) + 1) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .n8n-selo-quente {
+  animation: n8n-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc((var(--carta) + 1.3) * 1s);
+}
+
+/* Keyframes só com `from`: o destino é o estado base (final) do elemento. */
+@keyframes n8n-acende {
+  from {
+    opacity: 0.45;
+    border-color: rgba(86, 88, 115, 0.4);
+  }
+}
+@keyframes n8n-janela {
+  0% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes n8n-gira {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@keyframes n8n-confirma {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+@keyframes n8n-percorre {
+  0% {
+    left: -3px;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    left: calc(100% - 3px);
+    opacity: 0;
+  }
+}
+@keyframes n8n-flash {
+  0% {
+    background: rgba(255, 122, 89, 0);
+  }
+  20% {
+    background: rgba(255, 122, 89, 0.18);
+  }
+  100% {
+    background: rgba(255, 122, 89, 0);
+  }
+}
+@keyframes n8n-carrega {
+  from {
+    width: 52%;
+  }
+}
+@keyframes n8n-sai {
+  to {
+    opacity: 0;
+    transform: translateY(-9px);
+  }
+}
+@keyframes n8n-entra {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+}
+@keyframes n8n-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+/* Movimento reduzido: a cena aparece montada, sem execução. O "52", o
+   spinner e o pulso somem na mão porque o estado final deles é "já saiu
+   de cena", e quem os tirava era a animação. */
+@media (prefers-reduced-motion: reduce) {
+  .prova-aba input:checked ~ .prova-aba-painel .n8n-no,
+  .prova-aba input:checked ~ .prova-aba-painel .n8n-check,
+  .prova-aba input:checked ~ .prova-aba-painel .n8n-itens,
+  .prova-aba input:checked ~ .prova-aba-painel .n8n-hs-prop,
+  .prova-aba input:checked ~ .prova-aba-painel .n8n-barra-fill,
+  .prova-aba input:checked ~ .prova-aba-painel .n8n-score-depois,
+  .prova-aba input:checked ~ .prova-aba-painel .n8n-chip,
+  .prova-aba input:checked ~ .prova-aba-painel .n8n-selo-quente {
+    animation: none;
+  }
+  .prova-aba input:checked ~ .prova-aba-painel .n8n-spinner,
+  .prova-aba input:checked ~ .prova-aba-painel .n8n-pulso,
+  .prova-aba input:checked ~ .prova-aba-painel .n8n-score-antes {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIMULAÇÃO DO SISTEMA DE QUALIFICAÇÃO DE LEADS
+   Três atores empilhados num cartão só: o formulário de captação
+   no topo, o funil de três estágios em trapézio (clip-path) no
+   meio e o CRM na base, recebendo os qualificados com selo verde.
+   O movimento contínuo é a chuva de leads: gotas nascem sob o
+   formulário e caem pelo funil em loop com delays escalonados,
+   como os pontinhos de digitação do WhatsApp; a profundidade da
+   queda de cada gota é a filtragem, umas morrem na borda do
+   estágio, outras atravessam até a saída. Paleta inteira da casa,
+   mais o verde de sucesso que a página já usa; nenhuma marca de
+   terceiro, nenhum arquivo de imagem.
+
+   A mecânica é a mesma das outras simulações: tudo em CSS, zero
+   JavaScript de runtime, e as animações declaradas SÓ sob a aba
+   marcada, então a cena recomeça a cada seleção da aba.
+
+   Os elementos ficam no estado FINAL e os keyframes definem só o
+   `from`: o destino de cada animação é o próprio estado base.
+   Assim, `animation: none` (movimento reduzido) entrega a cena
+   montada; as gotas em trânsito, cujo estado final é "já saiu de
+   cena", somem na mão nesse modo.
+   ═══════════════════════════════════════════════════════════════ */
+
+.funil {
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 18px;
+  background: #070b13;
+  overflow: hidden;
+  max-width: 372px;
+  width: 100%;
+  justify-self: center;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* ─── Topbar: nome do sistema e o pulso de "ao vivo" ─── */
+.funil-topo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+.funil-nome {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.funil-vivo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  font-family: var(--hzn-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2fbf71;
+}
+.funil-vivo i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2fbf71;
+  box-shadow: 0 0 6px rgba(47, 191, 113, 0.8);
+}
+
+/* ─── A cena, com a mesma malha pontilhada dos outros cartões ─── */
+.funil-cena {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px 14px;
+  background-image: radial-gradient(rgba(143, 166, 196, 0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* ─── O formulário de captação ─── */
+.funil-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(22, 32, 58, 0.85);
+  border: 1px solid var(--hzn-border-default);
+}
+.funil-form-titulo {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.funil-campo {
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: #0b111d;
+  border: 1px solid var(--hzn-border-subtle);
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9.5px;
+  color: rgba(143, 166, 196, 0.65);
+}
+.funil-botao {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--sinal);
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--hzn-text-inverse);
+}
+
+/* ─── O funil: três trapézios que continuam um no outro ───
+   As larguras encadeiam de propósito: a boca de cada estágio tem a
+   largura da saída do anterior (100 → 78 → 56 → 38% da coluna), então
+   os três leem como um funil só apesar de serem blocos separados. */
+.funil-afunila {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.funil-estagio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+}
+.funil-estagio-1 {
+  width: 100%;
+  clip-path: polygon(0 0, 100% 0, 89% 100%, 11% 100%);
+  background: linear-gradient(rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.13));
+}
+.funil-estagio-2 {
+  width: 78%;
+  clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%);
+  background: linear-gradient(rgba(59, 130, 246, 0.3), rgba(59, 130, 246, 0.21));
+}
+/* O último estágio vira verde: é onde o lead deixa de ser tráfego e
+   passa a ser venda, o mesmo verde do selo no CRM logo abaixo. */
+.funil-estagio-3 {
+  width: 56%;
+  clip-path: polygon(0 0, 100% 0, 84% 100%, 16% 100%);
+  background: linear-gradient(rgba(47, 191, 113, 0.28), rgba(47, 191, 113, 0.18));
+}
+.funil-estagio-nome {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.funil-estagio-qtd {
+  font-family: var(--hzn-font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--hzn-brand-200);
+}
+.funil-estagio-3 .funil-estagio-qtd {
+  color: #8ce8b8;
+}
+
+/* ─── A chuva de leads ───
+   Camada absoluta sobre o funil. Cada gota nasce um pouco acima da boca
+   (embaixo do formulário) e desce `--queda` px enquanto `--desvio` a puxa
+   pro eixo central, acompanhando o afunilamento. Estado final: fora de
+   cena, por isso a opacidade base é 0. */
+.funil-chuva {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.funil-gota {
+  position: absolute;
+  top: -8px;
+  left: var(--x);
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  border-radius: 50%;
+  background: var(--hzn-brand-300);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.9);
+  opacity: 0;
+}
+
+/* ─── A base: o CRM recebendo só quem atravessou ─── */
+.funil-crm {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px 11px 11px;
+  border-radius: 10px;
+  background: rgba(22, 32, 58, 0.85);
+  border: 1px solid var(--hzn-border-default);
+}
+.funil-crm-topo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--hzn-border-subtle);
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--hzn-brand-300);
+}
+/* Ícone de quadro kanban: quatro quadradinhos pintados por gradiente,
+   sem arquivo de imagem. */
+.funil-crm-marca {
+  width: 10px;
+  height: 10px;
+  background-image:
+    linear-gradient(var(--hzn-brand-300), var(--hzn-brand-300)),
+    linear-gradient(var(--hzn-brand-300), var(--hzn-brand-300)),
+    linear-gradient(var(--hzn-brand-300), var(--hzn-brand-300)),
+    linear-gradient(var(--hzn-brand-300), var(--hzn-brand-300));
+  background-size: 4px 4px;
+  background-position: 0 0, 6px 0, 0 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+.funil-lead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.funil-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sinal), var(--hzn-brand-700));
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  color: var(--gelo);
+  flex-shrink: 0;
+}
+.funil-lead-nomes {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+  min-width: 0;
+}
+.funil-lead-nomes strong {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.funil-lead-nomes em {
+  font-style: normal;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9px;
+  color: var(--hzn-text-muted);
+}
+.funil-selo {
+  margin-left: auto;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #2fbf71;
+  background: rgba(47, 191, 113, 0.12);
+  border: 1px solid rgba(47, 191, 113, 0.38);
+}
+
+/* ─── A encenação: só existe sob a aba marcada, então reinicia ─── */
+.prova-aba input:checked ~ .prova-aba-painel .funil-form {
+  animation: funil-entra 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-campo {
+  animation: funil-entra 0.3s ease-out both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+/* Duas animações sem conflito de propriedade: a entrada só mexe na
+   opacidade e o clique só no transform. Se as duas mexessem no transform,
+   o preenchimento retroativo da segunda apagaria o deslize da primeira. */
+.prova-aba input:checked ~ .prova-aba-painel .funil-botao {
+  animation:
+    funil-surge 0.3s ease-out both,
+    funil-clica 0.4s ease both;
+  animation-delay: calc(var(--inicio) * 1s), calc(var(--clique) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-estagio {
+  animation: funil-acende 0.45s ease-out both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-estagio-qtd {
+  animation: funil-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-crm {
+  animation: funil-entra 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-lead {
+  animation: funil-entra 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-selo {
+  animation: funil-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+/* As infinitas também vivem só aqui, pelo mesmo motivo das one-shot. */
+.prova-aba input:checked ~ .prova-aba-painel .funil-gota {
+  animation: funil-cai calc(var(--ciclo) * 1s) linear infinite;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .funil-vivo i {
+  animation: funil-pulsa 1.6s ease-in-out infinite;
+}
+
+/* Keyframes só com `from`: o destino é o estado base (final) do elemento. */
+@keyframes funil-entra {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+}
+@keyframes funil-surge {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes funil-acende {
+  from {
+    opacity: 0.18;
+  }
+}
+@keyframes funil-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+/* O aperto do botão: afunda e volta, começa e termina no estado base. */
+@keyframes funil-clica {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(0.92);
+  }
+}
+/* A gota é transiente: entra, cai e some onde a filtragem manda. */
+@keyframes funil-cai {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  84% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(var(--desvio) * 1px), calc(var(--queda) * 1px));
+    opacity: 0;
+  }
+}
+@keyframes funil-pulsa {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Movimento reduzido: a cena aparece montada, sem encenação. As gotas
+   somem na mão porque o estado final delas é "já saiu de cena", e quem
+   as tirava era a animação. */
+@media (prefers-reduced-motion: reduce) {
+  .prova-aba input:checked ~ .prova-aba-painel .funil-form,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-campo,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-botao,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-estagio,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-estagio-qtd,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-crm,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-lead,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-selo,
+  .prova-aba input:checked ~ .prova-aba-painel .funil-vivo i {
+    animation: none;
+  }
+  .prova-aba input:checked ~ .prova-aba-painel .funil-gota {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIMULAÇÃO DE ÁREA DE MEMBROS (aba Sistemas de Treinamento)
+   Uma área de membros pequena, tipo Academy: cabeçalho fino com a
+   marca e o aluno, grade 2x2 de módulos (dois de vendas, dois de
+   Claude) e a linha de continuar assistindo no rodapé. Os módulos
+   de Claude usam o coral da marca (#d97757) e um asterisco de seis
+   pontas desenhado em CSS: uso nominativo da ferramenta que os
+   treinamentos da casa ensinam, por decisão explícita do founder;
+   nenhum arquivo de logo. Os de vendas ficam no azul da casa.
+
+   A mecânica é a mesma das simulações de WhatsApp e n8n: tudo em
+   CSS, zero JavaScript de runtime, linha do tempo calculada no
+   servidor e entregue em custom properties, e as animações
+   declaradas SÓ sob a aba marcada, então a cena recomeça a cada
+   seleção da aba.
+
+   Os elementos ficam no estado FINAL e os keyframes definem só o
+   `from`: o destino de cada animação é o próprio estado base.
+   Assim, `animation: none` (movimento reduzido) entrega a cena
+   montada.
+   ═══════════════════════════════════════════════════════════════ */
+
+.memb {
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 18px;
+  background: #070b13;
+  overflow: hidden;
+  max-width: 372px;
+  width: 100%;
+  justify-self: center;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* ─── Cabeçalho: a marca da área e o aluno logado ─── */
+.memb-topo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+.memb-marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--gelo);
+}
+/* O símbolo da plataforma: um quadrado arredondado com um play, o
+   glifo universal de plataforma de aulas. */
+.memb-marca-simbolo {
+  position: relative;
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, var(--sinal), var(--hzn-brand-700));
+  flex-shrink: 0;
+}
+.memb-marca-simbolo::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 7px;
+  background: #fff;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.memb-aluno {
+  margin-left: auto;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 10px;
+  color: rgba(232, 238, 247, 0.6);
+}
+.memb-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sinal), var(--hzn-brand-700));
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* ─── Grade 2x2 de módulos, sobre a mesma malha pontilhada sutil
+   das outras simulações ─── */
+.memb-grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 12px;
+  background-image: radial-gradient(rgba(143, 166, 196, 0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.memb-cartao {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(22, 32, 58, 0.55);
+  border: 1px solid var(--hzn-border-subtle);
+}
+
+/* ─── Thumbnail: bloco de cor com o glifo do tema ─── */
+.memb-thumb {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  background: linear-gradient(135deg, #1e3a6b, #16203a);
+}
+/* Os módulos de Claude ganham o coral da marca sobre um escuro
+   levemente quente, para o cartão contar de longe qual trilha é. */
+.memb-claude .memb-thumb {
+  background:
+    linear-gradient(135deg, rgba(217, 119, 87, 0.3), rgba(217, 119, 87, 0.06)),
+    #1a1412;
+}
+
+/* Glifo de vendas: o botão de play das aulas. */
+.memb-play {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(232, 238, 247, 0.14);
+  border: 1.5px solid rgba(232, 238, 247, 0.55);
+}
+.memb-play::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  width: 9px;
+  height: 11px;
+  background: var(--gelo);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+/* Glifo de Claude: asterisco de seis pontas no coral da marca, três
+   barras rotacionadas, mesma construção do asterisco do HubSpot na
+   simulação de n8n. */
+.memb-asterisco {
+  position: relative;
+  display: block;
+  width: 3.5px;
+  height: 21px;
+  border-radius: 3px;
+  background: #d97757;
+}
+.memb-asterisco::before,
+.memb-asterisco::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  background: #d97757;
+}
+.memb-asterisco::before {
+  transform: rotate(60deg);
+}
+.memb-asterisco::after {
+  transform: rotate(-60deg);
+}
+
+/* O selo do módulo 100%. Estado final: visível; a animação o faz
+   pingar quando a barra dele termina de encher. */
+.memb-selo {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 2.5px 8px;
+  border-radius: 999px;
+  background: #2fbf71;
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* ─── Corpo do cartão: título, contagem de aulas e a barra ───
+   `margin-top: auto` na linha de meta ancora meta e barra no pé do
+   cartão, então título de uma linha e de duas alinham igual. */
+.memb-corpo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px 10px;
+  flex: 1;
+}
+.memb-titulo {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--gelo);
+}
+.memb-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: auto;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 8.5px;
+  color: var(--hzn-text-muted);
+}
+/* O percentual entra junto com a barra, não com o cartão. */
+.memb-pct {
+  font-style: normal;
+  font-family: var(--hzn-font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--hzn-brand-300);
+}
+.memb-claude .memb-pct {
+  color: #e59a7f;
+}
+
+.memb-trilho {
+  display: block;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(143, 166, 196, 0.18);
+  overflow: hidden;
+}
+/* Estado final: a barra já cheia até o progresso do módulo, que
+   chega do servidor em `--fim`; a animação parte do zero. */
+.memb-barra {
+  display: block;
+  height: 100%;
+  width: var(--fim, 100%);
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--sinal), var(--hzn-brand-400));
+}
+.memb-claude .memb-barra {
+  background: linear-gradient(90deg, #d97757, #e59a7f);
+}
+
+/* ─── Rodapé: continuar assistindo, o convite de volta à trilha ─── */
+.memb-rodape {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-top: 1px solid var(--hzn-border-subtle);
+}
+.memb-rodape-play {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--sinal);
+  flex-shrink: 0;
+}
+.memb-rodape-play::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  width: 9px;
+  height: 10px;
+  background: #fff;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.memb-rodape-texto {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+  min-width: 0;
+}
+.memb-rodape-texto em {
+  font-style: normal;
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hzn-brand-300);
+}
+.memb-rodape-texto strong {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gelo);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.memb-rodape-seta {
+  margin-left: auto;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--hzn-brand-300);
+}
+
+/* ─── A encenação: só existe sob a aba marcada, então reinicia ───
+   As custom properties chegam do cartão por herança: `--inicio` é a
+   entrada, `--barra` e `--dur` são o intervalo da barra, `--selo` é
+   o instante do selo. O pulso do play do rodapé herda o `--inicio`
+   do próprio rodapé e só começa depois que ele assenta. */
+.prova-aba input:checked ~ .prova-aba-painel .memb-cartao {
+  animation: memb-surge 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .memb-barra {
+  animation: memb-enche calc(var(--dur) * 1s) cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--barra) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .memb-pct {
+  animation: memb-aparece 0.35s ease-out both;
+  animation-delay: calc(var(--barra) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .memb-selo {
+  animation: memb-pinga 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(var(--selo) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .memb-rodape {
+  animation: memb-chega 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .memb-rodape-play {
+  animation: memb-pulsa 2.4s ease-in-out infinite;
+  animation-delay: calc((var(--inicio) + 0.6) * 1s);
+}
+
+/* Keyframes só com `from`: o destino é o estado base (final). */
+@keyframes memb-surge {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+}
+@keyframes memb-enche {
+  from {
+    width: 0;
+  }
+}
+@keyframes memb-aparece {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes memb-pinga {
+  from {
+    opacity: 0;
+    transform: scale(0.4) translateY(-5px);
+  }
+}
+@keyframes memb-chega {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+/* O único laço da cena: um anel discreto respirando no play do
+   rodapé depois que a sequência termina. */
+@keyframes memb-pulsa {
+  from {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+  }
+  to {
+    box-shadow: 0 0 0 7px rgba(59, 130, 246, 0);
+  }
+}
+
+/* Movimento reduzido: a cena aparece montada. Nada aqui "sai de
+   cena": todo elemento tem estado final visível, então basta
+   desligar as animações, sem esconder nada na mão. */
+@media (prefers-reduced-motion: reduce) {
+  .prova-aba input:checked ~ .prova-aba-painel .memb-cartao,
+  .prova-aba input:checked ~ .prova-aba-painel .memb-barra,
+  .prova-aba input:checked ~ .prova-aba-painel .memb-pct,
+  .prova-aba input:checked ~ .prova-aba-painel .memb-selo,
+  .prova-aba input:checked ~ .prova-aba-painel .memb-rodape,
+  .prova-aba input:checked ~ .prova-aba-painel .memb-rodape-play {
+    animation: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIMULAÇÃO DO SISTEMA DE PROSPECÇÃO (stack de ferramentas)
+   As ferramentas reais da esteira em balões flutuando em volta do
+   núcleo Prospecção, cada uma com a própria identidade por decisão
+   explícita do founder, no precedente do n8n rosa e do HubSpot
+   laranja das outras abas: n8n #ea4b71, Python #3776ab e #ffd43b,
+   Sales Navigator #0a66c2, Instagram no gradiente da marca, Tavily
+   em azul, WhatsApp #25d366, Claude #d97757. Uso nominativo do que
+   a operação usa de verdade; nenhum logo em arquivo, todo ícone é
+   forma desenhada em CSS ou wordmark em texto.
+
+   A mecânica é a mesma das outras simulações: tudo em CSS, zero
+   JavaScript de runtime, e as animações declaradas SÓ sob a aba
+   marcada, então a cena recomeça a cada seleção da aba. Isso vale
+   inclusive para os loops (flutuação, radar, farol).
+
+   Os elementos ficam no estado FINAL e os keyframes de entrada
+   definem só o `from`: o destino de cada animação é o próprio
+   estado base. Assim, `animation: none` (movimento reduzido)
+   entrega a cena montada e parada.
+   ═══════════════════════════════════════════════════════════════ */
+
+.stack {
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 18px;
+  background: var(--noite);
+  overflow: hidden;
+  max-width: 372px;
+  width: 100%;
+  justify-self: center;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* ─── Cabeçalho: nome do painel e o farol de operação ─── */
+.stack-topo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+.stack-farol {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2fbf71;
+  box-shadow: 0 0 8px rgba(47, 191, 113, 0.8);
+  flex-shrink: 0;
+}
+.stack-topo strong {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.stack-estado {
+  margin-left: auto;
+  font-family: var(--hzn-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hzn-brand-300);
+}
+
+/* ─── Palco: altura fixa, malha pontilhada da casa e um halo azul
+   atrás do núcleo para os balões coloridos saltarem do fundo frio ─── */
+.stack-palco {
+  position: relative;
+  height: 404px;
+  overflow: hidden;
+  background-color: var(--noite);
+  background-image: radial-gradient(rgba(143, 166, 196, 0.06) 1px, transparent 1px);
+  background-size: 15px 15px;
+}
+.stack-palco::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 47%, rgba(59, 130, 246, 0.13), rgba(59, 130, 246, 0) 58%);
+}
+
+/* ─── Raios: linhas finas do núcleo até cada balão ───
+   Ancorados no centro do núcleo e girados pelo ângulo calculado no
+   servidor. As duas pontas somem no degradê e terminam DEBAIXO do
+   núcleo e do balão, que têm fundo opaco: é o que permite geometria
+   fixa num cartão de largura fluida sem nenhuma emenda aparecer. */
+.stack-raio {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: calc(var(--comp) * 1px);
+  height: 1px;
+  transform-origin: 0 50%;
+  transform: rotate(calc(var(--ang) * 1deg));
+  background: linear-gradient(
+    90deg,
+    rgba(143, 166, 196, 0) 4%,
+    rgba(143, 166, 196, 0.4) 30%,
+    rgba(143, 166, 196, 0.32) 68%,
+    rgba(143, 166, 196, 0) 96%
+  );
+}
+
+/* ─── Núcleo: o único elemento na cor da casa, de propósito.
+   As marcas de terceiros orbitam; o centro é Horizon. ─── */
+.stack-nucleo {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  z-index: 3;
+  width: 96px;
+  height: 96px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(147, 197, 253, 0.4), rgba(147, 197, 253, 0) 58%),
+    linear-gradient(140deg, var(--sinal), var(--hzn-brand-700));
+  border: 1px solid rgba(147, 197, 253, 0.55);
+  box-shadow: 0 0 36px rgba(59, 130, 246, 0.35), 0 16px 34px -18px rgba(0, 0, 0, 0.9);
+}
+.stack-nucleo strong {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+.stack-nucleo span {
+  font-family: var(--hzn-font-mono);
+  font-size: 6.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+/* O anel do radar de prospecção. Estado final: entre um ping e outro,
+   invisível; quem o acende é a animação, só sob a aba marcada. */
+.stack-nucleo::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(96, 165, 250, 0.55);
+  opacity: 0;
+}
+
+/* ─── Balões: três camadas, um transform por camada ───
+   O wrapper posiciona (translate de centragem), a boia flutua em
+   loop (translateY) e a bola faz o pop de entrada (scale). Num
+   elemento só, cada animação atropelaria o transform da outra. */
+.stack-balao {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  z-index: 2;
+  width: calc(var(--tam) * 1px);
+  height: calc(var(--tam) * 1px);
+  transform: translate(-50%, -50%);
+}
+.stack-boia {
+  width: 100%;
+  height: 100%;
+}
+.stack-bola {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #101a30;
+  border: 1px solid var(--hzn-border-default);
+  box-shadow: 0 14px 30px -16px rgba(0, 0, 0, 0.85), 0 0 26px var(--halo, rgba(59, 130, 246, 0.1));
+}
+.stack-nome {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  max-width: 78%;
+  color: rgba(232, 238, 247, 0.88);
+}
+
+/* Cada balão recebe o halo, a borda e o tingimento interno na cor da
+   própria marca. O fundo continua opaco: é ele que esconde a ponta
+   do raio que chega por baixo. */
+.stack-n8n .stack-bola {
+  --halo: rgba(234, 75, 113, 0.2);
+  border-color: rgba(234, 75, 113, 0.5);
+  background-image: radial-gradient(circle at 32% 26%, rgba(234, 75, 113, 0.16), rgba(234, 75, 113, 0) 62%);
+}
+.stack-salesnav .stack-bola {
+  --halo: rgba(10, 102, 194, 0.28);
+  border-color: rgba(10, 102, 194, 0.6);
+  background-image: radial-gradient(circle at 32% 26%, rgba(10, 102, 194, 0.2), rgba(10, 102, 194, 0) 62%);
+}
+.stack-instagram .stack-bola {
+  --halo: rgba(214, 41, 118, 0.22);
+  border-color: rgba(214, 41, 118, 0.5);
+  background-image: radial-gradient(circle at 32% 26%, rgba(214, 41, 118, 0.16), rgba(214, 41, 118, 0) 62%);
+}
+.stack-python .stack-bola {
+  --halo: rgba(55, 118, 171, 0.28);
+  border-color: rgba(55, 118, 171, 0.6);
+  background-image: radial-gradient(circle at 32% 26%, rgba(55, 118, 171, 0.2), rgba(55, 118, 171, 0) 62%);
+}
+.stack-tavily .stack-bola {
+  --halo: rgba(74, 157, 255, 0.24);
+  border-color: rgba(74, 157, 255, 0.55);
+  background-image: radial-gradient(circle at 32% 26%, rgba(74, 157, 255, 0.16), rgba(74, 157, 255, 0) 62%);
+}
+.stack-whatsapp .stack-bola {
+  --halo: rgba(37, 211, 102, 0.22);
+  border-color: rgba(37, 211, 102, 0.5);
+  background-image: radial-gradient(circle at 32% 26%, rgba(37, 211, 102, 0.14), rgba(37, 211, 102, 0) 62%);
+}
+.stack-claude .stack-bola {
+  --halo: rgba(217, 119, 87, 0.24);
+  border-color: rgba(217, 119, 87, 0.55);
+  background-image: radial-gradient(circle at 32% 26%, rgba(217, 119, 87, 0.16), rgba(217, 119, 87, 0) 62%);
+}
+
+/* ─── Ícones e wordmarks, um por ferramenta ─── */
+
+/* n8n e Tavily se apresentam pelo próprio wordmark; balão sem rótulo. */
+.stack-marca-n8n {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ea4b71;
+}
+.stack-marca-tavily {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #4a9dff;
+}
+
+/* Python: as duas serpentes simplificadas em pílulas contrapostas,
+   azul em cima, amarela embaixo, cada uma com o olho branco. */
+.stack-icone-py {
+  position: relative;
+  width: 22px;
+  height: 22px;
+}
+.stack-icone-py i {
+  position: absolute;
+  width: 18px;
+  height: 9px;
+}
+.stack-icone-py i:first-child {
+  top: 1px;
+  left: 1px;
+  background: #3776ab;
+  border-radius: 8px 8px 3px 3px;
+}
+.stack-icone-py i:last-child {
+  bottom: 1px;
+  left: 3px;
+  background: #ffd43b;
+  border-radius: 3px 3px 8px 8px;
+}
+.stack-icone-py i::after {
+  content: "";
+  position: absolute;
+  width: 2.5px;
+  height: 2.5px;
+  border-radius: 50%;
+  background: #fff;
+}
+.stack-icone-py i:first-child::after {
+  top: 2.5px;
+  left: 3.5px;
+}
+.stack-icone-py i:last-child::after {
+  bottom: 2.5px;
+  right: 3.5px;
+}
+
+/* Sales Navigator: o crachá "in" no azul do LinkedIn. */
+.stack-icone-in {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 5px;
+  background: #0a66c2;
+  padding-bottom: 2px;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+}
+
+/* Instagram: azulejo no gradiente da marca, lente e viseira em branco. */
+.stack-icone-insta {
+  position: relative;
+  width: 23px;
+  height: 23px;
+  border-radius: 7px;
+  background: linear-gradient(45deg, #feda75 0%, #fa7e1e 26%, #d62976 52%, #962fbf 76%, #4f5bd5 100%);
+}
+.stack-icone-insta::before {
+  content: "";
+  position: absolute;
+  inset: 5.5px;
+  border: 1.8px solid #fff;
+  border-radius: 50%;
+}
+.stack-icone-insta::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 2.6px;
+  height: 2.6px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* WhatsApp: bolha verde com cauda e o fone em meia-lua branca. */
+.stack-icone-zap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: #25d366;
+}
+.stack-icone-zap::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0.5px;
+  width: 7px;
+  height: 7px;
+  background: #25d366;
+  clip-path: polygon(0 100%, 12% 0, 100% 55%);
+}
+.stack-icone-zap i {
+  width: 12px;
+  height: 12px;
+  border: 2.4px solid transparent;
+  border-left-color: #fff;
+  border-bottom-color: #fff;
+  border-radius: 50%;
+  transform: rotate(-45deg);
+}
+
+/* Claude: o resplendor coral, quatro barras giradas = oito raios. */
+.stack-icone-claude {
+  position: relative;
+  width: 21px;
+  height: 21px;
+}
+.stack-icone-claude i,
+.stack-icone-claude::before,
+.stack-icone-claude::after {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2.6px;
+  height: 21px;
+  margin-left: -1.3px;
+  border-radius: 2px;
+  background: #d97757;
+}
+.stack-icone-claude::before,
+.stack-icone-claude::after {
+  content: "";
+}
+.stack-icone-claude::after {
+  transform: rotate(90deg);
+}
+.stack-icone-claude i:first-child {
+  transform: rotate(45deg);
+}
+.stack-icone-claude i:last-child {
+  transform: rotate(135deg);
+}
+
+/* ─── Rodapé: a barra é cromo fixo; só o conteúdo entra em cena ─── */
+.stack-pe {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-top: 1px solid var(--hzn-border-subtle);
+}
+.stack-selo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.stack-ok {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #2fbf71;
+  font-style: normal;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.stack-selo span {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.stack-selo em {
+  margin-left: auto;
+  font-style: normal;
+  font-family: var(--hzn-font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hzn-brand-300);
+}
+
+/* ─── A encenação: só existe sob a aba marcada, então reinicia ───
+   Inclusive os loops. Fora da aba a propriedade `animation` some;
+   ao voltar ela é reaplicada e o navegador recomeça do zero. */
+.prova-aba input:checked ~ .prova-aba-painel .stack-nucleo {
+  animation: stack-nasce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .stack-nucleo::after {
+  animation: stack-radar 2.6s ease-out infinite;
+  animation-delay: calc((var(--inicio) + 0.55) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .stack-raio {
+  animation: stack-estende 0.4s ease-out both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .stack-bola {
+  animation: stack-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+/* Delay negativo: cada balão já acorda no meio do próprio ciclo, e a
+   flutuação nunca fica em uníssono. */
+.prova-aba input:checked ~ .prova-aba-painel .stack-boia {
+  animation: stack-flutua calc(var(--dura) * 1s) ease-in-out infinite alternate;
+  animation-delay: calc(var(--fase) * -1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .stack-farol {
+  animation: stack-pulsa 2.2s ease-in-out infinite;
+}
+.prova-aba input:checked ~ .prova-aba-painel .stack-selo {
+  animation: stack-sobe 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+
+/* Keyframes de entrada só com `from`: o destino é o estado base (final). */
+@keyframes stack-nasce {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+}
+@keyframes stack-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.3) translateY(12px);
+  }
+}
+@keyframes stack-estende {
+  from {
+    opacity: 0;
+    transform: rotate(calc(var(--ang) * 1deg)) scaleX(0);
+  }
+}
+@keyframes stack-sobe {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+}
+/* Loops: aqui `from` e `to` existem porque não são entrada, são ciclo. */
+@keyframes stack-flutua {
+  from {
+    transform: translateY(calc(var(--amp) * 1px));
+  }
+  to {
+    transform: translateY(calc(var(--amp) * -1.15px));
+  }
+}
+@keyframes stack-radar {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+@keyframes stack-pulsa {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* Movimento reduzido: a cena aparece montada e parada. O anel do radar
+   some na mão porque o estado base dele é invisível e quem o mostrava
+   era a animação. */
+@media (prefers-reduced-motion: reduce) {
+  .prova-aba input:checked ~ .prova-aba-painel .stack-nucleo,
+  .prova-aba input:checked ~ .prova-aba-painel .stack-raio,
+  .prova-aba input:checked ~ .prova-aba-painel .stack-bola,
+  .prova-aba input:checked ~ .prova-aba-painel .stack-boia,
+  .prova-aba input:checked ~ .prova-aba-painel .stack-farol,
+  .prova-aba input:checked ~ .prova-aba-painel .stack-selo {
+    animation: none;
+  }
+  .prova-aba input:checked ~ .prova-aba-painel .stack-nucleo::after {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIMULAÇÃO DE INTELIGÊNCIA DE MERCADO (radar de concorrência)
+   Um radar de espionagem clássico, verde sobre o escuro da casa:
+   o prato com anéis e mira, a varredura girando em loop, e os
+   alvos pingando NO INSTANTE em que o feixe passa por eles (o
+   ângulo do alvo vira delay, calculado no servidor). Cada alvo
+   dispara um alerta no feed de sinais interceptados, com a fonte
+   real do trabalho e a cor da marca no ponto do selo: Semrush
+   #ff642d, DataForSEO, SimilarWeb, Ahrefs. Uso nominativo por
+   decisão explícita do founder; nenhum logo em arquivo.
+
+   A mecânica é a mesma das outras simulações: tudo em CSS, zero
+   JavaScript de runtime, e as animações declaradas SÓ sob a aba
+   marcada, então a cena recomeça a cada seleção da aba. Isso
+   vale inclusive para a varredura em loop.
+
+   Os elementos ficam no estado FINAL e os keyframes de entrada
+   definem só o `from`: o destino de cada animação é o próprio
+   estado base. Assim, `animation: none` (movimento reduzido)
+   entrega a cena montada; a varredura some nesse modo, porque um
+   feixe congelado parece defeito, não radar.
+   ═══════════════════════════════════════════════════════════════ */
+
+.esp {
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 18px;
+  background: var(--noite);
+  overflow: hidden;
+  max-width: 372px;
+  width: 100%;
+  justify-self: center;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* ─── Cabeçalho: o nome do posto e o farol de plantão ─── */
+.esp-topo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: rgba(22, 32, 58, 0.95);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+.esp-farol {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2fbf71;
+  box-shadow: 0 0 8px rgba(47, 191, 113, 0.8);
+  flex-shrink: 0;
+}
+.esp-topo strong {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--gelo);
+}
+.esp-estado {
+  margin-left: auto;
+  font-family: var(--hzn-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2fbf71;
+}
+
+.esp-cena {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background-image: radial-gradient(rgba(143, 166, 196, 0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* ─── O prato do radar ─── */
+.esp-radar {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 1px solid rgba(47, 191, 113, 0.4);
+  background: radial-gradient(circle, rgba(47, 191, 113, 0.1), rgba(47, 191, 113, 0.02) 58%, rgba(47, 191, 113, 0) 72%);
+}
+.esp-anel {
+  position: absolute;
+  border: 1px solid rgba(47, 191, 113, 0.22);
+  border-radius: 50%;
+}
+.esp-anel-1 {
+  inset: 17%;
+}
+.esp-anel-2 {
+  inset: 34%;
+}
+/* A mira: as duas linhas de eixo, pintadas por gradiente. */
+.esp-mira {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    linear-gradient(rgba(47, 191, 113, 0.16), rgba(47, 191, 113, 0.16)) 50% 0 / 1px 100% no-repeat,
+    linear-gradient(90deg, rgba(47, 191, 113, 0.16), rgba(47, 191, 113, 0.16)) 0 50% / 100% 1px no-repeat;
+}
+
+/* A varredura: um cone com o rastro ATRÁS do feixe, como radar de
+   verdade. O brilho máximo fica na borda dos 360 graus, que é a linha
+   do feixe; o rastro decai contra o sentido do giro. */
+.esp-varredura {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(47, 191, 113, 0) 0deg,
+    rgba(47, 191, 113, 0) 288deg,
+    rgba(47, 191, 113, 0.04) 300deg,
+    rgba(47, 191, 113, 0.42) 356deg,
+    rgba(47, 191, 113, 0.6) 360deg
+  );
+}
+
+/* O alvo: ponto com rótulo, cravado na posição que o servidor calculou.
+   Estado final: descoberto, aceso no prato. */
+.esp-alvo {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  font-weight: 700;
+  color: rgba(232, 238, 247, 0.85);
+}
+.esp-alvo i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2fbf71;
+  box-shadow: 0 0 7px rgba(47, 191, 113, 0.9);
+}
+
+/* ─── O feed de sinais ─── */
+.esp-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.esp-feed-titulo {
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hzn-text-muted);
+}
+.esp-alerta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: rgba(22, 32, 58, 0.85);
+  border: 1px solid var(--hzn-border-subtle);
+}
+.esp-alerta p {
+  margin: 0;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 9.5px;
+  line-height: 1.35;
+  color: var(--gelo);
+}
+
+/* O selo da fonte: nome da ferramenta com o ponto na cor da marca. */
+.esp-fonte {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  min-width: 74px;
+  font-family: var(--hzn-font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--hzn-text-muted);
+}
+.esp-fonte i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.esp-fonte-semrush i {
+  background: #ff642d;
+}
+.esp-fonte-dataforseo i {
+  background: #1f9be0;
+}
+.esp-fonte-similarweb i {
+  background: #4d7cfe;
+}
+.esp-fonte-ahrefs i {
+  background: #ff8800;
+}
+
+/* ─── A encenação: só existe sob a aba marcada, então reinicia ───
+   Inclusive o loop da varredura. O pop do alvo escreve em transform e
+   opacidade; o brilho infinito só em box-shadow, de propósito, para as
+   duas animações do mesmo elemento não se atropelarem. */
+.prova-aba input:checked ~ .prova-aba-painel .esp-varredura {
+  animation: esp-gira calc(var(--ciclo) * 1s) linear infinite;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .esp-alvo {
+  animation:
+    esp-pinga 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+    esp-brilha 2.4s ease-in-out infinite;
+  animation-delay: calc(var(--pinga) * 1s), calc((var(--pinga) + 0.3) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .esp-alerta {
+  animation: esp-entra 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--inicio) * 1s);
+}
+.prova-aba input:checked ~ .prova-aba-painel .esp-farol {
+  animation: esp-pulsa 2.2s ease-in-out infinite;
+}
+
+/* Keyframes de entrada só com `from`: o destino é o estado base. */
+@keyframes esp-gira {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@keyframes esp-pinga {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+}
+@keyframes esp-brilha {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.55);
+  }
+}
+@keyframes esp-entra {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@keyframes esp-pulsa {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* Movimento reduzido: a cena aparece montada. A varredura some porque
+   um feixe congelado no prato parece defeito, não radar; os alvos e o
+   feed ficam, que são o conteúdo. */
+@media (prefers-reduced-motion: reduce) {
+  .prova-aba input:checked ~ .prova-aba-painel .esp-alvo,
+  .prova-aba input:checked ~ .prova-aba-painel .esp-alerta,
+  .prova-aba input:checked ~ .prova-aba-painel .esp-farol {
+    animation: none;
+  }
+  .prova-aba input:checked ~ .prova-aba-painel .esp-varredura {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOBRA "O PLAYBOOK DA HORIZON" (cartões de serviço)
+   Espelhada de playbooklab.com.br ("O jeito Playbook Lab"), por
+   instrução do founder: mesma estrutura e medidas, paleta e nomes
+   da casa. Medido no navegador na referência: cartões de 380px,
+   gap 20, raio 22, padding 20; tile de ilustração de 148px de
+   altura; título do cartão Syne 20px/20px 600 na cor de acento;
+   parágrafo Poppins 14px/19.6px; h2 Syne 42px/1 centrado; eyebrow
+   em pílula com contorno, Syne 14 600 caixa alta. As ilustrações
+   deles são PNG; as nossas são glifos desenhados em CSS, na regra
+   da página (nenhum arquivo de imagem novo).
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Sem o risco de 1px no fim da dobra: a faixa de logos entra logo abaixo,
+   e o border-bottom herdado do .prova-bloco desenhava uma linha solta no
+   topo do letreiro (a própria .clientes já abre mão do dela pelo mesmo
+   motivo). */
+.prova-bloco-cartoes {
+  border-bottom: 0;
+  /* Rodapé curto: a faixa de logos é o remate desta dobra, então ela sobe
+     e encosta nos cartões em vez de flutuar no meio do caminho até a banda
+     de conversão. O padding-top da dobra segue o do .prova-bloco. */
+  padding-bottom: clamp(24px, 3.5vh, 40px);
+}
+
+/* O h2 desta dobra volta ao 42px fixo da referência (o título é curto e
+   cabe em uma linha em qualquer tela razoável); ganha do clamp da dobra
+   de abas por vir depois no arquivo, na mesma especificidade. */
+.prova-bloco-cartoes > h2 {
+  font-size: clamp(30px, 3.4vw, 42px);
+  line-height: 1;
+}
+
+/* A pílula do eyebrow: contorno fino, caixa alta, centrada. */
+.prova-bloco-cartoes > .prova-eyebrow {
+  display: block;
+  width: fit-content;
+  margin-inline: auto;
+  margin-bottom: clamp(28px, 4vw, 48px);
+  padding: 9px 18px;
+  border: 1px solid var(--hzn-border-default);
+  border-radius: 8px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--gelo);
+}
+
+/* Fileira única por pedido do founder: os 5 cartões dividem a largura da
+   dobra por igual (380px fixos da referência não cabem 5 vezes; o gap 20
+   fica). Abaixo de 1100px a fileira quebra e os cartões voltam aos 380px
+   da referência, empilhando no mobile. */
+.prova-cartoes {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.prova-cartao {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 380px;
+  padding: 20px;
+  border-radius: 22px;
+  background: var(--hzn-bg-raised);
+  border: 1px solid var(--hzn-border-subtle);
+  text-align: left;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+.prova-cartao:hover {
+  transform: translateY(-4px);
+  border-color: var(--hzn-border-default);
+  box-shadow: 0 20px 44px -20px rgba(0, 0, 0, 0.75);
+}
+@media (max-width: 1100px) {
+  .prova-cartoes {
+    flex-wrap: wrap;
+  }
+  .prova-cartao {
+    flex: 0 1 auto;
+    width: 380px;
+    max-width: 100%;
+  }
+}
+.prova-cartao h3 {
+  font-family: var(--font-syne), sans-serif;
+  font-variation-settings: normal;
+  font-size: 20px;
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: normal;
+  color: var(--hzn-brand-300);
+  margin: 18px 0 12px;
+}
+.prova-cartao p {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 19.6px;
+  color: var(--gelo);
+  margin: 0;
+}
+
+/* O tile da ilustração: painel interno com a malha pontilhada da casa. */
+.prova-cartao-arte {
+  position: relative;
+  height: 148px;
+  border-radius: 14px;
+  background-color: rgba(22, 32, 58, 0.6);
+  background-image: radial-gradient(rgba(143, 166, 196, 0.06) 1px, transparent 1px);
+  background-size: 16px 16px;
+  border: 1px solid var(--hzn-border-subtle);
+  overflow: hidden;
+}
+.prova-cartao-arte i {
+  position: absolute;
+  display: block;
+}
+
+/* ─── squad: dois avatares e duas pílulas de conversa ─── */
+.prova-arte-squad i:nth-child(1),
+.prova-arte-squad i:nth-child(2) {
+  border: 2px solid var(--bruma);
+  border-radius: 50%;
+}
+.prova-arte-squad i:nth-child(1) {
+  width: 46px;
+  height: 46px;
+  left: 24%;
+  top: 26%;
+}
+.prova-arte-squad i:nth-child(2) {
+  width: 36px;
+  height: 36px;
+  right: 22%;
+  top: 42%;
+}
+.prova-arte-squad i:nth-child(1)::before,
+.prova-arte-squad i:nth-child(2)::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 26%;
+  transform: translateX(-50%);
+  width: 32%;
+  height: 32%;
+  border-radius: 50%;
+  background: var(--bruma);
+}
+.prova-arte-squad i:nth-child(1)::after,
+.prova-arte-squad i:nth-child(2)::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  width: 62%;
+  height: 30%;
+  border-radius: 999px 999px 4px 4px;
+  background: var(--bruma);
+}
+.prova-arte-squad i:nth-child(3),
+.prova-arte-squad i:nth-child(4) {
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.55);
+}
+.prova-arte-squad i:nth-child(3) {
+  width: 64px;
+  left: 38%;
+  top: 22%;
+}
+.prova-arte-squad i:nth-child(4) {
+  width: 46px;
+  left: 30%;
+  bottom: 22%;
+  background: rgba(143, 166, 196, 0.35);
+}
+
+/* ─── diagnóstico: matriz de células com três acesas ─── */
+.prova-arte-diagnostico i:nth-child(1) {
+  inset: 24px 56px;
+  border-radius: 10px;
+  background-image: radial-gradient(rgba(143, 166, 196, 0.35) 5px, transparent 5.5px);
+  background-size: 26px 26px;
+  background-position: 6px 4px;
+}
+.prova-arte-diagnostico i:nth-child(2),
+.prova-arte-diagnostico i:nth-child(3),
+.prova-arte-diagnostico i:nth-child(4) {
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  background: var(--neve);
+  box-shadow: 0 0 10px rgba(169, 198, 232, 0.6);
+}
+.prova-arte-diagnostico i:nth-child(2) {
+  left: 84px;
+  top: 50px;
+}
+.prova-arte-diagnostico i:nth-child(3) {
+  right: 96px;
+  top: 76px;
+  background: var(--sinal);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
+}
+.prova-arte-diagnostico i:nth-child(4) {
+  left: 132px;
+  bottom: 28px;
+}
+
+/* ─── treinamento: trilha de aulas e o aluno ao lado ─── */
+.prova-arte-treinamento i:nth-child(1),
+.prova-arte-treinamento i:nth-child(2),
+.prova-arte-treinamento i:nth-child(3) {
+  left: 15%;
+  width: 100px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(143, 166, 196, 0.3);
+}
+.prova-arte-treinamento i:nth-child(1) {
+  top: 30px;
+}
+.prova-arte-treinamento i:nth-child(2) {
+  top: 66px;
+}
+.prova-arte-treinamento i:nth-child(3) {
+  top: 102px;
+}
+.prova-arte-treinamento i:nth-child(1)::before,
+.prova-arte-treinamento i:nth-child(2)::before,
+.prova-arte-treinamento i:nth-child(3)::before {
+  content: "";
+  position: absolute;
+  left: -18px;
+  top: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sinal);
+}
+.prova-arte-treinamento i:nth-child(4) {
+  right: 18%;
+  top: 40px;
+  width: 52px;
+  height: 52px;
+  border: 2px solid var(--bruma);
+  border-radius: 50%;
+}
+.prova-arte-treinamento i:nth-child(4)::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 24%;
+  transform: translateX(-50%);
+  width: 32%;
+  height: 32%;
+  border-radius: 50%;
+  background: var(--bruma);
+}
+.prova-arte-treinamento i:nth-child(4)::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border: 1.5px dashed rgba(143, 166, 196, 0.45);
+  border-radius: 14px;
+}
+
+/* ─── projeto fechado: o documento de escopo com o check ─── */
+.prova-arte-projeto i:nth-child(1) {
+  left: 50%;
+  top: 50%;
+  transform: translate(-58%, -50%);
+  width: 92px;
+  height: 108px;
+  border-radius: 10px;
+  border: 1.5px solid var(--bruma);
+  background-image:
+    linear-gradient(rgba(143, 166, 196, 0.45), rgba(143, 166, 196, 0.45)),
+    linear-gradient(rgba(143, 166, 196, 0.45), rgba(143, 166, 196, 0.45)),
+    linear-gradient(rgba(143, 166, 196, 0.45), rgba(143, 166, 196, 0.45));
+  background-repeat: no-repeat;
+  background-size: 56px 5px, 44px 5px, 50px 5px;
+  background-position: 16px 22px, 16px 42px, 16px 62px;
+}
+.prova-arte-projeto i:nth-child(2) {
+  left: 50%;
+  top: 50%;
+  transform: translate(28px, 14px);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--sinal);
+  border: 3px solid var(--noite);
+}
+.prova-arte-projeto i:nth-child(2)::before {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ─── SAAS: a janela do produto e a nuvem ─── */
+.prova-arte-saas i:nth-child(1) {
+  left: 50%;
+  top: 54%;
+  transform: translate(-54%, -50%);
+  width: 128px;
+  height: 88px;
+  border-radius: 10px;
+  border: 1.5px solid var(--bruma);
+}
+.prova-arte-saas i:nth-child(1)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 18px;
+  border-bottom: 1.5px solid rgba(143, 166, 196, 0.5);
+  background-image:
+    radial-gradient(rgba(143, 166, 196, 0.7) 2.5px, transparent 3px),
+    radial-gradient(rgba(143, 166, 196, 0.7) 2.5px, transparent 3px),
+    radial-gradient(rgba(143, 166, 196, 0.7) 2.5px, transparent 3px);
+  background-repeat: no-repeat;
+  background-size: 8px 8px;
+  background-position: 8px 5px, 20px 5px, 32px 5px;
+}
+.prova-arte-saas i:nth-child(1)::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  width: 58px;
+  height: 34px;
+  border-radius: 6px;
+  background: rgba(59, 130, 246, 0.35);
+}
+.prova-arte-saas i:nth-child(2) {
+  right: 20%;
+  top: 24px;
+  width: 54px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--neve);
+}
+.prova-arte-saas i:nth-child(2)::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: -12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--neve);
+}
+.prova-arte-saas i:nth-child(2)::after {
+  content: "";
+  position: absolute;
+  right: 8px;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--neve);
+}
+
+/* ─── Vida nos glifos ───
+   Cada quadro ganha um laço ambiente discreto, no vocabulário do próprio
+   glifo: a conversa do squad pulsa, o diagnóstico varre as células, a
+   trilha de aulas acende bullet por bullet, o check do projeto emite o
+   ping de confirmado, a nuvem do SAAS flutua e o deploy pisca. Estes
+   cartões ficam sempre visíveis (não são gated por aba), então os laços
+   são infinitos e lentos, dessincronizados por delay, e só tocam em
+   opacity/transform/box-shadow, que não custam layout. */
+
+.prova-arte-squad i:nth-child(3) {
+  animation: arte-respira 3.2s ease-in-out infinite;
+}
+.prova-arte-squad i:nth-child(4) {
+  animation: arte-respira 3.2s ease-in-out infinite;
+  animation-delay: 1.6s;
+}
+.prova-arte-squad i:nth-child(1) {
+  animation: arte-boia 5s ease-in-out infinite alternate;
+}
+.prova-arte-squad i:nth-child(2) {
+  animation: arte-boia 5s ease-in-out infinite alternate;
+  animation-delay: 2.5s;
+}
+
+.prova-arte-diagnostico i:nth-child(2) {
+  animation: arte-celula 2.7s ease-in-out infinite;
+}
+.prova-arte-diagnostico i:nth-child(3) {
+  animation: arte-celula 2.7s ease-in-out infinite;
+  animation-delay: 0.9s;
+}
+.prova-arte-diagnostico i:nth-child(4) {
+  animation: arte-celula 2.7s ease-in-out infinite;
+  animation-delay: 1.8s;
+}
+
+.prova-arte-treinamento i:nth-child(1)::before {
+  animation: arte-respira 3s ease-in-out infinite;
+}
+.prova-arte-treinamento i:nth-child(2)::before {
+  animation: arte-respira 3s ease-in-out infinite;
+  animation-delay: 1s;
+}
+.prova-arte-treinamento i:nth-child(3)::before {
+  animation: arte-respira 3s ease-in-out infinite;
+  animation-delay: 2s;
+}
+.prova-arte-treinamento i:nth-child(4)::after {
+  animation: arte-respira 4.2s ease-in-out infinite;
+  animation-delay: 0.6s;
+}
+
+.prova-arte-projeto i:nth-child(2) {
+  animation: arte-confere 2.8s ease-out infinite;
+}
+
+.prova-arte-saas i:nth-child(2) {
+  animation: arte-boia 4.5s ease-in-out infinite alternate;
+}
+.prova-arte-saas i:nth-child(1)::after {
+  animation: arte-deploy 2.4s ease-in-out infinite;
+}
+
+/* O laço parte do estado base e volta pra ele: nada salta no início. */
+@keyframes arte-boia {
+  to {
+    transform: translateY(-4px);
+  }
+}
+@keyframes arte-respira {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes arte-celula {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.85);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes arte-confere {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 11px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+@keyframes arte-deploy {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+/* Movimento reduzido: os glifos ficam parados; o cartão continua com o
+   hover de elevação, que é transição, não laço. */
+@media (prefers-reduced-motion: reduce) {
+  .prova-cartao-arte i,
+  .prova-cartao-arte i::before,
+  .prova-cartao-arte i::after {
+    animation: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FAIXA DE CLIENTES (letreiro infinito)
+   Entre o Playbook e a dobra de produtos, como na referência
+   playbooklab: logos em deriva contínua e lenta, 98px entre elas
+   (medido lá), tratamento monocromático uniforme. O trilho carrega
+   DUAS cópias da fila e anda -50% em loop linear: quando a
+   primeira cópia sai inteira, a segunda está exatamente onde a
+   primeira começou, e a emenda não existe. A velocidade (~39px/s)
+   é a da referência, medida: 384px de slide a cada 10s.
+   ═══════════════════════════════════════════════════════════════ */
+
+.clientes {
+  overflow: hidden;
+  /* Respiro ASSIMÉTRICO: quase nada em cima, porque o letreiro é o remate
+     da dobra de cartões e sobe até quase encostar nela; o respiro cheio
+     fica embaixo, separando as logos da banda de conversão. */
+  padding-top: clamp(6px, 1vh, 14px);
+  padding-bottom: clamp(40px, 7vh, 72px);
+  /* sem border-bottom: a faixa encosta na banda de conversao, e o risco
+     de 1px desenhava uma linha no topo da cena */
+  /* as pontas do letreiro somem num degradê, para as logos nascerem e
+     morrerem no ar em vez de cortarem na borda da tela */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+.clientes-trilho {
+  display: flex;
+  width: max-content;
+}
+
+.clientes-fila {
+  display: flex;
+  align-items: center;
+  gap: 98px;
+  /* o respiro entre o fim de uma cópia e o começo da outra é o MESMO gap
+     da fila; com ele no margin (e não no gap do trilho), o -50% fecha o
+     ciclo na conta exata */
+  margin: 0 98px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.clientes-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.clientes-item img {
+  height: 44px;
+  width: auto;
+  /* mesma presença rebaixada dos letreiros de logo da referência */
+  opacity: 0.75;
+}
+.clientes-item span {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--gelo);
+  opacity: 0.8;
+}
+
+.clientes-trilho {
+  animation: clientes-anda 36s linear infinite;
+}
+@keyframes clientes-anda {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Movimento reduzido: o letreiro para; a primeira fila fica visível e o
+   degradê das pontas continua escondendo o corte. */
+@media (prefers-reduced-motion: reduce) {
+  .clientes-trilho {
+    animation: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BANDA DE CONVERSÃO "MESMO TIME, MAIS VENDAS." (full-bleed)
+   A cena ocupa a DOBRA INTEIRA, borda a borda, como o herói:
+   feedback do founder derrubou a moldura de janela que confinava
+   as imagens a um retângulo central. O ambiente é construído com
+   as cores amostradas do fundo do próprio retrato (topo navy
+   #0c223d, faixa de brilho #2161a1/#2f71b0, base #051f36), mais
+   grade fina de engenharia, traços de circuito continuando os da
+   mão e os neons diagonais do retrato ecoados. Título e botão da
+   referência playbooklab (Syne 30/30 e botão 239x40) sobrepostos
+   à cena com véu de legibilidade.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* A seção escapa do container: sem teto de largura, sem padding, a cena
+   é a dobra. O border-bottom herdado do .prova-bloco fica, separando da
+   dobra seguinte. */
+.prova-bloco-chamada {
+  max-width: none;
+  padding: 0;
+  /* sem risco de 1px embaixo: a cena termina direto na dobra seguinte */
+  border-bottom: 0;
+}
+
+.prova-chamada {
+  position: relative;
+  height: clamp(560px, 74vh, 780px);
+  /* o tom da primeira dobra: a noite da casa, pedido do founder */
+  background: var(--noite);
+  overflow: hidden;
+}
+
+.prova-chamada-corpo {
+  position: absolute;
+  inset: 0;
+}
+
+.prova-chamada-arte {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  /* Campo geral na noite da casa (o tom da primeira dobra); o brilho azul
+     amostrado da foto fica CONCENTRADO no halo atrás do retrato, que é o
+     que segura a foto fundida na cena com o fundo mais escuro. */
+  background:
+    repeating-linear-gradient(90deg, rgba(120, 180, 255, 0.045) 0 1px, transparent 1px 56px),
+    repeating-linear-gradient(0deg, rgba(120, 180, 255, 0.045) 0 1px, transparent 1px 56px),
+    radial-gradient(ellipse 48% 58% at 52% 42%, rgba(47, 113, 176, 0.55), rgba(47, 113, 176, 0.12) 55%, transparent 72%),
+    radial-gradient(ellipse 40% 55% at 10% 84%, rgba(33, 97, 161, 0.2), transparent 62%),
+    linear-gradient(180deg, #0a0f1a 0%, #0d1626 45%, #0a0f1a 100%);
+}
+
+/* Traços de circuito na metade esquerda, continuando os da própria mão. */
+.prova-chamada-arte::before {
+  content: "";
+  position: absolute;
+  inset: 0 52% 0 0;
+  background-image:
+    radial-gradient(circle 2.5px at 26% 22%, rgba(96, 165, 250, 0.9), transparent 3.5px),
+    radial-gradient(circle 2.5px at 44% 36%, rgba(56, 189, 248, 0.8), transparent 3.5px),
+    radial-gradient(circle 2.5px at 18% 54%, rgba(96, 165, 250, 0.8), transparent 3.5px),
+    radial-gradient(circle 2.5px at 52% 72%, rgba(56, 189, 248, 0.9), transparent 3.5px),
+    linear-gradient(90deg, transparent 6%, rgba(96, 165, 250, 0.4) 6%, rgba(96, 165, 250, 0.4) 26%, transparent 26%),
+    linear-gradient(90deg, transparent 22%, rgba(56, 189, 248, 0.35) 22%, rgba(56, 189, 248, 0.35) 44%, transparent 44%),
+    linear-gradient(90deg, transparent 10%, rgba(96, 165, 250, 0.3) 10%, rgba(96, 165, 250, 0.3) 18%, transparent 18%),
+    linear-gradient(90deg, transparent 34%, rgba(56, 189, 248, 0.35) 34%, rgba(56, 189, 248, 0.35) 52%, transparent 52%);
+  background-repeat: no-repeat;
+  background-size:
+    100% 100%, 100% 100%, 100% 100%, 100% 100%,
+    100% 1px, 100% 1px, 100% 1px, 100% 1px;
+  background-position:
+    0 0, 0 0, 0 0, 0 0,
+    0 22%, 0 36%, 0 54%, 0 72%;
+}
+
+/* Os neons diagonais do retrato, ecoados pela cena inteira. */
+.prova-chamada-arte::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(56deg, transparent 42%, rgba(169, 198, 232, 0.2) 47.6%, rgba(169, 198, 232, 0.04) 48.6%, transparent 54%),
+    linear-gradient(124deg, transparent 58%, rgba(96, 165, 250, 0.15) 63.6%, rgba(96, 165, 250, 0.03) 64.4%, transparent 70%);
+  pointer-events: none;
+}
+
+/* O retrato no centro da cena, em altura cheia com o topo cortado pela
+   dobra. Com o ambiente na cor do fundo da foto, as máscaras abrem e o
+   cenário do retrato é parte da dobra. */
+.prova-chamada-rosto {
+  position: absolute;
+  left: 50%;
+  top: -10%;
+  height: 118%;
+  width: auto;
+  transform: translateX(-58%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent);
+}
+
+/* A mão entra por fora da borda esquerda, apontando pro ombro dela. */
+.prova-chamada-mao {
+  position: absolute;
+  left: -4vw;
+  bottom: 6%;
+  width: clamp(380px, 42vw, 760px);
+  height: auto;
+  filter: drop-shadow(0 22px 38px rgba(0, 0, 0, 0.5));
+}
+
+/* O texto flutua sobre a cena, na terça direita, com véu de legibilidade
+   que termina na cor-base do ambiente. */
+.prova-chamada-texto {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(520px, 38vw);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 27px;
+  padding: 48px clamp(44px, 7vw, 120px) 48px 44px;
+  background: linear-gradient(90deg, rgba(10, 15, 26, 0) 0, rgba(10, 15, 26, 0.82) 26%, rgba(10, 15, 26, 0.92) 100%);
+}
+.prova-chamada-texto h2 {
+  font-family: var(--font-syne), sans-serif;
+  font-variation-settings: normal;
+  font-size: 30px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: normal;
+  color: var(--sinal);
+  max-width: 240px;
+  margin: 0;
+}
+.prova-chamada-botao {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 14px;
+  line-height: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 13px 22px;
+  border-radius: 6px;
+  background: var(--gelo);
+  color: var(--hzn-text-inverse);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.prova-chamada-botao:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--hzn-glow-amber);
+}
+
+/* Em tela estreita a cena vira faixa e o texto desce pra baixo dela. */
+@media (max-width: 900px) {
+  .prova-chamada {
+    height: auto;
+  }
+  .prova-chamada-corpo {
+    position: static;
+  }
+  .prova-chamada-arte {
+    position: relative;
+    inset: auto;
+    height: 300px;
+  }
+  .prova-chamada-rosto {
+    left: auto;
+    right: -6%;
+    transform: none;
+  }
+  .prova-chamada-mao {
+    left: -30px;
+    bottom: 14px;
+    width: 58%;
+  }
+  .prova-chamada-texto {
+    position: static;
+    width: auto;
+    padding: 30px 26px 36px;
+    background: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOBRA "TECNOLOGIAS PARCEIRAS" (letreiro infinito)
+   Título centrado no padrão das dobras espelhadas e o letreiro da
+   stack em texto, cada item com o ponto na cor da própria marca.
+   Mesma mecânica do letreiro de clientes: duas cópias da fila no
+   trilho, translada -50% em loop linear, emenda fechada pela conta
+   margin = gap, pontas dissolvendo em máscara, ~38px/s.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Sem o risco de 1px embaixo do letreiro, e a seção FULL-BLEED: o
+   letreiro explora as bordas laterais da tela em vez de morrer no
+   container (o título é centrado, então não perde nada). */
+.prova-bloco-techs {
+  border-bottom: 0;
+  max-width: none;
+  padding-inline: 0;
+  /* Rodapé zerado: o vão embaixo do letreiro somava ESTE padding ao
+     padding-top da dobra "Recursos" e abria um vazio de ~240px, com o
+     letreiro empilhado no topo da dobra. Zerando aqui, o respiro de baixo
+     passa a ser só o da dobra seguinte, e o letreiro desce (o espaço vai
+     para o margin-top de .techs-faixa). */
+  padding-bottom: 0;
+}
+
+/* Fraunces, não Syne, por decisão de tipografia: o "g" do Syne tem
+   descendente curto POR DESENHO da fonte (verificado a 120px, sem nenhum
+   ancestral recortando) e lia como defeito. Esta dobra é nossa, não
+   espelhada da referência, então usa a display da casa, a mesma dos
+   títulos nativos, cujo "g" é redondo e completo. */
+.prova-bloco-techs > h2 {
+  font-family: var(--prova-display);
+  font-variation-settings: "SOFT" 0, "WONK" 1, "opsz" 60;
+  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: none;
+}
+
+.techs-faixa {
+  overflow: hidden;
+  /* O letreiro desce e ocupa o meio da dobra em vez de ficar colado no
+     título: herda o respiro que era o rodapé da seção (11vh) somado ao
+     antigo clamp(28px, 4vw, 48px). O título fica com ar, e o vão que
+     sobra até "Recursos" é só o padding-top da dobra seguinte. */
+  margin-top: clamp(100px, calc(4vw + 11vh), 180px);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+.techs-trilho {
+  display: flex;
+  width: max-content;
+  /* fila medida em ~2646px + 56 de respiro = 2702 de ciclo (ícones a
+     44px); a 71s dá os mesmos ~38px/s do letreiro de clientes */
+  animation: techs-anda 71s linear infinite;
+}
+
+.techs-fila {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+  /* o respiro entre as cópias é o MESMO gap da fila: o -50% fecha exato */
+  margin: 0 56px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.techs-fila li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--gelo);
+  opacity: 0.9;
+}
+.techs-fila li img {
+  /* mesmo tamanho dos logos do letreiro de clientes */
+  height: 44px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+@keyframes techs-anda {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .techs-trilho {
+    animation: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOBRA "RECURSOS" (acordeão horizontal de painéis numerados)
+   Mesmo efeito do playbooklab na paleta da casa: cinco painéis em
+   fileira, o marcado cresce (flex-grow com transição) e revela
+   título, tagline em caixa alta, texto e o botão de contorno; os
+   colapsados mostram só o numerão. Separadores de 1px entre os
+   painéis e borda no topo da fileira, como lá. A copy dos painéis
+   é NOSSA (os sistemas que as cenas das abas já mostram); a deles
+   descreve os produtos deles.
+
+   Mecânica da casa: grupo de radio (clique, teclado e touch, coisa
+   que hover puro não dá), painel marcado via :has(). O rótulo com
+   o número cobre o painel colapsado inteiro; no aberto, o conteúdo
+   assume a área e o rótulo continua sendo o numerão do canto.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Full-bleed como o letreiro de techs: o acordeão explora as bordas. O
+   fundo é próprio, na paleta da casa (pedido do founder: diferente do
+   preto): a serra no miolo com um halo azul discreto no alto, voltando à
+   noite nas pontas pra fundir com as dobras vizinhas. */
+.prova-bloco-recursos {
+  max-width: none;
+  padding-inline: 0;
+  border-bottom: 0;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 22%, rgba(59, 130, 246, 0.12), transparent 65%),
+    linear-gradient(180deg, var(--noite) 0%, #101b30 18%, var(--serra) 55%, #0d1626 88%, var(--noite) 100%);
+}
+.prova-bloco-recursos > h2 {
+  font-family: var(--prova-display);
+  font-variation-settings: "SOFT" 0, "WONK" 1, "opsz" 60;
+  font-size: clamp(2rem, 3.4vw, 2.9rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: none;
+}
+
+.prova-recursos {
+  display: flex;
+  margin-top: clamp(28px, 4vw, 48px);
+  border-top: 1px solid var(--hzn-border-subtle);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+  min-height: clamp(480px, 62vh, 620px);
+}
+
+.prova-recurso {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  border-left: 1px solid var(--hzn-border-subtle);
+  transition: flex-grow 550ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.prova-recurso:first-child {
+  border-left: 0;
+}
+.prova-recurso:has(input:checked) {
+  flex-grow: 6.5;
+}
+
+.prova-recurso input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* O rótulo é a área de clique do painel inteiro; o numerão vive nele. */
+.prova-recurso label {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  cursor: pointer;
+  padding: 36px clamp(18px, 2vw, 40px);
+}
+.prova-recurso-num {
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(30px, 2.6vw, 46px);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--gelo);
+  opacity: 0.85;
+  transition: opacity 200ms ease, color 200ms ease;
+}
+.prova-recurso label:hover .prova-recurso-num {
+  opacity: 1;
+  color: var(--hzn-brand-300);
+}
+.prova-recurso:has(input:checked) label {
+  cursor: default;
+}
+.prova-recurso input:focus-visible ~ label .prova-recurso-num {
+  outline: 2px solid var(--hzn-brand-400);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* O conteúdo do painel aberto. Colapsado: invisível e fora do fluxo de
+   interação; aberto: entra com um leve atraso, depois que a largura já
+   respirou. A largura fixa evita o texto refluir durante a transição. */
+.prova-recurso-conteudo {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  width: min(560px, 78%);
+  padding: 42px clamp(24px, 3vw, 48px) 42px clamp(84px, 7vw, 130px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 240ms ease;
+}
+.prova-recurso:has(input:checked) .prova-recurso-conteudo {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 320ms ease 260ms;
+}
+.prova-recurso-conteudo h3 {
+  font-family: var(--font-syne), sans-serif;
+  font-variation-settings: normal;
+  /* os títulos agora são frases inteiras: corpo um pouco menor e quebra
+     livre em até duas linhas, sem o nowrap da primeira versão */
+  font-size: clamp(24px, 1.9vw, 34px);
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: normal;
+  color: var(--gelo);
+  margin: 0;
+  max-width: 22ch;
+}
+.prova-recurso-tagline {
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(14px, 1.1vw, 18px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--hzn-brand-300);
+  margin: 10px 0 0;
+}
+.prova-recurso-texto {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 19.6px;
+  color: var(--gelo);
+  max-width: 52ch;
+  margin: 0;
+}
+.prova-recurso-botao {
+  margin-top: 14px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 14px;
+  line-height: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border: 1px solid var(--sinal);
+  border-radius: 6px;
+  color: var(--gelo);
+  text-decoration: none;
+  transition: background 200ms ease, transform 200ms ease;
+}
+.prova-recurso-botao:hover {
+  background: rgba(59, 130, 246, 0.16);
+  transform: translateY(-1px);
+}
+
+/* ─── A fotografia do painel aberto ───
+   Realista, no duotone azul da casa (tratada no arquivo, não em CSS),
+   ocupando a metade direita do painel em altura cheia. A máscara funde
+   a borda esquerda no fundo da dobra e o véu de baixo escurece a área
+   onde o glifo do numerão do painel vizinho encosta. */
+.prova-recurso-foto {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 52%;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 30%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 30%);
+}
+.prova-recurso:has(input:checked) .prova-recurso-foto {
+  opacity: 0.88;
+  transition: opacity 550ms ease 250ms;
+}
+.prova-recurso-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ─── Em tela estreita o acordeão vira vertical ─── */
+@media (max-width: 900px) {
+  .prova-recursos {
+    flex-direction: column;
+    min-height: 0;
+  }
+  .prova-recurso {
+    border-left: 0;
+    border-top: 1px solid var(--hzn-border-subtle);
+    min-height: 84px;
+    transition: min-height 450ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .prova-recurso:first-child {
+    border-top: 0;
+  }
+  .prova-recurso:has(input:checked) {
+    min-height: 430px;
+  }
+  .prova-recurso label {
+    padding: 26px 22px;
+  }
+  .prova-recurso-conteudo {
+    width: auto;
+    padding: 84px 22px 30px;
+  }
+  .prova-recurso-conteudo h3,
+  .prova-recurso-tagline {
+    white-space: normal;
+  }
+  .prova-recurso-foto {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova-recurso,
+  .prova-recurso-conteudo,
+  .prova-recurso-foto {
+    transition: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOBRA DE FAQ (duas colunas, perguntas expansíveis)
+   Estrutura espelhada da referência agentyx: eyebrow + título
+   serifado grande na coluna esquerda; na direita, a lista de
+   perguntas com o "+" na ponta e separadores finos, expandindo no
+   clique. Mecânica em details/summary NATIVO: zero JavaScript,
+   teclado e leitor de tela de graça. O "+" gira 45 graus e vira
+   "×" quando o item abre.
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-faq {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: clamp(40px, 6vw, 110px);
+  align-items: start;
+}
+
+/* O cabeçalho herda o estilo padrão da dobra (eyebrow mono + Fraunces). */
+.prova-faq-cabeca h2 {
+  margin-bottom: 0;
+}
+
+.prova-faq-item {
+  border-bottom: 1px solid var(--hzn-border-subtle);
+}
+
+.prova-faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding-block: 26px;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gelo);
+  transition: color 180ms ease;
+}
+.prova-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.prova-faq-item summary:hover {
+  color: var(--hzn-brand-300);
+}
+.prova-faq-item summary:focus-visible {
+  outline: 2px solid var(--hzn-brand-400);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* O "+": duas barras; aberto, o conjunto gira 45 graus e lê como "×". */
+.prova-faq-item summary i {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transition: transform 260ms ease;
+}
+.prova-faq-item summary i::before,
+.prova-faq-item summary i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  background: var(--sinal);
+  border-radius: 2px;
+}
+.prova-faq-item summary i::before {
+  width: 16px;
+  height: 2px;
+}
+.prova-faq-item summary i::after {
+  width: 2px;
+  height: 16px;
+}
+.prova-faq-item[open] summary i {
+  transform: rotate(45deg);
+}
+
+.prova-faq-item > p {
+  margin: 0;
+  padding: 0 34px 26px 0;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--hzn-text-secondary);
+  max-width: 60ch;
+}
+.prova-faq-item[open] > p {
+  animation: faq-abre 280ms ease both;
+}
+@keyframes faq-abre {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@media (max-width: 900px) {
+  .prova-faq {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova-faq-item[open] > p {
+    animation: none;
+  }
+  .prova-faq-item summary i {
+    transition: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOBRA DE AGENDAMENTO (fecho da página)
+   Desenho da referência: título grande centrado, linha de apoio na
+   cor de acento e o calendário embutido num cartão de cantos
+   redondos. Sem agendaUrl no conteúdo, a dobra mostra o botão de
+   sempre no lugar do cartão.
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-bloco-agenda > h2 {
+  font-family: var(--font-syne), sans-serif;
+  font-variation-settings: normal;
+  font-size: clamp(30px, 3.4vw, 44px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: normal;
+  max-width: none;
+}
+/* A linha de apoio vira o subtítulo de acento da referência. */
+.prova-bloco-agenda .prova-prosa {
+  margin-inline: auto;
+  text-align: center;
+}
+.prova-bloco-agenda .prova-prosa p {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 15px;
+  color: var(--hzn-brand-300);
+  max-width: none;
+}
+
+.prova-agenda {
+  max-width: 1040px;
+  margin: clamp(28px, 4vw, 48px) auto 0;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--hzn-border-default);
+  background: var(--hzn-bg-raised);
+}
+.prova-agenda iframe {
+  display: block;
+  width: 100%;
+  height: 700px;
+  border: 0;
+}
+
+.prova-bloco-agenda .prova-cta {
+  justify-content: center;
+  margin-top: clamp(24px, 3vw, 40px);
+}
+
+@media (max-width: 720px) {
+  .prova-agenda iframe {
+    height: 820px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RODAPÉ (última dobra)
+   Estrutura da referência fraktalsoftwares: bloco de marca com a
+   frase da casa à esquerda, colunas de links à direita, e a barra
+   legal fechando com assinatura e CNPJ. A paleta é a da página, e
+   o rodapé começa exatamente na cor em que o corpo termina, então
+   a emenda entre os dois não existe: o único sinal de que uma
+   coisa acabou e outra começou é o fio de 1px.
+   ═══════════════════════════════════════════════════════════════ */
+
+.prova-pe {
+  background: var(--hzn-bg-muted);
+  border-top: 1px solid var(--hzn-border-subtle);
+}
+
+.prova-pe-grade {
+  width: 100%;
+  max-width: var(--hzn-container-max);
+  margin-inline: auto;
+  padding-inline: var(--hzn-container-padding);
+  padding-block: clamp(48px, 8vh, 88px);
+  display: grid;
+  /* A coluna da marca é mais larga que as de links: ela carrega a frase,
+     as outras carregam listas curtas. */
+  grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+}
+
+/* Em telas médias as três colunas de links viram duas e a marca ocupa a
+   linha inteira em cima; abaixo de 520px tudo empilha. */
+@media (max-width: 900px) {
+  .prova-pe-grade {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .prova-pe-marca-bloco {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 520px) {
+  .prova-pe-grade {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.prova-pe-marca-bloco {
+  max-width: 44ch;
+}
+
+/* O mesmo lockup da barra de navegação. Aqui ele não flutua sobre a foto,
+   então a palavra pode vir com opacidade cheia. */
+.prova-pe-marca {
+  margin-bottom: 18px;
+}
+.prova-pe-marca .prova-marca-palavra {
+  opacity: 1;
+}
+
+.prova-pe-descricao {
+  margin: 0 0 24px;
+  font-family: var(--hzn-font-sans);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--hzn-text-secondary);
+}
+
+/* Mesma pílula do CTA do topo: o rodapé é a última chance de conversão da
+   página, e ela não pode ler como link perdido no meio da lista. */
+.prova-pe-zap {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--hzn-font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--hzn-text-inverse);
+  background: var(--sinal);
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.prova-pe-zap:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--hzn-glow-amber);
+}
+
+.prova-pe-titulo {
+  margin: 0 0 16px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bruma);
+}
+
+.prova-pe-coluna ul {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.prova-pe-coluna a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--hzn-font-sans);
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: rgba(232, 238, 247, 0.78);
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+.prova-pe-coluna a:hover {
+  color: var(--gelo);
+}
+
+/* O glifo herda a cor do link por currentColor, então o hover tinge os
+   dois de uma vez; no repouso ele fica um tom abaixo do texto. */
+.prova-pe-glifo {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  color: var(--bruma);
+  transition: color 180ms ease;
+}
+.prova-pe-coluna a:hover .prova-pe-glifo {
+  color: var(--sinal);
+}
+
+.prova-pe-legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  width: 100%;
+  max-width: var(--hzn-container-max);
+  margin-inline: auto;
+  padding-inline: var(--hzn-container-padding);
+  padding-block: 20px;
+  border-top: 1px solid var(--hzn-border-subtle);
+}
+.prova-pe-legal p {
+  margin: 0;
+  font-family: var(--hzn-font-sans);
+  font-size: 0.82rem;
+  color: var(--hzn-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova-pe-zap:hover {
+    transform: none;
+  }
+}

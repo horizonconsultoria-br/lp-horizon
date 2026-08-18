@@ -1,125 +1,292 @@
 export type Destaque = { valor: string; legenda: string; fonte: string };
-export type Item = { nome: string; descricao: string };
+export type Item = {
+  nome: string;
+  descricao: string;
+  /** Ilustração opcional do painel. "whatsapp" simula um atendimento que
+   *  termina virando compromisso na agenda; "n8n" encena uma automação de
+   *  lead scoring executando nó a nó até atualizar o CRM; "funil" mostra a
+   *  captação atravessando o funil até virar linha no CRM; "membros" é a
+   *  área de membros com módulos de vendas e de Claude; "stack" são as
+   *  ferramentas de prospecção em balões flutuantes; "radar" é o radar de
+   *  concorrência com o feed de sinais interceptados. */
+  visual?: "whatsapp" | "n8n" | "funil" | "membros" | "stack" | "radar";
+  /** Glifo do cartão na dobra de layout "cartoes", desenhado em CSS. */
+  icone?: "squad" | "diagnostico" | "treinamento" | "projeto" | "saas";
+  /** Linha de impacto em caixa alta do painel, na dobra de layout
+   *  "recursos" (a caixa alta é do CSS; aqui vai texto normal). */
+  tagline?: string;
+  /** Glifo de fundo do painel expandido na dobra "recursos". */
+  arte?: "projeto" | "vazao" | "integracoes" | "diagnostico" | "desalocar";
+};
 
 export type Bloco = {
   id: string;
-  eyebrow: string;
+  /** Opcional: o herói não usa. */
+  eyebrow?: string;
+  /** Opcional: linha de apoio logo abaixo do título da dobra. */
+  subtitulo?: string;
+  /** "abas" renderiza os `itens` como painéis selecionáveis em vez de lista;
+   *  "cartoes" renderiza como grade de cartões com glifo, título e texto;
+   *  "chamada" é a banda de conversão full-bleed com botão próprio;
+   *  "techs" é o título centrado com o letreiro infinito de tecnologias;
+   *  "recursos" é o acordeão horizontal de painéis numerados;
+   *  "faq" é o duas-colunas com o título à esquerda e as perguntas
+   *  expansíveis à direita; "agenda" é o título centrado com o calendário
+   *  de agendamento embutido (ou o botão, enquanto não há URL). */
+  layout?: "abas" | "cartoes" | "chamada" | "techs" | "recursos" | "faq" | "agenda";
   titulo: string;
   paragrafos: string[];
   destaque?: Destaque;
   itens?: Item[];
+  /** Botão da dobra de layout "chamada". */
+  acao?: Acao;
+  /** Letreiro da dobra de layout "techs": nome como o founder escreveu e o
+   *  arquivo do ícone em public/prova/techs/. Ícones oficiais vêm de
+   *  devicon/simpleicons; Openclaw, Hermes Agent e Microserviços não têm
+   *  marca pública e usam traço da casa. */
+  techs?: Array<{ nome: string; arquivo: string }>;
+};
+
+/** Um cliente da faixa de logos. `largura`/`altura` são as dimensões reais
+ *  do arquivo em public/prova/clientes/, para o navegador reservar o espaço;
+ *  `rotulo: true` quando a marca é só símbolo ou monograma e o nome precisa
+ *  aparecer escrito ao lado. */
+export type Cliente = {
+  nome: string;
+  arquivo: string;
+  largura: number;
+  altura: number;
+  rotulo?: boolean;
 };
 
 export type Acao = { rotulo: string; href: string; primaria: boolean };
 // Só as ações. O bloco "cta" já carrega título e parágrafos como qualquer outro
 // bloco; um segundo par título/subtítulo aqui seria dado que ninguém renderiza.
-export type CTA = { acoes: Acao[] };
+// `agendaUrl` é o link de agendamento do founder (Cal.com): VAZIO enquanto ele
+// não passar o link. Com a URL preenchida, a dobra final troca o botão pelo
+// calendário embutido; vazia, o botão fica, porque calendário morto em página
+// de conversão é o defeito que esta página existe pra não ter.
+export type CTA = { acoes: Acao[]; agendaUrl?: string };
 
-export type ConteudoProva = { blocos: Bloco[]; cta: CTA };
+/** O rodapé. Mesma regra do menu do topo: item sem destino que existe é
+ *  defeito, então aqui só entra link que leva a alguma coisa. `navegacao`
+ *  aponta para âncoras desta página; `redes` são os perfis onde a casa
+ *  publica de fato. O ícone é desenhado no componente, não é arquivo. */
+export type Rodape = {
+  descricao: string;
+  navegacao: Array<{ rotulo: string; href: string }>;
+  redes: Array<{ nome: string; href: string; icone: "instagram" | "linkedin" }>;
+  whatsapp: { rotulo: string; href: string };
+  email: string;
+  cnpj: string;
+  assinatura: string;
+};
+
+export type ConteudoProva = {
+  blocos: Bloco[];
+  cta: CTA;
+  clientes: Cliente[];
+  rodape: Rodape;
+};
 
 export const conteudoProva: ConteudoProva = {
   blocos: [
     {
       id: "abertura",
-      eyebrow: "Horizon",
-      titulo: "A gente roda a própria operação no software que vende.",
+      titulo: "Tecnologia e Inteligência Artificial aplicada a vendas e otimização operacional",
       paragrafos: [
-        "Toda software house diz que domina IA. Poucas usam o que constroem para tocar o próprio negócio.",
+        "Aumente sua receita e diminua seu custo operacional usando tecnologia, automação e inteligência artificial do jeito certo",
         "O CRM que a Horizon usa para prospectar, diagnosticar e propor foi construído pela Horizon, roda em produção e muda quase todo dia. O que você lê abaixo não é portfólio: é a nossa operação, com os números que ela gerou.",
       ],
     },
     {
       id: "crm-proprio",
-      eyebrow: "O que usamos todo dia",
-      titulo: "Um CRM inteiro, construído para uma operação de verdade.",
-      paragrafos: [
-        "Ele descobre empresas por varredura de mapa, organiza a fila de prospecção, escaneia uma conta a partir do Instagram e volta com nome real, site, telefone e contatos.",
-        "Do outro lado, gera diagnóstico do negócio do prospect, monta a proposta comercial, publica as duas como páginas próprias e ainda concentra as conversas de WhatsApp e Instagram na mesma tela.",
-        "Nada disso é protótipo. É o que a nossa equipe abre de manhã.",
-      ],
+      titulo: "Seu time técnico para soluções de vendas e desenvolvimento de software",
+      subtitulo: "Onde a IA faz diferença para seu time Comercial",
+      layout: "abas",
+      // Sem prosa nesta dobra: a estrutura de abas fala por si, como na
+      // referência. Isso também resolve o pronome órfão que ficou quando a
+      // manchete mudou de "Um CRM inteiro" para "Sua squad técnica" e o
+      // parágrafo seguinte continuou começando com "Ele descobre empresas".
+      paragrafos: [],
       itens: [
-        { nome: "Ingestão", descricao: "Varredura de mapa por nicho e cidade, com fila de revisão." },
-        { nome: "Prospecção", descricao: "Board de contas, carteira por vendedor e histórico." },
-        { nome: "Diagnóstico", descricao: "Análise do negócio do prospect, publicada em página própria." },
-        { nome: "Proposta", descricao: "Valores, escopo e prazo, publicados no mesmo endereço da análise." },
-        { nome: "Conversas", descricao: "WhatsApp e Instagram na mesma caixa de entrada." },
-        { nome: "Espaços do cliente", descricao: "Tarefas, checklists e arquivos por cliente, em bucket privado." },
+        {
+          nome: "AI Chatbots",
+          visual: "whatsapp",
+          descricao:
+            "Qualifica, agenda, responde em 3 segundos. Clone do hello seu melhor vendedor online 24/7, sem folga, sem café, sem segunda-feira ruim.",
+        },
+        {
+          nome: "Sistema de qualificação de leads",
+          visual: "funil",
+          descricao:
+            "Encontra tudo sobre o lead, analisa se é fit, personaliza a primeira mensagem e entrega um dossiê completo já dentro do CRM. Sua equipe falando por mais tempo com quem pode comprar.",
+        },
+        {
+          nome: "Sistema de prospecção",
+          visual: "stack",
+          descricao:
+            "Aborda automaticamente com mensagens personalizadas 1-pra-1, só que agora no automático para listas ultrasegmentadas. Uma equipe de hunters sistemáticos para encher o pipeline.",
+        },
+        {
+          nome: "Sistemas de treinamento",
+          visual: "membros",
+          descricao:
+            "Acompanha calls, identifica gaps e recomenda melhorias em tempo real. Cada vendedor recebe coaching personalizado baseado em dados, não em achismo.",
+        },
+        {
+          nome: "CRM Automation",
+          visual: "n8n",
+          descricao:
+            "CRM que se atualiza sozinho. Automações que preenchem campos, movem deals e criam tarefas sem ninguém clicar em nada. Seu pipeline sempre atualizado, seu forecast sempre confiável.",
+        },
+        {
+          nome: "Inteligência de Mercado",
+          visual: "radar",
+          descricao:
+            "Monitora seus concorrentes, rastreia mudanças de preço, identifica empresas procurando sua solução. Meio como ter um espião, só que sem infringir leis e que opera no automático.",
+        },
       ],
     },
     {
-      id: "numeros",
-      eyebrow: "Medido, não estimado",
-      titulo: "A diferença entre achar e saber é ter medido.",
-      paragrafos: [
-        "Numa única operação de prospecção, a varredura cobriu quatro cidades e quatro segmentos e trouxe empresas qualificadas com nome, telefone, site e Instagram de cada uma.",
-        "Não é projeção nem estimativa de modelo. É o resultado de uma execução real, registrado no dia em que aconteceu.",
+      id: "playbook",
+      // Dobra espelhada de playbooklab.com.br ("O jeito Playbook Lab"), por
+      // instrução do founder: mesma estrutura e copy, paleta e nomes da casa.
+      // Os cartões "Projetos fechados" e "SAAS" são adição nossa, escritos na
+      // mesma voz e tamanho dos demais.
+      eyebrow: "Nossos serviços",
+      titulo: "O Playbook da Horizon",
+      layout: "cartoes",
+      paragrafos: [],
+      itens: [
+        {
+          nome: "Squad multidisciplinar",
+          icone: "squad",
+          descricao:
+            "Sales specialist, project manager e automation expert. Três perfis que falam a língua de vendas e escrevem em código. Seu time de IA desde o dia 1.",
+        },
+        {
+          nome: "Diagnóstico e Auditoria com IA",
+          icone: "diagnostico",
+          descricao:
+            "Antes de automatizar qualquer coisa, a gente entende o que trava. Diagnóstico completo da sua operação com um plano claro de onde IA faz diferença de verdade.",
+        },
+        {
+          nome: "Treinamento de IA",
+          icone: "treinamento",
+          descricao:
+            "Mini cursos práticos para seu time usar IA no dia a dia, sem depender de ninguém. Sua equipe extraindo o máximo das ferramentas de IA que já tem em mãos.",
+        },
+        {
+          nome: "Projetos fechados",
+          icone: "projeto",
+          descricao:
+            "Escopo, prazo e preço definidos antes de começar, pagos por entrega. Você sabe o que recebe e quando. O jeito de tirar do papel o sistema que o seu time não tem braço pra construir.",
+        },
+        {
+          nome: "SAAS",
+          icone: "saas",
+          descricao:
+            "Do zero ao produto no ar: arquitetura, código, deploy e operação. A gente constrói e opera o seu SaaS como se fosse nosso, porque o nosso também roda assim.",
+        },
       ],
-      destaque: {
-        valor: "1.465",
-        legenda: "empresas qualificadas numa única operação, em 4 cidades e 4 segmentos",
-        fonte: "progress.md HorizonConsultoria, entrada de 2026-08-03/04",
+    },
+    {
+      id: "mesmo-time",
+      // Banda de conversão espelhada de playbooklab ("Mesmo time, mais
+      // vendas."), por instrução do founder: moldura de janela com arte à
+      // esquerda e título + botão à direita. A arte deles é uma foto glitch;
+      // a nossa é a fotografia do herói, que o navegador já tem em cache.
+      titulo: "Mesmo time, mais vendas.",
+      layout: "chamada",
+      paragrafos: [],
+      acao: {
+        rotulo: "Quero um diagnóstico",
+        href: "mailto:suporte@consultoriahorizon.com.br?subject=Diagn%C3%B3stico%20Horizon",
+        primaria: true,
       },
     },
     {
-      id: "para-outros",
-      eyebrow: "O que construímos para outros",
-      titulo: "Produto de gente que já tem produto.",
-      paragrafos: [
-        "A Horizon não vive de slide. Estes são trabalhos com código rodando, cada um descrito pelo que ele é hoje.",
-      ],
-      itens: [
-        {
-          nome: "Umind",
-          descricao:
-            "SaaS de gestão para clínicas, com produto já em produção, que a Horizon assumiu para evoluir e manter. Ambientes de desenvolvimento e produção no ar, com o banco real do negócio.",
-        },
-        {
-          nome: "PipePro",
-          descricao:
-            "Ferramenta de gestão de projetos com WhatsApp integrado, construída pela Horizon e hoje em staging.",
-        },
-        {
-          nome: "DocsGrowth",
-          descricao:
-            "Demo hi-fi de CRM sob medida, construída para a DocsGrowth e publicada com dados coerentes, feita para ser navegada antes de qualquer contrato.",
-        },
-      ],
-    },
-    {
-      id: "como-entramos",
-      eyebrow: "Como entramos",
-      titulo: "Quatro formatos, e um deles nos coloca no mesmo barco.",
-      paragrafos: [
-        "O formato certo depende de quanto do risco faz sentido dividir. Em todos, o que entregamos é software em produção, não relatório.",
-      ],
-      itens: [
-        { nome: "Squad alocado", descricao: "Time dedicado ao seu produto por alguns meses, com custo previsível." },
-        { nome: "Projeto fechado", descricao: "Escopo e prazo definidos, pagos por entrega." },
-        { nome: "IA vertical", descricao: "Um agente construído para o seu domínio, com avaliação própria de qualidade." },
-        {
-          nome: "Tech for Equity",
-          descricao:
-            "Mensalidade reduzida somada a participação no negócio. É o formato que preferimos quando dá, porque alinha o nosso ganho ao seu crescimento em vez de à nossa hora.",
-        },
+      id: "tecnologias",
+      titulo: "Tecnologias Parceiras",
+      layout: "techs",
+      paragrafos: [],
+      // Lista dada pelo founder, nomes como ele escreveu.
+      techs: [
+        { nome: "C#", arquivo: "csharp.svg" },
+        { nome: ".NET", arquivo: "dotnet.svg" },
+        { nome: "Python", arquivo: "python.svg" },
+        { nome: "Node JS", arquivo: "nodejs.svg" },
+        { nome: "React JS", arquivo: "react.svg" },
+        { nome: "Angular", arquivo: "angular.svg" },
+        { nome: "Vue JS", arquivo: "vuejs.svg" },
+        { nome: "Supabase", arquivo: "supabase.svg" },
+        { nome: "N8N", arquivo: "n8n.svg" },
+        { nome: "Openclaw", arquivo: "openclaw.svg" },
+        { nome: "Hermes Agent", arquivo: "hermes.svg" },
+        { nome: "AWS", arquivo: "aws.svg" },
+        { nome: "Azure", arquivo: "azure.svg" },
+        { nome: "Docker", arquivo: "docker.svg" },
+        { nome: "Microserviços", arquivo: "microservicos.svg" },
       ],
     },
     {
-      id: "antes-de-assinar",
-      eyebrow: "Antes de assinar",
-      titulo: "Você recebe a análise antes de decidir qualquer coisa.",
-      paragrafos: [
-        "Antes de falar de contrato, a gente estuda o seu negócio e publica o resultado numa página só sua: presença digital, o que os concorrentes estão fazendo, onde você aparece e onde não aparece.",
-        "A regra que seguimos ao escrever essa análise é dura de propósito: assunto que não encontramos aparece como ponto crítico, e não some do relatório. Você recebe o que existe, incluindo o que não existe.",
-        "É o mesmo material que usamos para decidir se vale a nossa conversa. Você fica com ele mesmo que a resposta seja não.",
+      id: "recursos",
+      // Acordeão espelhado do "Recursos" do playbooklab: mesmo efeito e
+      // estrutura, paleta da casa. A COPY dos painéis é nossa: os deles
+      // descrevem os produtos deles, e esta página só afirma o que a
+      // Horizon entrega (os cinco painéis mapeiam os sistemas que as
+      // cenas das abas já mostram).
+      titulo: "Recursos",
+      layout: "recursos",
+      paragrafos: [],
+      itens: [
+        {
+          nome: "Crie seu projeto ou aplicativo do zero em até 90 dias",
+          tagline: "Do papel à produção em um trimestre",
+          arte: "projeto",
+          descricao:
+            "Squad da casa desenha, constrói e publica: arquitetura, código, deploy e operação. Você acompanha por entregas semanais, e o primeiro corte útil chega bem antes do prazo final.",
+        },
+        {
+          nome: "Dê vazão ao seu backlog",
+          tagline: "As demandas paradas viram versão publicada",
+          arte: "vazao",
+          descricao:
+            "Seu time segue no roadmap; a gente assume a fila que não anda: funcionalidades, correções, integrações e dívidas técnicas, com ritmo e código documentado para o seu time manter.",
+        },
+        {
+          nome: "Integre seus sistemas e CRM com APIs e Automações",
+          tagline: "Os dados andando sozinhos entre as pontas",
+          arte: "integracoes",
+          descricao:
+            "Webhooks, filas e automações ligando ERP, CRM e planilhas que hoje dependem de gente copiando dado. O que entra num sistema aparece nos outros, com log e reprocesso.",
+        },
+        {
+          nome: "Diagnóstico de como usar IA nos seus processos",
+          tagline: "Onde a IA paga o próprio custo no seu fluxo",
+          arte: "diagnostico",
+          descricao:
+            "A gente mapeia a operação, mede onde o tempo morre e devolve um plano priorizado: o que automatizar primeiro, com qual ferramenta e qual retorno esperar.",
+        },
+        {
+          nome: "Desaloque o time sem multas contratuais",
+          tagline: "Escala para cima e para baixo, sem letra miúda",
+          arte: "desalocar",
+          descricao:
+            "Contrato mensal sem fidelidade: se a demanda cair, você reduz ou encerra sem multa. O código, a documentação e os acessos ficam com você.",
+        },
       ],
     },
     {
       id: "objecoes",
-      eyebrow: "Perguntas diretas",
-      titulo: "As dúvidas que aparecem antes da primeira conversa.",
-      paragrafos: [
-        "Respostas curtas, do jeito que a gente responderia numa call.",
-      ],
+      // Estrutura do FAQ espelhada do agentyx (duas colunas, perguntas
+      // expansíveis com o "+"); título dado pelo founder. As perguntas e
+      // respostas seguem sendo as nossas.
+      eyebrow: "Perguntas frequentes",
+      titulo: "Ainda com dúvida? A gente responde.",
+      layout: "faq",
+      paragrafos: [],
       itens: [
         {
           nome: "Vocês entregam código ou consultoria?",
@@ -143,11 +310,13 @@ export const conteudoProva: ConteudoProva = {
     },
     {
       id: "cta",
-      eyebrow: "Próxima ação",
-      titulo: "Uma conversa de uma hora, e você sai com um diagnóstico.",
+      // Dobra de agendamento no desenho da referência: título centrado,
+      // linha de apoio e o calendário embutido logo abaixo (quando houver
+      // agendaUrl; sem ela, o botão de sempre).
+      titulo: "Agende uma conversa",
+      layout: "agenda",
       paragrafos: [
-        "Mapeamos a sua maior dor operacional, damos uma estimativa honesta de prazo e falamos o que faríamos primeiro.",
-        "Se não fizer sentido fechar, você fica com a análise mesmo assim.",
+        "Escolha um horário para falar com a nossa equipe. Você sai com um diagnóstico, mesmo que a resposta seja não.",
       ],
     },
   ],
@@ -159,5 +328,50 @@ export const conteudoProva: ConteudoProva = {
         primaria: true,
       },
     ],
+    // Conta Cal.com criada pelo founder em 17/08; com a URL preenchida a
+    // dobra final embute o calendário no lugar do botão.
+    agendaUrl: "https://cal.com/rodrigo-de-almeida-gustavo-oaiozs/diagnostico-gratuito",
+  },
+  // A faixa de logos entre o Playbook e a dobra de produtos. Lista dada pelo
+  // founder; as artes vivem em public/prova/clientes/, todas convertidas ao
+  // mesmo tratamento gelo-sobre-transparente (a da Umind é a versão branca
+  // que o próprio site deles publica).
+  clientes: [
+    { nome: "Umind", arquivo: "umind.svg", largura: 589, altura: 165 },
+    { nome: "Ferreira & Sá Advocacia", arquivo: "ferreira.png", largura: 634, altura: 112 },
+    { nome: "Wikialphabet", arquivo: "wikialphabet.png", largura: 234, altura: 112 },
+    { nome: "Family Protect", arquivo: "familyprotect.png", largura: 112, altura: 112, rotulo: true },
+    { nome: "Nádia Contabilidade", arquivo: "nadia.png", largura: 140, altura: 112, rotulo: true },
+  ],
+  // Rodapé no desenho da referência fraktalsoftwares: marca e frase à
+  // esquerda, colunas de links à direita, barra legal fechando embaixo com
+  // assinatura e CNPJ. Os dados são os da casa, dados pelo founder.
+  rodape: {
+    descricao:
+      "Tecnologia e inteligência artificial aplicadas a vendas e operação. A gente constrói, publica e opera o software que o seu time não tem braço para tocar.",
+    navegacao: [
+      { rotulo: "O que fazemos", href: "#playbook" },
+      { rotulo: "Recursos", href: "#recursos" },
+      { rotulo: "Tecnologias", href: "#tecnologias" },
+      { rotulo: "Perguntas", href: "#objecoes" },
+      { rotulo: "Agendar conversa", href: "#cta" },
+    ],
+    redes: [
+      { nome: "Instagram", href: "https://instagram.com/consultoria.horizon/", icone: "instagram" },
+      {
+        nome: "LinkedIn",
+        href: "https://www.linkedin.com/company/consultoria-horizon/",
+        icone: "linkedin",
+      },
+    ],
+    // wa.me com texto pronto, pelo mesmo motivo do mailto da dobra de
+    // chamada: quem clica já chega com o assunto escrito.
+    whatsapp: {
+      rotulo: "+55 24 99825-5174",
+      href: "https://wa.me/5524998255174?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Horizon%20e%20quero%20falar%20sobre%20um%20diagn%C3%B3stico.",
+    },
+    email: "suporte@consultoriahorizon.com.br",
+    cnpj: "37.111.839/0001-07",
+    assinatura: "© 2026 Horizon. Todos os direitos reservados.",
   },
 };
