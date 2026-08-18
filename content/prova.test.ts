@@ -215,6 +215,17 @@ describe("botões de ação", () => {
       ).toBe(true);
     }
   });
+
+  // O numero aparece em dois lugares da pagina. Se um dia alguem escrever a
+  // URL na mao num deles em vez de usar o helper, o cliente que clicar no
+  // fecho da agenda e o que clicar no rodape caem em WhatsApps diferentes,
+  // e ninguem descobre isso lendo a tela.
+  it("o WhatsApp do fecho e o do rodapé são o mesmo número", () => {
+    const numero = (href: string) => href.replace(/^https:\/\/wa\.me\//, "").split("?")[0];
+    const doFecho = conteudoProva.cta.whatsapp.href;
+    expect(/^https:\/\/wa\.me\/\d{12,13}\?/.test(doFecho), `href inválido: ${doFecho}`).toBe(true);
+    expect(numero(doFecho)).toBe(numero(conteudoProva.rodape.whatsapp.href));
+  });
 });
 
 describe("rodapé", () => {

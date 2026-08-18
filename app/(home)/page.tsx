@@ -1440,6 +1440,21 @@ export default function ProvaPage() {
                     ))}
                   </div>
                 ))}
+
+              {/* Fica abaixo do calendário e vale também quando não há
+                  calendário nenhum: é a saída de quem não quer marcar
+                  horário e prefere falar agora. */}
+              {indice === demais.length - 1 && (
+                <div className="prova-agenda-zap">
+                  <a
+                    href={cta.whatsapp.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {cta.whatsapp.rotulo}
+                  </a>
+                </div>
+              )}
             </section>
             {/* A faixa de clientes vive ENTRE as dobras, como na referência:
                 nao e um bloco de conteudo com titulo, e um respiro de prova

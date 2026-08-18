@@ -4815,3 +4815,37 @@ html:has(.theme-v3) {
     scroll-behavior: auto;
   }
 }
+
+/* ─── O botão de WhatsApp que fecha a dobra de agenda ───
+   Mesma pílula do botão do rodapé, para a página ter UM jeito de oferecer
+   WhatsApp e não dois. Sem `nowrap`: o rótulo é longo e numa tela de 320px
+   ele precisa poder quebrar em vez de estourar o container. */
+.prova-agenda-zap {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(20px, 3vw, 32px);
+}
+.prova-agenda-zap a {
+  display: inline-flex;
+  align-items: center;
+  text-align: center;
+  font-family: var(--hzn-font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--hzn-text-inverse);
+  background: var(--sinal);
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.prova-agenda-zap a:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--hzn-glow-amber);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova-agenda-zap a:hover {
+    transform: none;
+  }
+}

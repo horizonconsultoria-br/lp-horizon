@@ -70,7 +70,16 @@ export type Acao = { rotulo: string; href: string; primaria: boolean };
 // não passar o link. Com a URL preenchida, a dobra final troca o botão pelo
 // calendário embutido; vazia, o botão fica, porque calendário morto em página
 // de conversão é o defeito que esta página existe pra não ter.
-export type CTA = { acoes: Acao[]; agendaUrl?: string };
+export type CTA = { acoes: Acao[]; agendaUrl?: string; whatsapp: Acao };
+
+// Um numero de WhatsApp so, escrito UMA vez. Ele aparece em dois lugares da
+// pagina (o fecho da dobra de agenda e o rodape), e numero divergindo entre
+// dois pontos do mesmo site e o defeito que ninguem percebe ate um cliente
+// escrever para o lugar errado. O texto pronto muda por contexto: quem clica
+// no fecho ja passou pelo calendario e escolheu falar agora.
+const WHATSAPP_NUMERO = "5524998255174";
+const zap = (texto: string) =>
+  `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(texto)}`;
 
 /** O rodapé. Mesma regra do menu do topo: item sem destino que existe é
  *  defeito, então aqui só entra link que leva a alguma coisa. `navegacao`
@@ -358,6 +367,14 @@ export const conteudoProva: ConteudoProva = {
     // app/(home)/page.tsx e o frame-src da CSP em next.config.ts. Faltando
     // qualquer um dos três, a página fecha com um retângulo vazio.
     agendaUrl: "https://calendly.com/horizonenterprisebr/30-minute-meeting-clone",
+    // A saída para quem não quer marcar horário. Vive DEPOIS do calendário de
+    // propósito: a página inteira empurra para o agendamento, e este botão é
+    // para quem chegou até o fim e prefere conversar antes de marcar.
+    whatsapp: {
+      rotulo: "Quero entrar em contato agora!",
+      href: zap("Olá! Vim pelo site da Horizon e quero falar agora."),
+      primaria: true,
+    },
   },
   // A faixa de logos entre o Playbook e a dobra de produtos. Lista dada pelo
   // founder; as artes vivem em public/prova/clientes/, todas convertidas ao
@@ -391,11 +408,10 @@ export const conteudoProva: ConteudoProva = {
         icone: "linkedin",
       },
     ],
-    // wa.me com texto pronto, pelo mesmo motivo do mailto da dobra de
-    // chamada: quem clica já chega com o assunto escrito.
+    // wa.me com texto pronto: quem clica já chega com o assunto escrito.
     whatsapp: {
       rotulo: "+55 24 99825-5174",
-      href: "https://wa.me/5524998255174?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Horizon%20e%20quero%20falar%20sobre%20um%20diagn%C3%B3stico.",
+      href: zap("Olá! Vim pelo site da Horizon e quero falar sobre um diagnóstico."),
     },
     email: "suporte@consultoriahorizon.com.br",
     cnpj: "37.111.839/0001-07",
