@@ -62,7 +62,7 @@ export type Cliente = {
 export type Acao = { rotulo: string; href: string; primaria: boolean };
 // Só as ações. O bloco "cta" já carrega título e parágrafos como qualquer outro
 // bloco; um segundo par título/subtítulo aqui seria dado que ninguém renderiza.
-// `agendaUrl` é o link de agendamento do founder (Cal.com): VAZIO enquanto ele
+// `agendaUrl` é o link de agendamento do founder (Calendly): VAZIO enquanto ele
 // não passar o link. Com a URL preenchida, a dobra final troca o botão pelo
 // calendário embutido; vazia, o botão fica, porque calendário morto em página
 // de conversão é o defeito que esta página existe pra não ter.
@@ -102,7 +102,7 @@ export const conteudoProva: ConteudoProva = {
     {
       id: "crm-proprio",
       titulo: "Seu time técnico para soluções de vendas e desenvolvimento de software",
-      subtitulo: "Onde a IA faz diferença para seu time Comercial",
+      subtitulo: "Onde a IA faz diferença para seu time",
       layout: "abas",
       // Sem prosa nesta dobra: a estrutura de abas fala por si, como na
       // referência. Isso também resolve o pronome órfão que ficou quando a
@@ -135,7 +135,7 @@ export const conteudoProva: ConteudoProva = {
             "Acompanha calls, identifica gaps e recomenda melhorias em tempo real. Cada vendedor recebe coaching personalizado baseado em dados, não em achismo.",
         },
         {
-          nome: "CRM Automation",
+          nome: "Automação de CRM",
           visual: "n8n",
           descricao:
             "CRM que se atualiza sozinho. Automações que preenchem campos, movem deals e criam tarefas sem ninguém clicar em nada. Seu pipeline sempre atualizado, seu forecast sempre confiável.",
@@ -197,7 +197,7 @@ export const conteudoProva: ConteudoProva = {
       // vendas."), por instrução do founder: moldura de janela com arte à
       // esquerda e título + botão à direita. A arte deles é uma foto glitch;
       // a nossa é a fotografia do herói, que o navegador já tem em cache.
-      titulo: "Mesmo time, mais vendas.",
+      titulo: "Mais performance para você.",
       layout: "chamada",
       paragrafos: [],
       acao: {
@@ -328,9 +328,12 @@ export const conteudoProva: ConteudoProva = {
         primaria: true,
       },
     ],
-    // Conta Cal.com criada pelo founder em 17/08; com a URL preenchida a
-    // dobra final embute o calendário no lugar do botão.
-    agendaUrl: "https://cal.com/rodrigo-de-almeida-gustavo-oaiozs/diagnostico-gratuito",
+    // Agenda do founder no Calendly, que substituiu a conta do Cal.com usada
+    // enquanto esta dobra era rascunho. Trocar de provedor mexe em três
+    // lugares ao mesmo tempo: a URL aqui, os parâmetros do iframe em
+    // app/(home)/page.tsx e o frame-src da CSP em next.config.ts. Faltando
+    // qualquer um dos três, a página fecha com um retângulo vazio.
+    agendaUrl: "https://calendly.com/horizonenterprisebr/30-minute-meeting-clone",
   },
   // A faixa de logos entre o Playbook e a dobra de produtos. Lista dada pelo
   // founder; as artes vivem em public/prova/clientes/, todas convertidas ao

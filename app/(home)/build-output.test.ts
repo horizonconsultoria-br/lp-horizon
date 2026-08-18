@@ -47,6 +47,10 @@ describe.skipIf(!disponivel)("HTML pré-renderizado da raiz", () => {
     expect(tag, "vídeo de fundo não pode ter controles").not.toMatch(/controls/i);
   });
 
+  // "Host de terceiro" aqui é o que a PRÓPRIA página baixa e executa: script
+  // e fonte, que custam render bloqueado e vazam o visitante. O iframe do
+  // calendário não entra nessa conta, porque é documento isolado, já
+  // sancionado pelo teste de cima e pelo frame-src da CSP em next.config.ts.
   it("não pede nada a host de terceiro", () => {
     expect(html).not.toContain("cdn.tailwindcss.com");
     expect(html).not.toContain("fonts.googleapis.com");
