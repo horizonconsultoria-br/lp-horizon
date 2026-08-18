@@ -163,7 +163,7 @@ export const conteudoProva: ConteudoProva = {
           nome: "Squad multidisciplinar",
           icone: "squad",
           descricao:
-            "Sales specialist, project manager e automation expert. Três perfis que falam a língua de vendas e escrevem em código. Seu time de IA desde o dia 1.",
+            "Um Product Owner, um Tech Lead e um desenvolvedor. Três perfis que falam a língua de vendas e escrevem em código. Seu time especialista desde o dia 1.",
         },
         {
           nome: "Diagnóstico e Auditoria com IA",
@@ -187,7 +187,7 @@ export const conteudoProva: ConteudoProva = {
           nome: "SAAS",
           icone: "saas",
           descricao:
-            "Do zero ao produto no ar: arquitetura, código, deploy e operação. A gente constrói e opera o seu SaaS como se fosse nosso, porque o nosso também roda assim.",
+            "Aproveite nossas soluções de prateleira e acelere seu crescimento.",
         },
       ],
     },
