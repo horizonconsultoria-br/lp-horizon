@@ -127,10 +127,18 @@ describe.skipIf(!disponivel)("HTML pré-renderizado da raiz", () => {
 
   // O FAQ usa details/summary nativo: cada pergunta precisa ser expansível
   // sem JavaScript. Se alguém trocar por divs com onClick, este teste avisa.
+  //
+  // A conta sai do conteúdo, não de um número escrito aqui: o FAQ cresce
+  // quando o founder manda pergunta nova, e uma guarda com número fixo
+  // ficaria vermelha a cada crescimento sem ter achado defeito nenhum.
   it("as perguntas do FAQ são details/summary nativos", () => {
+    const perguntas = conteudoProva.blocos.find((b) => b.layout === "faq")?.itens ?? [];
+    expect(perguntas.length, "sumiu a dobra de FAQ ou ela ficou sem perguntas").toBeGreaterThan(0);
     const detalhes = html.match(/<details[^>]*class="prova-faq-item"/g) ?? [];
-    expect(detalhes.length, "esperadas 4 perguntas expansíveis").toBe(4);
-    expect((html.match(/<summary/g) ?? []).length).toBeGreaterThanOrEqual(4);
+    expect(detalhes.length, `esperadas ${perguntas.length} perguntas expansíveis`).toBe(
+      perguntas.length,
+    );
+    expect((html.match(/<summary/g) ?? []).length).toBeGreaterThanOrEqual(perguntas.length);
   });
 
   it("declara o canonical da raiz do domínio", () => {
