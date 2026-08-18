@@ -1165,7 +1165,7 @@ body:has(.theme-v3) .skip-link {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SIMULAÇÃO DE AUTOMAÇÃO N8N (aba CRM Automation)
+   SIMULAÇÃO DE AUTOMAÇÃO N8N (aba Automação de CRM)
    Um pipeline plausível executando no editor do n8n, com a cara
    REAL da ferramenta por instrução explícita do founder: canvas
    escuro #2d2e3e com malha de pontos, nós quadrados com o nome
@@ -3369,10 +3369,13 @@ body:has(.theme-v3) .skip-link {
    motivo). */
 .prova-bloco-cartoes {
   border-bottom: 0;
-  /* Rodapé curto: a faixa de logos é o remate desta dobra, então ela sobe
-     e encosta nos cartões em vez de flutuar no meio do caminho até a banda
-     de conversão. O padding-top da dobra segue o do .prova-bloco. */
-  padding-bottom: clamp(24px, 3.5vh, 40px);
+  /* Rodapé largo por pedido do founder: o letreiro de logos deixou de ser o
+     remate desta dobra e passou a ler como banda própria, então precisa de
+     ar dos dois lados em vez de encostar nos cartões. O vão acima do
+     letreiro nasce metade aqui e metade no padding-top do .clientes; se
+     mexer em um, confira o outro. O padding-top da dobra segue o do
+     .prova-bloco. */
+  padding-bottom: clamp(46px, 7vh, 88px);
 }
 
 /* O h2 desta dobra volta ao 42px fixo da referência (o título é curto e
@@ -3860,11 +3863,16 @@ body:has(.theme-v3) .skip-link {
 
 .clientes {
   overflow: hidden;
-  /* Respiro ASSIMÉTRICO: quase nada em cima, porque o letreiro é o remate
-     da dobra de cartões e sobe até quase encostar nela; o respiro cheio
-     fica embaixo, separando as logos da banda de conversão. */
-  padding-top: clamp(6px, 1vh, 14px);
-  padding-bottom: clamp(40px, 7vh, 72px);
+  /* O letreiro respira dos DOIS lados: ele é uma banda independente, não o
+     rodapé dos cartões nem a abertura da banda de conversão, e sem folga
+     nas duas pontas as logos ficavam espremidas entre as duas dobras.
+     Contas diferentes em cima e embaixo: o vão de cima é este padding-top
+     MAIS o padding-bottom do .prova-bloco-cartoes; o de baixo é só este
+     padding-bottom, porque .prova-bloco-chamada zera o padding dela.
+     Piso em px para o letreiro não colar nas dobras em notebook baixo,
+     teto em px para o vão não virar um buraco em monitor alto. */
+  padding-top: clamp(36px, 5.5vh, 68px);
+  padding-bottom: clamp(64px, 10vh, 132px);
   /* sem border-bottom: a faixa encosta na banda de conversao, e o risco
      de 1px desenhava uma linha no topo da cena */
   /* as pontas do letreiro somem num degradê, para as logos nascerem e
@@ -3929,7 +3937,7 @@ body:has(.theme-v3) .skip-link {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   BANDA DE CONVERSÃO "MESMO TIME, MAIS VENDAS." (full-bleed)
+   BANDA DE CONVERSÃO "MAIS PERFORMANCE PARA VOCÊ." (full-bleed)
    A cena ocupa a DOBRA INTEIRA, borda a borda, como o herói:
    feedback do founder derrubou a moldura de janela que confinava
    as imagens a um retângulo central. O ambiente é construído com

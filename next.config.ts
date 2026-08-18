@@ -30,7 +30,7 @@ const cabecalhosComercial = [
 
 // CSP ESTRITA, da home e de todo o resto. A home é rota Next com as fontes
 // self-hosted pelo next/font, então não precisa de host de terceiro para nada
-// além do GA. O frame-src do Cal.com é o calendário embutido na última dobra.
+// além do GA. O frame-src do Calendly é o calendário embutido na última dobra.
 const cabecalhosEstritos = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -45,7 +45,7 @@ const cabecalhosEstritos = [
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: https://www.google-analytics.com",
       "connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net",
-      "frame-src 'self' https://cal.com https://*.cal.com",
+      "frame-src 'self' https://calendly.com https://*.calendly.com",
       "frame-ancestors 'none'",
     ].join("; "),
   },

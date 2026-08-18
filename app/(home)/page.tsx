@@ -1409,8 +1409,20 @@ export default function ProvaPage() {
               {indice === demais.length - 1 &&
                 (cta.agendaUrl ? (
                   <div className="prova-agenda">
+                    {/* Calendly em iframe puro, sem o widget.js deles: a CSP
+                        desta página não libera script de terceiro, e o embed
+                        renderiza sozinho quando recebe na URL os mesmos
+                        parâmetros que o widget escreveria. `embed_domain`
+                        fica fixo no domínio de produção porque não há script
+                        para ler o host em tempo de execução; quando ele não
+                        bate (em localhost, por exemplo) o calendário continua
+                        abrindo, só não emite os eventos de embed. As cores
+                        saem da paleta desta página para o fecho não virar um
+                        retângulo branco no meio do escuro, e valem a partir
+                        do plano pago do Calendly: no gratuito o embed as
+                        ignora e volta ao claro. */}
                     <iframe
-                      src={`${cta.agendaUrl}${cta.agendaUrl.includes("?") ? "&" : "?"}embed=true&theme=dark`}
+                      src={`${cta.agendaUrl}${cta.agendaUrl.includes("?") ? "&" : "?"}embed_domain=consultoriahorizon.com.br&embed_type=Inline&hide_gdpr_banner=1&background_color=0a0f1a&text_color=e8eef7&primary_color=3b82f6`}
                       title="Agendar conversa com a Horizon"
                       loading="lazy"
                     />
