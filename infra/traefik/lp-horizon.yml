@@ -33,6 +33,23 @@
 
 http:
   routers:
+    # Blog WordPress sob /blog. Prioridade 30 > 20 do apex: sem isso o router
+    # do apex (que casa o Host inteiro) captura /blog e entrega ao Next.
+    # O stripPrefix remove /blog antes do container; o wp-config devolve o
+    # prefixo virtualizando o REQUEST_URI, para o Apache rotear na raiz
+    # enquanto o WordPress gera URLs sob /blog.
+    https-horizon-blog:
+      rule: "Host(`consultoriahorizon.com.br`) && PathPrefix(`/blog`)"
+      entryPoints:
+        - https
+      service: horizon-blog-svc
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - horizon-blog-strip
+        - secure-headers
+      priority: 30
+
     # Router APEX — preferencial (HTTPS)
     https-lp-horizon-apex:
       rule: "Host(`consultoriahorizon.com.br`)"
@@ -79,7 +96,18 @@ http:
           - url: "http://lp-horizon:3000"
         passHostHeader: true
 
+    horizon-blog-svc:
+      loadBalancer:
+        servers:
+          - url: "http://blog-horizon-wp:80"
+        passHostHeader: true
+
   middlewares:
+    horizon-blog-strip:
+      stripPrefix:
+        prefixes:
+          - "/blog"
+
     redirect-www-to-apex:
       redirectRegex:
         regex: "^https?://www\\.consultoriahorizon\\.com\\.br/(.*)"
