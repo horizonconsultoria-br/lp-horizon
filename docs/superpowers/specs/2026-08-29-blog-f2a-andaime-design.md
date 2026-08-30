@@ -1,5 +1,13 @@
 # Design F2a — Andaime do blog em `consultoriahorizon.com.br/blog`
 
+> **Status: superseded por `2026-08-30-blog-wordpress-subpasta-design.md`.**
+>
+> Este documento descreve o blog como rotas MDX dentro do Next, andaime que foi
+> revertido no commit `a6e33c1`. O `/blog` hoje é um WordPress em container
+> próprio, roteado pelo Traefik com `stripPrefix` — a afirmação da §2 de que "o
+> `/blog` não precisa de Traefik" é hoje **falsa** e induz ao erro. Leia o
+> documento sucessor antes de usar qualquer coisa daqui.
+
 - **Data:** 2026-08-29
 - **Status:** design proposto · aguardando revisão do founder
 - **Repo:** `lp-horizon` (Next.js 15 App Router · React 19 · Tailwind 3 · Vitest)

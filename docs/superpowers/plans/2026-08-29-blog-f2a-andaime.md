@@ -1,5 +1,13 @@
 # Andaime do Blog (F2a) — Implementation Plan
 
+> **Status: superseded por `2026-08-30-blog-wordpress-subpasta-design.md`.**
+>
+> Este documento descreve o blog como rotas MDX dentro do Next, andaime que foi
+> revertido no commit `a6e33c1`. O `/blog` hoje é um WordPress em container
+> próprio, roteado pelo Traefik com `stripPrefix` — a afirmação da §2 de que "o
+> `/blog` não precisa de Traefik" é hoje **falsa** e induz ao erro. Leia o
+> documento sucessor antes de usar qualquer coisa daqui.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Colocar no ar `consultoriahorizon.com.br/blog` com pipeline MDX, metadados tipados validados no build e a camada de dados estruturados que o KPI de citação em IA exige.
