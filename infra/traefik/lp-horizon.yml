@@ -47,6 +47,7 @@ http:
         certResolver: letsencrypt
       middlewares:
         - horizon-blog-strip
+        - horizon-blog-frame
         - secure-headers
       priority: 30
 
@@ -100,6 +101,11 @@ http:
       loadBalancer:
         servers:
           - url: "http://blog-horizon-wp:80"
+        # passHostHeader NÃO é redundante aqui, apesar de parecer cópia do
+        # lp-horizon-svc. Sem ele o WordPress recebe `Host: blog-horizon-wp`,
+        # que não bate com `home`/`siteurl` (https://consultoriahorizon.com.br/blog)
+        # e o redirect canônico do WP passa a 301ar para si mesmo — em loop, junto
+        # com o stripPrefix. É requisito de funcionamento, não estilo.
         passHostHeader: true
 
   middlewares:
@@ -107,6 +113,22 @@ http:
       stripPrefix:
         prefixes:
           - "/blog"
+
+    # X-Frame-Options SAMEORIGIN só para /blog. O `secure-headers` (compartilhado
+    # com o apex e com outros sites da VPS) manda frameDeny, e DENY quebra o
+    # preview do Customizer do WordPress, que carrega o próprio site em um iframe
+    # de mesma origem. O `secure-headers` NÃO é tocado: este middleware sobrescreve
+    # o cabeçalho só na cadeia do blog.
+    #
+    # A ordem importa e é contraintuitiva: a lista de middlewares do router é
+    # percorrida na ida (request) e ao contrário na volta (response). Com
+    # [strip, frame, secure], a resposta passa por `secure-headers` (que escreve
+    # DENY) e só depois por `horizon-blog-frame` (que sobrescreve com SAMEORIGIN).
+    # Inverter os dois faria o DENY vencer.
+    horizon-blog-frame:
+      headers:
+        customResponseHeaders:
+          X-Frame-Options: "SAMEORIGIN"
 
     redirect-www-to-apex:
       redirectRegex:

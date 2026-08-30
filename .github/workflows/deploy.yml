@@ -31,12 +31,15 @@ jobs:
       - name: Typecheck
         run: npx tsc --noEmit
 
-      # As guardas de HTML pré-renderizado (blog-build-output.test.ts e as
-      # análogas da home) leem .next/server/app/**.html e são puladas em
-      # silêncio (describe.skipIf) quando esse HTML não existe. Sem este
-      # passo antes do Test, o pipeline fica verde mesmo se o artigo
-      # publicado perder BlogPosting, FAQPage, canonical ou a tabela
-      # comparativa — a guarda nunca dispara onde importa.
+      # O blog saiu do repositório (virou WordPress em /blog), e com ele o
+      # blog-build-output.test.ts que este comentário citava. O Build continua
+      # sendo pré-requisito do Test por outra razão, ainda viva: as guardas de
+      # HTML pré-renderizado da HOME — app/(home)/build-output.test.ts e
+      # app/(home)/blog-ancoras.test.ts — leem .next/server/app/index.html e são
+      # puladas em SILÊNCIO (describe.skipIf) quando esse HTML não existe. Sem
+      # este passo antes do Test, o pipeline fica verde mesmo se a home perder o
+      # canonical, o og:image, uma das 8 dobras, ou uma das âncoras que o tema do
+      # blog consome — exatamente os casos que essas guardas existem para pegar.
       - name: Build
         run: npm run build
 
@@ -114,7 +117,12 @@ jobs:
             docker compose pull
             docker compose up -d --remove-orphans
 
-            # Health check
+            # Health check — apex E /blog. O passo que sincroniza
+            # infra/traefik/lp-horizon.yml é justamente o que pode derrubar o
+            # /blog (router de prioridade 30, stripPrefix, passHostHeader), e a
+            # tabela de risco da spec manda testar os dois. Testar só o apex
+            # deixaria o blog quebrar em silêncio no deploy que o quebrou.
             sleep 5
             docker compose ps
-            curl -sSf https://consultoriahorizon.com.br/ -o /dev/null && echo "smoke OK" || echo "smoke FAILED (talvez TLS LE ainda emitindo)"
+            curl -sSf https://consultoriahorizon.com.br/ -o /dev/null && echo "smoke apex OK" || echo "smoke apex FAILED (talvez TLS LE ainda emitindo)"
+            curl -sSf https://consultoriahorizon.com.br/blog/ -o /dev/null && echo "smoke blog OK" || echo "smoke blog FAILED"
