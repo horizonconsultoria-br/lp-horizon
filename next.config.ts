@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
+import remarkGfm from "remark-gfm";
 
 // O react-refresh do modo dev roda via eval; sem liberar 'unsafe-eval' SÓ em
 // desenvolvimento, a CSP estrita mata a hidratação inteira no `next dev` e
@@ -100,6 +101,16 @@ const nextConfig: NextConfig = {
 
 // Só habilita o loader de .mdx para import. Os artigos NÃO são rotas (vivem
 // em content/), então `pageExtensions` continua intocado de propósito.
-const withMDX = createMDX({});
+//
+// remarkGfm: sem ele, tabela em pipe (a sintaxe usada nos artigos para
+// comparação) não é reconhecida — vira parágrafo com os caracteres "|"
+// literais em vez de <table>. Conteúdo de decisão vive de comparação, e
+// imagem de tabela não é recuperável por modelo, então a tabela precisa
+// nascer como HTML de verdade.
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [remarkGfm],
+  },
+});
 
 export default withMDX(nextConfig);
