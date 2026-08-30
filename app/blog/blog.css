@@ -1,0 +1,39 @@
+/* Container de leitura. Sem design system novo: a Onda 1 é experimento de
+   entrada, não projeto de marca. Herda tokens e fontes do layout raiz. */
+.blog-shell {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 4rem 1.25rem 6rem;
+}
+
+.artigo-resposta {
+  border-left: 3px solid currentColor;
+  padding: 0.75rem 0 0.75rem 1rem;
+  margin: 1.5rem 0 2.5rem;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.artigo-corpo table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.artigo-corpo th,
+.artigo-corpo td {
+  border: 1px solid rgba(127, 127, 127, 0.35);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.blog-indice-lista {
+  list-style: none;
+  padding: 0;
+}
+
+.artigo-relacionados {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(127, 127, 127, 0.35);
+}
