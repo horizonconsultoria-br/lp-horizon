@@ -1,8 +1,14 @@
 import { describe, it, expect } from "vitest";
+import { readdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 // Relativo, não "@/": o alias do tsconfig é resolvido pelo Next, e o Vitest
 // roda sem ele; com "@/" o arquivo nem coleta.
 import { artigoMetaSchema } from "./schema";
 import { artigos, buscarArtigo, slugs } from "./index";
+
+// A própria pasta content/blog, resolvida a partir deste arquivo em vez de
+// process.cwd(): assim a guarda não depende de onde o Vitest foi chamado.
+const DIRETORIO = fileURLToPath(new URL(".", import.meta.url));
 
 const valido = {
   slug: "exemplo",
@@ -61,11 +67,17 @@ describe("registro de artigos", () => {
     expect(new Set(slugs()).size).toBe(slugs().length);
   });
 
-  // O slug é a URL. Se ele divergir do nome da pasta, o corpo não é achado.
-  it("o slug do meta bate com a chave do registro", () => {
-    for (const a of artigos) {
-      expect(buscarArtigo(a.slug)?.slug).toBe(a.slug);
-    }
+  // O slug é a URL e também o nome da pasta onde vive o corpo.mdx. Se os dois
+  // divergirem, o corpo não é achado e a página serve 404. A checagem lê os
+  // nomes de pasta de verdade em content/blog/ — a versão anterior comparava
+  // `buscarArtigo(a.slug)?.slug` com `a.slug`, uma tautologia que não podia
+  // ficar vermelha nem com pasta e slug diferentes.
+  it("cada artigo registrado tem uma pasta com o mesmo nome do slug", () => {
+    const pastas = readdirSync(DIRETORIO, { withFileTypes: true })
+      .filter((e) => e.isDirectory())
+      .map((e) => e.name)
+      .sort();
+    expect(pastas, "pasta sem artigo registrado, ou slug sem pasta").toEqual(slugs().sort());
   });
 
   it("buscarArtigo devolve undefined para slug inexistente", () => {
