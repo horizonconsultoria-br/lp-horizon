@@ -6,6 +6,15 @@ import { corpos } from "@/content/blog/corpos";
 
 const SITE = "https://consultoriahorizon.com.br";
 
+// Mesma imagem e mesmo locale do layout raiz. Repetidos aqui de propósito:
+// o Next mescla `metadata` de forma RASA, então declarar `openGraph` no filho
+// SUBSTITUI o do pai inteiro. Sem estas três linhas o artigo perde og:image,
+// og:site_name e og:locale — o que a comparação com /blog (que não declara
+// openGraph nenhum e por isso herda tudo) mostra no HTML gerado.
+const OG_IMAGEM = "/og-image.png";
+const OG_SITE = "HorizonConsultoria";
+const OG_LOCALE = "pt_BR";
+
 export function generateStaticParams() {
   return slugs().map((slug) => ({ slug }));
 }
@@ -26,9 +35,22 @@ export async function generateMetadata({
       title: artigo.titulo,
       description: artigo.resumo,
       url: `${SITE}/blog/${artigo.slug}`,
+      siteName: OG_SITE,
+      locale: OG_LOCALE,
       type: "article",
       publishedTime: artigo.publicadoEm,
       modifiedTime: artigo.atualizadoEm,
+      images: [
+        { url: OG_IMAGEM, width: 1200, height: 630, alt: artigo.titulo },
+      ],
+    },
+    // Sem este bloco o artigo herda o `twitter` da raiz, e todo artigo
+    // compartilhado sai anunciando a manchete da landing em vez da própria.
+    twitter: {
+      card: "summary_large_image",
+      title: artigo.titulo,
+      description: artigo.resumo,
+      images: [OG_IMAGEM],
     },
   };
 }
