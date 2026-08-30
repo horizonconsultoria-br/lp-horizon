@@ -15,6 +15,17 @@ const OG_IMAGEM = "/og-image.png";
 const OG_SITE = "HorizonConsultoria";
 const OG_LOCALE = "pt_BR";
 
+/**
+ * Serializa para dentro de <script type="application/ld+json">.
+ *
+ * Escapar "<" não é zelo teórico: um "</script>" literal em qualquer título,
+ * resumo, pergunta ou resposta fecharia a tag cedo e derrubaria justamente o
+ * dado estruturado que este blog existe para emitir. A premissa de "conteúdo
+ * escrito por dev" vence na próxima fase, que automatiza a autoria dessas
+ * mesmas strings.
+ */
+const ld = (o: unknown) => JSON.stringify(o).replace(/</g, "\\u003c");
+
 export function generateStaticParams() {
   return slugs().map((slug) => ({ slug }));
 }
@@ -109,13 +120,13 @@ export default async function ArtigoPage({
       <script
         type="application/ld+json"
         id="ld-blogposting"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPosting) }}
+        dangerouslySetInnerHTML={{ __html: ld(blogPosting) }}
       />
       {faqPage && (
         <script
           type="application/ld+json"
           id="ld-faqpage"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPage) }}
+          dangerouslySetInnerHTML={{ __html: ld(faqPage) }}
         />
       )}
 
