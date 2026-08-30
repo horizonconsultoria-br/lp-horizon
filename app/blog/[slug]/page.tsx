@@ -79,20 +79,25 @@ export default async function ArtigoPage({
   if (!carregar) notFound();
   const { default: Corpo } = await carregar();
 
-  // BlogPosting aponta o publisher para a mesma Organization declarada no
-  // layout raiz: o artigo REFORÇA a entidade que já existe em vez de criar
-  // outra. É o objetivo da decisão de publicar em subpasta, não subdomínio.
+  // Autor e publisher são REFERÊNCIAS por @id à Organization declarada no
+  // layout raiz (`${SITE}/#org`), não cópias dela. A diferença é o ponto
+  // inteiro: um `{"@type":"Organization", name, url}` sem @id é um nó NOVO e
+  // anônimo, então o consumidor vê duas organizações distintas em vez de uma
+  // reforçada — o oposto do objetivo de publicar em subpasta e não em
+  // subdomínio. O próprio artigo também ganha @id, para poder ser referido
+  // por outros nós do grafo em vez de duplicado.
   const blogPosting = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
+    "@id": `${SITE}/blog/${artigo.slug}#post`,
     headline: artigo.titulo,
     description: artigo.resumo,
     datePublished: artigo.publicadoEm,
     dateModified: artigo.atualizadoEm,
     inLanguage: "pt-BR",
     mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE}/blog/${artigo.slug}` },
-    author: { "@type": "Organization", name: "HorizonConsultoria", url: SITE },
-    publisher: { "@type": "Organization", name: "HorizonConsultoria", url: SITE },
+    author: { "@id": `${SITE}/#org` },
+    publisher: { "@id": `${SITE}/#org` },
   };
 
   // FAQPage só existe quando há perguntas. Emitir um FAQPage vazio é sinal

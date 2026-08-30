@@ -22,11 +22,23 @@ describe.skipIf(!disponivel)("HTML pré-renderizado do artigo", () => {
     expect(html).toContain(artigo.titulo);
   });
 
-  // O publisher precisa ser a MESMA organização do layout raiz. Se alguém
-  // trocar por outro nome, o artigo passa a reforçar uma entidade diferente
-  // da do site, que é o oposto do objetivo.
-  it("credita a publicação à Organization do site", () => {
-    expect(html).toContain('"publisher":{"@type":"Organization","name":"HorizonConsultoria"');
+  // Autor e publisher precisam ser REFERÊNCIA por @id à Organization do
+  // layout raiz. Um objeto Organization inline, sem @id, cria um segundo nó
+  // anônimo: o artigo passaria a anunciar uma entidade diferente da do site,
+  // que é o oposto do objetivo.
+  it("referencia a Organization do site por @id, sem criar outra", () => {
+    expect(html).toContain('"author":{"@id":"https://consultoriahorizon.com.br/#org"}');
+    expect(html).toContain('"publisher":{"@id":"https://consultoriahorizon.com.br/#org"}');
+    expect(
+      html.includes('"publisher":{"@type":"Organization"'),
+      "publisher voltou a ser uma Organization inline, criando um segundo nó",
+    ).toBe(false);
+  });
+
+  it("dá @id ao próprio artigo", () => {
+    expect(html).toContain(
+      `"@id":"https://consultoriahorizon.com.br/blog/${artigo.slug}#post"`,
+    );
   });
 
   it("declara FAQPage quando o artigo tem perguntas", () => {
