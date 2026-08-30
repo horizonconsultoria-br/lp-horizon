@@ -6,7 +6,7 @@ import { CLUSTERS } from "@/content/blog/schema";
 const ROTULOS: Record<(typeof CLUSTERS)[number], string> = {
   "vertical-sistema": "Sistemas por vertical",
   "ia-juridica": "IA no jurídico",
-  agencia: "Agências e serviço",
+  servico: "Serviço em campo aberto",
   ferramentas: "Ferramentas e CRM",
 };
 

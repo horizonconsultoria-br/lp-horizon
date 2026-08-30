@@ -1,10 +1,21 @@
 import { z } from "zod";
 
-/** Clusters do discovery F0. Cada artigo pertence a exatamente um. */
+/**
+ * Clusters do discovery F0. Cada artigo pertence a exatamente um.
+ *
+ * `servico` é o Cluster 5 do discovery, "Serviço em campo aberto"
+ * (`melhor agencia de marketing` 97 · `melhor agencia de marketing digital`
+ * 75). NÃO é "agência para vertical": essa hipótese foi medida e falhou
+ * inteira — cinco termos, todos zero (`melhor agencia para clinicas`,
+ * `melhor agencia para advogados`, `agencia de marketing para clinicas`,
+ * `agencia de marketing para advogados`, `marketing para dentistas`).
+ * O que existe é a consulta de decisão sobre serviço onde a categoria já é
+ * comprada assim, e é isso que este cluster nomeia.
+ */
 export const CLUSTERS = [
   "vertical-sistema",
   "ia-juridica",
-  "agencia",
+  "servico",
   "ferramentas",
 ] as const;
 
