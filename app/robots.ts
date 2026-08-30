@@ -7,6 +7,11 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/"],
     },
-    sitemap: "https://consultoriahorizon.com.br/sitemap.xml",
+    // Dois sitemaps: o do Next cobre o site institucional; o do WordPress
+    // cobre o blog, que é servido pelo proxy em /blog.
+    sitemap: [
+      "https://consultoriahorizon.com.br/sitemap.xml",
+      "https://consultoriahorizon.com.br/blog/wp-sitemap.xml",
+    ],
   };
 }
