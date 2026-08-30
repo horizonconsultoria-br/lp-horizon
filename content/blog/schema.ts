@@ -39,6 +39,16 @@ export const artigoMetaSchema = z.object({
   faq: z
     .array(z.object({ pergunta: z.string().min(5), resposta: z.string().min(20) }))
     .default([]),
+  /** Declara que o corpo traz tabela comparativa.
+   *
+   *  Existe para a guarda de build poder ser exata em vez de aproximada: a
+   *  tabela precisa ser <table> de verdade (imagem não é recuperável por
+   *  modelo, e conteúdo de decisão vive de comparação), mas nem todo artigo
+   *  tem comparação. Sem este sinal, a guarda ou exigiria tabela de todo
+   *  artigo (falso positivo garantido) ou não exigiria de nenhum (deixando
+   *  passar a tabela virada imagem). Com ele a checagem é nos dois sentidos:
+   *  declarou, tem que existir; não declarou, não pode aparecer. */
+  temTabela: z.boolean().default(false),
 });
 
 export type ArtigoMeta = z.infer<typeof artigoMetaSchema>;

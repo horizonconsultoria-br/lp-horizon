@@ -9,6 +9,8 @@ export const meta: ArtigoMeta = {
   termoAlvo: "melhor sistema para clinicas",
   publicadoEm: "2026-08-29",
   atualizadoEm: "2026-08-29",
+  // O corpo compara critérios numa tabela de verdade (corpo.mdx).
+  temTabela: true,
   faq: [
     {
       pergunta: "Qual o melhor sistema para clínicas pequenas?",
