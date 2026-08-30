@@ -31,6 +31,15 @@ jobs:
       - name: Typecheck
         run: npx tsc --noEmit
 
+      # As guardas de HTML pré-renderizado (blog-build-output.test.ts e as
+      # análogas da home) leem .next/server/app/**.html e são puladas em
+      # silêncio (describe.skipIf) quando esse HTML não existe. Sem este
+      # passo antes do Test, o pipeline fica verde mesmo se o artigo
+      # publicado perder BlogPosting, FAQPage, canonical ou a tabela
+      # comparativa — a guarda nunca dispara onde importa.
+      - name: Build
+        run: npm run build
+
       - name: Test
         run: npm test
 
