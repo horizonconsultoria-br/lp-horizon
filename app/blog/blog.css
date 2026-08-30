@@ -6,6 +6,20 @@
   padding: 4rem 1.25rem 6rem;
 }
 
+/* ─── Navegação do blog ───
+   Vive no layout para valer em TODO artigo, presente e futuro, sem trabalho
+   por artigo: sem ela o leitor que chega de um mecanismo de resposta cai no
+   artigo e não tem caminho nenhum de volta para o hub nem para o site. */
+.blog-nav {
+  display: flex;
+  gap: var(--hzn-space-6);
+  align-items: center;
+  margin-bottom: var(--hzn-space-10);
+  padding-bottom: var(--hzn-space-4);
+  border-bottom: 1px solid var(--hzn-border-subtle);
+  font-size: var(--hzn-text-sm);
+}
+
 /* ─── Tipografia ───
    O `@tailwind base` (preflight) zera tamanho, peso e margem de h1..h6 e de
    <p>, e tira cor e sublinhado de <a>. Sem estas regras o índice serve o
