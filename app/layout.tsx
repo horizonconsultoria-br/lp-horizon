@@ -74,6 +74,25 @@ export const metadata: Metadata = {
 
 const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
+// Metricool — tracker do painel de marketing da casa.
+//
+// O snippet é o que o Metricool entrega: um loader inline que injeta o
+// `be.js`. E o `be.js` inteiro cabe numa linha — ele mede disparando uma
+// IMAGEM para `tracker.metricool.com/c3po.jpg?u=…&bw=…&ref=…`. Não usa
+// fetch, não usa XHR, não usa sendBeacon, não grava cookie.
+//
+// Daí a consequência que governa a CSP em next.config.ts: o host precisa
+// estar em `script-src` E em `img-src`, e NÃO precisa de `connect-src`.
+// Sem o `img-src` o comportamento é o pior possível — o script carrega,
+// `beTracker.t()` não lança (atribuir `.src` a uma Image bloqueada por CSP
+// falha calado), a página fica verde e nenhuma visita chega ao painel.
+//
+// O hash é identificador público: aparece no fonte da página de qualquer
+// visitante. Fica como constante de propósito, e não em env var, porque o
+// `NEXT_PUBLIC_GA_ID` logo acima está vazio desde abril — o GA nunca rodou
+// uma única vez. Env-gating já matou uma medição neste mesmo arquivo.
+const metricoolHash = "72ddce77b7b68578987e264b6ef45e77";
+
 // Schema.org structured data — Organization + Service x4 + FAQPage + WebSite
 const structuredData = {
   "@context": "https://schema.org",
@@ -256,6 +275,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#main" className="skip-link">Pular para o conteúdo principal</a>
         <main id="main">{children}</main>
         {gaId && <GoogleAnalytics gaId={gaId} />}
+        {/*
+          `afterInteractive` porque medição não pode bloquear render, e o `id`
+          porque é ele que faz o next/script executar uma vez só por
+          carregamento — sem ele, re-render duplicaria a chamada.
+        */}
+        <Script id="metricool-tracker" strategy="afterInteractive">
+          {`function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"${metricoolHash}"})});`}
+        </Script>
       </body>
     </html>
   );
