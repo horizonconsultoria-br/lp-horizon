@@ -30,7 +30,14 @@ const cabecalhosComercial = [
 
 // CSP ESTRITA, da home e de todo o resto. A home é rota Next com as fontes
 // self-hosted pelo next/font, então não precisa de host de terceiro para nada
-// além do GA. O frame-src do Calendly é o calendário embutido na última dobra.
+// além do GA e do Metricool. O frame-src do Calendly é o calendário embutido
+// na última dobra.
+//
+// tracker.metricool.com aparece em DOIS lugares e os dois são obrigatórios:
+// `script-src` para o `be.js` e `img-src` porque o `be.js` mede disparando uma
+// Image para `/c3po.jpg`. Faltando o img-src, o tracker falha em silêncio —
+// nada quebra na tela e o painel do Metricool fica vazio. Não entra em
+// `connect-src`: o script não faz fetch/XHR nenhum. Ver app/layout.tsx.
 const cabecalhosEstritos = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -40,10 +47,10 @@ const cabecalhosEstritos = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com`,
+      `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com https://tracker.metricool.com`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: https://www.google-analytics.com",
+      "img-src 'self' data: https://www.google-analytics.com https://tracker.metricool.com",
       "connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net",
       "frame-src 'self' https://calendly.com https://*.calendly.com",
       "frame-ancestors 'none'",
