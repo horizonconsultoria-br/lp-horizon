@@ -89,7 +89,7 @@ Push to `main` → GitHub Actions roda automaticamente. Detalhes em [`docs/hando
 - [ ] **GA4 Measurement ID** → `NEXT_PUBLIC_GA_ID` no compose (não bloqueia deploy v1, vira ativo em commit posterior)
 - [ ] **Logo SVG vetorial** Horizon → substituir o "H" estilizado no header/footer (placeholder está OK pra v1)
 - [ ] **DNS APEX** `consultoriahorizon.com.br` → 31.97.93.85 (já tem WWW; falta apex)
-- [ ] **Política de privacidade** em `/legal/privacidade` (P2 v1.1)
+- [x] **Páginas legais** em `/legal/privacidade`, `/legal/termos-de-uso` e `/legal/exclusao-de-dados`
 
 ## Plano de execução
 

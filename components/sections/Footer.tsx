@@ -49,6 +49,16 @@ export default function Footer() {
                   Política de privacidade
                 </Link>
               </li>
+              <li>
+                <Link href="/legal/termos-de-uso" className="hover:text-hzn-brand-400">
+                  Termos de uso
+                </Link>
+              </li>
+              <li>
+                <Link href="/legal/exclusao-de-dados" className="hover:text-hzn-brand-400">
+                  Exclusão de dados
+                </Link>
+              </li>
             </ul>
           </div>
 
